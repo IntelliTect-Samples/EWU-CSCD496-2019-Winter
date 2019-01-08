@@ -13,11 +13,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration) SecretSanta/
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: test
-    projects: '**/*Tests/*.csproj'
+    projects: 'SecretSanta/**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
