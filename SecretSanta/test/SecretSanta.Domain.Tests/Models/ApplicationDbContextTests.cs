@@ -1,6 +1,8 @@
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 
@@ -12,6 +14,17 @@ namespace SecretSanta.Domain.Tests
         private SqliteConnection SqliteConnection {get; set;}
         private DbContextOptions<ApplicationDbContext> Options {get; set;}
 
+        private ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+                   builder.AddConsole()
+                          .AddFilter(DbLoggerCategory.Database.Command.Name,
+                                     LogLevel.Information));
+            return serviceCollection.BuildServiceProvider()
+                    .GetService<ILoggerFactory>();
+        }
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -19,6 +32,8 @@ namespace SecretSanta.Domain.Tests
             SqliteConnection.Open();
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .UseSqlite(SqliteConnection)
                 .Options;
 
