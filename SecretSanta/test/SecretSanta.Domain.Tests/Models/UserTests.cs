@@ -12,5 +12,12 @@ namespace SecretSanta.Domain.Tests.Models
             var user = new User { FirstName = "Michael", LastName = "Stokesbary"};
             Assert.AreEqual("Michael", user.FirstName);
         }
+
+        [TestMethod]
+        public void AnotherSimpleTest()
+        {
+            var user = new User {FirstName = "Inigo", LastName = "Montoya"};
+            Assert.AreEqual("Montoya", user.LastName);
+        }
     }
 }
