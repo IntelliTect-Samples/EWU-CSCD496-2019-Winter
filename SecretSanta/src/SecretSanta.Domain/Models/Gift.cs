@@ -1,13 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace SecretSanta.Domain.Models
 {
     public class Gift
     {
-        public int Id { get; set; }
         public string Title { get; set; }
+        public int WantTier { get; set; }
         public string Description { get; set; }
-        public int OrderOfImportance { get; set; }
-        public string Url { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public string URL { get; set; }
+        public User WhoWantIt { get; set; }
     }
 }
