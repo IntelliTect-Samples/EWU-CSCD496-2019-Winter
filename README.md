@@ -4,3 +4,13 @@
 
 
 Updated for assignment 1
+
+Things to do,
+
+Build the fallowing services
+
+GiftService
+PairingService
+MessageService
+
+Set up test for all services.
