@@ -4,9 +4,14 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class Group
+    public class Group : Entity
     {
-        public string Titel { get; set; }
+        public string Title { get; set; }
         public ICollection<User> UserList { get; set; }
+
+        public Group()
+        {
+            EntityType = "Group";
+        }
     }
 }

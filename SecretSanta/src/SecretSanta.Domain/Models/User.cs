@@ -4,17 +4,16 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class User
+    public class User : Entity
     {
         public string first { get; set; }
         public string last { get; set; }
         public ICollection<Group> GroupList { get; set; }
         public ICollection<Gift> ListOfGifts { get; set; }
         
-        public User(string fName, string lName)
+        public User()
         {
-            first = fName;
-            last = lName;
+            EntityType = "User";
         }
     }
 }
