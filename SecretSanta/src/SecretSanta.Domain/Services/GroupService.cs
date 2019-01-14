@@ -1,36 +1,63 @@
+﻿using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SecretSanta.Domain.Models;
+using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
     public class GroupService
     {
-        private ApplicationDbContext DbContext { get; }
+        private SecretSantaDbContext DbContext { get; }
 
-        public GroupService(ApplicationDbContext dbContext)
+        public GroupService(SecretSantaDbContext context)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            DbContext = context;
         }
 
-        public Group AddGroup(Group @group)
+        public void CreateGroup(string title)
         {
-            DbContext.Groups.Add(@group);
+            Group newGroup = new Group { Title = title };
+
+            if(DbContext.Groups.Find(title) == null)
+            {
+                DbContext.Groups.Add(newGroup);
+            }
             DbContext.SaveChanges();
-            return @group;
         }
 
-        public Group UpdateGroup(Group @group)
+        public void AddUser(User user, string groupTitle)
         {
-            DbContext.Groups.Update(@group);
-            DbContext.SaveChanges();
-            return @group;
+            Group group = FindGroup(groupTitle);
+
+            if(group != null)
+            {
+                if(!group.UserList.Contains(user))
+                {
+                    group.UserList.Add(user);
+                }
+                DbContext.Groups.Update(group);
+                DbContext.SaveChanges();
+            }
         }
 
-        public List<Group> FetchAll()
+        public void RemoveUser(User user, string groupTitle)
         {
-            return DbContext.Groups.ToList();
+            Group group = FindGroup(groupTitle);
+
+            if(group != null)
+            {
+                if(group.UserList.Contains(user))
+                {
+                    group.UserList.Remove(user);
+                }
+                DbContext.Groups.Update(group);
+                DbContext.SaveChanges();
+            }
+        }
+
+        private Group FindGroup(string title)
+        {
+            return DbContext.Groups.Find(title);
         }
     }
 }

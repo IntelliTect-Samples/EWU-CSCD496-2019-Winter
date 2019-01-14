@@ -1,36 +1,44 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SecretSanta.Domain.Models;
+using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
     public class UserService
     {
-        private ApplicationDbContext DbContext { get; }
+        private SecretSantaDbContext DbContext { get; }
 
-        public UserService(ApplicationDbContext dbContext)
+        public UserService(SecretSantaDbContext context)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            DbContext = context;
         }
 
-        public User AddUser(User user)
+        public void UpsertUser(User user)
         {
-            DbContext.Users.Add(user);
+            if (user.ID == default(int))
+            {
+                DbContext.Users.Add(user);
+            }
+            else
+            {
+                DbContext.Users.Update(user);
+            }
             DbContext.SaveChanges();
-            return user;
         }
 
-        public User UpdateUser(User user)
+        public User Find(int id)
         {
-            DbContext.Users.Update(user);
-            DbContext.SaveChanges();
-            return user;
+            return DbContext.Users.Find(id);
         }
 
         public List<User> FetchAll()
         {
-            return DbContext.Users.ToList();
+            var userTask = DbContext.Users.ToListAsync();
+            userTask.Wait();
+
+            return userTask.Result;
         }
     }
 }
