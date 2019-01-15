@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Blog.Domain.Models
 {
-    public class Post
+    public class Post : Entity
     {
         public string Title { get; set; }
         public string Body { get; set; }
