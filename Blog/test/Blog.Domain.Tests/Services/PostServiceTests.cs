@@ -166,5 +166,53 @@ namespace Blog.Domain.Tests.Services
                 Assert.IsNull(post);
             }
         }
+
+        [TestMethod]
+        public void ChangeUser()
+        {
+            PostService postService;
+            UserService userService;
+
+            var post = CreateInitialData();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                postService = new PostService(context);
+                userService = new UserService(context);
+
+                postService.UpsertPost(post);
+
+                userService.UpsertUser(new User { FirstName = "Princess", LastName = "Buttercup" });
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                postService = new PostService(context);
+                userService = new UserService(context);
+
+                // var user = userService.Find(2);
+
+                post = postService.Find(1);
+
+                Assert.AreEqual("Inigo", post.User.FirstName);
+
+                post.UserId = 2;
+
+                postService.UpsertPost(post);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                userService = new UserService(context);
+                postService = new PostService(context);
+
+                var users = userService.FetchAll();
+                post = postService.Find(1);
+
+                Assert.AreEqual(2, users.Count);
+
+                Assert.AreEqual("Princess", post.User.FirstName);
+            }
+        }
     }
 }

@@ -12,6 +12,9 @@ namespace Blog.Domain.Models
         public bool IsPublished { get; set; }
         public string Slug { get; set; }
 
+        public int UserId { get; set; }
         public User User { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

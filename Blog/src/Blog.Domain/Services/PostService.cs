@@ -40,7 +40,10 @@ namespace Blog.Domain.Services
 
         public Post Find(int id)
         {
-            var findTask = DbContext.Posts.FindAsync(id);
+            var findTask = DbContext.Posts.Include(p => p.User).SingleOrDefaultAsync(p => p.Id == id);
+
+            //var findTask = DbContext.Posts.FindAsync(id);
+
             findTask.Wait();
 
             return findTask.Result;
