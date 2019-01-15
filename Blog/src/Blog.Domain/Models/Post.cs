@@ -16,5 +16,7 @@ namespace Blog.Domain.Models
         public User User { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+
+        public ICollection<PostTag> PostTags { get; set; }
     }
 }

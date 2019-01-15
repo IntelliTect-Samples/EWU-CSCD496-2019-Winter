@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace Blog.Domain.Tests.Services
 {
@@ -212,6 +213,214 @@ namespace Blog.Domain.Tests.Services
                 Assert.AreEqual(2, users.Count);
 
                 Assert.AreEqual("Princess", post.User.FirstName);
+            }
+        }
+
+        [TestMethod]
+        public void MessWithTags()
+        {
+            var post = CreateInitialData();
+            var tags = new List<Tag>();
+            tags.Add(new Tag { Name = "First Tag" });
+            tags.Add(new Tag { Name = "Second Tag" });
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Posts.Add(post);
+                context.Tags.AddRange(tags);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                        .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+
+                var tagTask = context.Tags.ToListAsync();
+                tagTask.Wait();
+
+                if (firstTask.Result.PostTags == null)
+                {
+                    firstTask.Result.PostTags = new List<PostTag>();
+                }
+
+                foreach (var actualTagTask in tagTask.Result)
+                {
+                    firstTask.Result.PostTags.Add(new PostTag { Tag = actualTagTask });
+                }
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTag = context.Tags.SingleOrDefault(t => t.Name == "First Tag");
+
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(2, firstTask.Result.PostTags.Count);
+
+                context.Tags.Remove(firstTag);
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(1, firstTask.Result.PostTags.Count);
+            }
+        }
+
+        [TestMethod]
+        public void MessWithTagsSomemore()
+        {
+            var post = CreateInitialData();
+            var tags = new List<Tag>();
+            tags.Add(new Tag { Name = "First Tag" });
+            tags.Add(new Tag { Name = "Second Tag" });
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Posts.Add(post);
+                context.Tags.AddRange(tags);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                        .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+
+                var tagTask = context.Tags.ToListAsync();
+                tagTask.Wait();
+
+                if (firstTask.Result.PostTags == null)
+                {
+                    firstTask.Result.PostTags = new List<PostTag>();
+                }
+
+                foreach (var actualTagTask in tagTask.Result)
+                {
+                    firstTask.Result.PostTags.Add(new PostTag { Tag = actualTagTask });
+                }
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(2, firstTask.Result.PostTags.Count);
+
+                firstTask.Result.PostTags.Add(new PostTag
+                {
+                    Tag = new Tag { Name = "Third Tag" }
+                });
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(3, firstTask.Result.PostTags.Count);
+            }
+        }
+
+        [TestMethod]
+        public void MessWithTagsOneMoreTime()
+        {
+            var post = CreateInitialData();
+            var tags = new List<Tag>();
+            tags.Add(new Tag { Name = "First Tag" });
+            tags.Add(new Tag { Name = "Second Tag" });
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Posts.Add(post);
+                context.Tags.AddRange(tags);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                        .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+
+                var tagTask = context.Tags.ToListAsync();
+                tagTask.Wait();
+
+                if (firstTask.Result.PostTags == null)
+                {
+                    firstTask.Result.PostTags = new List<PostTag>();
+                }
+
+                foreach (var actualTagTask in tagTask.Result)
+                {
+                    firstTask.Result.PostTags.Add(new PostTag { Tag = actualTagTask });
+                }
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(2, firstTask.Result.PostTags.Count);
+
+                firstTask.Result.PostTags.Remove(
+                    firstTask.Result.PostTags.SingleOrDefault(pt => pt.Tag.Name == "Second Tag"));
+
+                firstTask.Result.PostTags.Add(new PostTag
+                {
+                    Tag = new Tag { Name = "Third Tag" }
+                });
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var firstTask = context.Posts
+                    .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                    .FirstOrDefaultAsync(p => p.Id == 1);
+                firstTask.Wait();
+
+                Assert.AreEqual(2, firstTask.Result.PostTags.Count);
+                Assert.AreEqual("First Tag", firstTask.Result.PostTags.ToList()[0].Tag.Name);
+                Assert.AreEqual("Third Tag", firstTask.Result.PostTags.ToList()[1].Tag.Name);
             }
         }
     }
