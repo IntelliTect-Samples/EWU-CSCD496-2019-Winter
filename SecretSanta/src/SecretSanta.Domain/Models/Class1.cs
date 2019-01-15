@@ -121,7 +121,7 @@ namespace SecretSanta.Domain
 
         public void AddMessage(string message, string id)
         {
-            string id; //pin to start of each message - id either "Santa" or "Recipient"
+            //pin id to start of each message - id either "Santa" or "Recipient"
         }
 
     }
