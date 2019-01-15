@@ -17,6 +17,30 @@ namespace Blog.Domain.Tests.Services
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
+        ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+            });
+
+            return serviceCollection.BuildServiceProvider()
+                .GetService<ILoggerFactory>();
+        }
+
+        private User CreateInitialData()
+        {
+            User user = new User
+            {
+                FirstName = "Inigo",
+                LastName = "Montoya"
+            };
+
+            return user;
+        }
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -25,6 +49,8 @@ namespace Blog.Domain.Tests.Services
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .Options;
 
             using (var context = new ApplicationDbContext(Options))
@@ -42,11 +68,7 @@ namespace Blog.Domain.Tests.Services
         {
             UserService userService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
+            var user = CreateInitialData();
 
             using (var context = new ApplicationDbContext(Options))
             {
@@ -70,11 +92,7 @@ namespace Blog.Domain.Tests.Services
         {
             UserService userService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
+            var user = CreateInitialData();
 
             using (var context = new ApplicationDbContext(Options))
             {

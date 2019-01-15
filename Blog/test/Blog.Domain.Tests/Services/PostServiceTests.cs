@@ -6,6 +6,8 @@ using Blog.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blog.Domain.Tests.Services
 {
@@ -15,6 +17,40 @@ namespace Blog.Domain.Tests.Services
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
+        ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+            });
+
+            return serviceCollection.BuildServiceProvider()
+                .GetService<ILoggerFactory>();
+        }
+
+        private Post CreateInitialData()
+        {
+            User user = new User
+            {
+                FirstName = "Inigo",
+                LastName = "Montoya"
+            };
+
+            Post post = new Post
+            {
+                Title = "First Post",
+                Body = "Simple body for a blog post",
+                CreatedOn = DateTime.Now,
+                IsPublished = false,
+                Slug = "first-post",
+                User = user
+            };
+
+            return post;
+        }
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -23,6 +59,8 @@ namespace Blog.Domain.Tests.Services
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .Options;
 
             using (var context = new ApplicationDbContext(Options))
@@ -42,21 +80,7 @@ namespace Blog.Domain.Tests.Services
         {
             PostService postService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
+            var post = CreateInitialData();
 
             using (var context = new ApplicationDbContext(Options))
             {
@@ -80,21 +104,7 @@ namespace Blog.Domain.Tests.Services
         {
             PostService postService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
+            var post = CreateInitialData();
 
             using (var context = new ApplicationDbContext(Options))
             {
@@ -131,21 +141,7 @@ namespace Blog.Domain.Tests.Services
         {
             PostService postService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
+            var post = CreateInitialData();
 
             using (var context = new ApplicationDbContext(Options))
             {
