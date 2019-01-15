@@ -26,5 +26,10 @@ namespace SecretSanta.Domain.Services
             }
             DbContext.SaveChanges();
         }
+
+        public Message FindMessage(int id)
+        {
+            return DbContext.Messages.Find(id);
+        }
     }
 }
