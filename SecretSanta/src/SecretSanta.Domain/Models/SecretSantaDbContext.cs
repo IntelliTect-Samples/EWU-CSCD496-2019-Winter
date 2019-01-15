@@ -12,5 +12,10 @@ namespace SecretSanta.Domain.Models
         public DbSet<Pairing> Pairs { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        public SecretSantaDbContext(DbContextOptions<SecretSantaDbContext> options) : base(options)
+        {
+
+        }
     }
 }
