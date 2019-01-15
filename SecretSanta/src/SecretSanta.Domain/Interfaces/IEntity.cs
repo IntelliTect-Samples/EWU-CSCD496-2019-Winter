@@ -6,7 +6,7 @@ namespace SecretSanta.Domain.Interfaces
 {
     public interface IEntity
     {
-        int ID { get; set; }
-        string EntityType { get; set; }
+        int Id { get; set; }
+        //string EntityType { get; set; }
     }
 }

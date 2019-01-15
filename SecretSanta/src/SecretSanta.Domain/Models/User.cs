@@ -6,14 +6,14 @@ namespace SecretSanta.Domain.Models
 {
     public class User : Entity
     {
-        public string first { get; set; }
-        public string last { get; set; }
-        public ICollection<Group> GroupList { get; set; }
-        public ICollection<Gift> ListOfGifts { get; set; }
+        public string First { get; set; }
+        public string Last { get; set; }
+        public ICollection<Group> Groups { get; set; }
+        public ICollection<Gift> Gifts { get; set; }
         
-        public User()
+        /*public User()
         {
-            EntityType = "User";
-        }
+            //EntityType = "User";
+        }*/
     }
 }

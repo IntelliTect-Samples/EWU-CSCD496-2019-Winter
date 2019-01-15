@@ -9,9 +9,9 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void MakeUser()
         {
-            User testUser = new User { first = "Miles", last = "Prower" };
-            Assert.AreEqual("Miles", testUser.first);
-            Assert.AreEqual("User", testUser.EntityType);
+            User testUser = new User { First = "Miles", Last = "Prower" };
+            Assert.AreEqual("Miles", testUser.First);
+            //Assert.AreEqual("User", testUser.EntityType);
         }
     }
 }

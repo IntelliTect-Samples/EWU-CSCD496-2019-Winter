@@ -10,9 +10,9 @@ namespace SecretSanta.Domain.Models
         public User UserFrom { get; set; }
         public string MessageBody { get; set; }
 
-        public Message()
+        /*public Message()
         {
-            EntityType = "Message";
-        }
+            //EntityType = "Message";
+        }*/
     }
 }
