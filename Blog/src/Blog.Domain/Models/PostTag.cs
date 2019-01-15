@@ -1,6 +1,6 @@
 namespace Blog.Domain.Models
 {
-    public class PostTag : Entity
+    public class PostTag
     {
         public int PostId { get; set; }
         public Post Post { get; set; }

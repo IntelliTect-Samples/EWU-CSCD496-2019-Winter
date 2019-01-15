@@ -17,14 +17,14 @@ namespace Blog.Domain.Services
 
         public void UpsertUser(User user)
         {
-            if (user.Id == default(int))
-            {
-                DbContext.Users.Add(user);
-            }
-            else
-            {
-                DbContext.Users.Update(user);
-            }
+            //if (user.Id == default(int))
+            //{
+            //    DbContext.Users.Add(user);
+            //}
+            //else
+            //{
+            //    DbContext.Users.Update(user);
+            //}
             DbContext.SaveChanges();
         }
 

@@ -16,14 +16,14 @@ namespace Blog.Domain.Services
 
         public void UpsertPost(Post post)
         {
-            if (post.Id == default(int))
-            {
-                DbContext.Posts.Add(post);
-            }
-            else
-            {
-                DbContext.Posts.Update(post);
-            }
+            //if (post.Id == default(int))
+            //{
+            //    DbContext.Posts.Add(post);
+            //}
+            //else
+            //{
+            //    DbContext.Posts.Update(post);
+            //}
 
             var saveChangesTask = DbContext.SaveChangesAsync();
             saveChangesTask.Wait();

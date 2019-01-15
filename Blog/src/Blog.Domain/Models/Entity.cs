@@ -1,7 +1,4 @@
-﻿using Blog.Domain.Interface;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Blog.Domain.Interfaces;
 
 namespace Blog.Domain.Models
 {
