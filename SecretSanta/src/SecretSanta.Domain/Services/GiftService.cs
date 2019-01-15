@@ -19,9 +19,9 @@ namespace SecretSanta.Domain.Services
         {
             DbContext.Gifts.Add(gift);
 
-            if(!user.ListOfGifts.Contains(gift))
+            if(!user.Gifts.Contains(gift))
             {
-                user.ListOfGifts.Add(gift);
+                user.Gifts.Add(gift);
             }
 
             DbContext.SaveChanges();
@@ -29,12 +29,12 @@ namespace SecretSanta.Domain.Services
 
         public void EditGift(User user, Gift gift)
         {
-            if (gift.ID != default(int))
+            if (gift.Id != default(int))
                 DbContext.Gifts.Update(gift);
             else
                 DbContext.Gifts.Add(gift);
 
-            List<Gift> set = (List<Gift>)user.ListOfGifts;
+            List<Gift> set = (List<Gift>)user.Gifts;
 
             for(int index = 0; index < set.Count; index++)
             {
@@ -45,7 +45,7 @@ namespace SecretSanta.Domain.Services
                 }
             }
 
-            user.ListOfGifts = set;
+            user.Gifts = set;
             DbContext.SaveChanges();
         }
 
@@ -53,9 +53,14 @@ namespace SecretSanta.Domain.Services
         {
             DbContext.Gifts.Remove(gift);
 
-            user.ListOfGifts.Remove(gift);
+            user.Gifts.Remove(gift);
 
             DbContext.SaveChanges();
+        }
+
+        public bool HasGift(User user, Gift gift)
+        {
+            return user.Gifts.Contains(gift);
         }
     }
 }

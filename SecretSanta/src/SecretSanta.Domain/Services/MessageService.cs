@@ -16,7 +16,7 @@ namespace SecretSanta.Domain.Services
 
         public void StoreMassage(Message message)
         {
-            if(message.ID == default(int))
+            if(message.Id == default(int))
             {
                 DbContext.Messages.Add(message);
             }

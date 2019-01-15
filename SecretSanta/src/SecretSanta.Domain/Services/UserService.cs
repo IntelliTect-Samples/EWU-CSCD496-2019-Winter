@@ -17,7 +17,7 @@ namespace SecretSanta.Domain.Services
 
         public void UpsertUser(User user)
         {
-            if (user.ID == default(int))
+            if (user.Id == default(int))
             {
                 DbContext.Users.Add(user);
             }

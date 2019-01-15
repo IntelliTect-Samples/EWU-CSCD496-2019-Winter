@@ -25,39 +25,50 @@ namespace SecretSanta.Domain.Services
             DbContext.SaveChanges();
         }
 
-        public void AddUser(User user, string groupTitle)
+        public void AddUser(User user, int id)
         {
-            Group group = FindGroup(groupTitle);
+            Group group = FindGroup(id);
 
             if(group != null)
             {
-                if(!group.UserList.Contains(user))
+                if(!group.Users.Contains(user))
                 {
-                    group.UserList.Add(user);
+                    group.Users.Add(user);
                 }
                 DbContext.Groups.Update(group);
                 DbContext.SaveChanges();
             }
         }
 
-        public void RemoveUser(User user, string groupTitle)
+        public void RemoveUser(User user, int id)
         {
-            Group group = FindGroup(groupTitle);
+            Group group = FindGroup(id);
 
             if(group != null)
             {
-                if(group.UserList.Contains(user))
+                if(group.Users.Contains(user))
                 {
-                    group.UserList.Remove(user);
+                    group.Users.Remove(user);
                 }
                 DbContext.Groups.Update(group);
                 DbContext.SaveChanges();
             }
         }
 
-        private Group FindGroup(string title)
+        public bool HasUser(User user, int id)
         {
-            return DbContext.Groups.Find(title);
+            bool test = false;
+
+            Group group = FindGroup(id);
+
+            test = group.Users.Contains(user);
+
+            return test;
+        }
+
+        private Group FindGroup(int id)
+        {
+            return DbContext.Groups.Find(id);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace SecretSanta.Domain.Models
         public User UserFor { get; set; }
         public User Santa { get; set; }
 
-        public Pairing()
+        /*public Pairing()
         {
-            EntityType = "Pairing";
-        }
+            //EntityType = "Pairing";
+        }*/
     }
 }
