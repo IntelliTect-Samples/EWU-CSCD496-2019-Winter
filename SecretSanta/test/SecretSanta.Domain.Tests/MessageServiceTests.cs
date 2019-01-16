@@ -44,7 +44,7 @@ namespace SecretSanta.Domain.Tests
             User to = new User() { First = "Rena", Last = "Hau" };
             string body = "This is a test body";
 
-            Message message = new Message() { UserFrom = from, UserFor = to, MessageBody = body };
+            Message message = new Message() { UserFrom = from, UserTo = to, MessageBody = body };
 
             using (var context = new SecretSantaDbContext(Options))
             {

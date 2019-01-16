@@ -7,11 +7,11 @@ namespace SecretSanta.Domain.Models
     public class Group : Entity
     {
         public string Title { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<UserGroup> Users { get; set; }
 
-        /*public Group()
+        public Group()
         {
-            //EntityType = "Group";
-        }*/
+            EntityType = "Group";
+        }
     }
 }
