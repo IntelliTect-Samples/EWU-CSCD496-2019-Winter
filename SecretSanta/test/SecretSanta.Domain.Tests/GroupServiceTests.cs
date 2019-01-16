@@ -51,7 +51,7 @@ namespace SecretSanta.Domain.Tests
                 groupService = new GroupService(context);
 
                 userService.UpsertUser(user);
-                groupService.CreateGroup(group.Title);
+                groupService.CreateGroup(group);
 
                 userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
 
@@ -91,13 +91,13 @@ namespace SecretSanta.Domain.Tests
                 groupService = new GroupService(context);
 
                 userService.UpsertUser(user);
-                groupService.CreateGroup(group.Title);
+                groupService.CreateGroup(group);
 
                 userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
 
-                user = userService.Find(1);
-                user.UserGroups.Add(userGroup);
-                userService.UpsertUser(user);
+                //user = userService.Find(1);
+                //user.UserGroups.Add(userGroup);
+                //userService.UpsertUser(user);
 
                 group = groupService.FindGroup(1);
                 group.UserGroups.Add(userGroup);
@@ -113,7 +113,7 @@ namespace SecretSanta.Domain.Tests
 
                 groupService.RemoveUser(user, 1);
 
-                Assert.AreEqual(false, groupService.HasUser(user, 1));
+                Assert.AreEqual(false, groupService.HasUser(1, 1));
             }
         }
     }
