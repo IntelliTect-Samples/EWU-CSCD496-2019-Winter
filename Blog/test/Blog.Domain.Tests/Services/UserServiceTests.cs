@@ -14,6 +14,42 @@ namespace Blog.Domain.Tests.Services
     [TestClass]
     public class UserServiceTests
     {
+        ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name,
+                               LogLevel.Information);
+            });
+            return serviceCollection.BuildServiceProvider().
+            GetService<ILoggerFactory>();
+        }
+        User CreateUser()
+        {
+            var user = new User
+            {
+                FirstName = "Inigo",
+                LastName = "Montoya"
+            };
+
+            var post = new Post
+            {
+                Title = "My First Post",
+                Content = "Here is some great content",
+                IsPublished = false,
+                PostedOn = DateTime.Now,
+                Slug = "my-first-post",
+
+            };
+
+            user.Posts = new List<Post>();
+            user.Posts.Add(post);
+
+            return user;
+        }
+
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
@@ -25,6 +61,8 @@ namespace Blog.Domain.Tests.Services
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .Options;
 
             using (var context = new ApplicationDbContext(Options))
@@ -32,75 +70,47 @@ namespace Blog.Domain.Tests.Services
                 context.Database.EnsureCreated();
             }
         }
+
         [TestCleanup]
         public void CloseConnection()
         {
             SqliteConnection.Close();
         }
+
         [TestMethod]
-        public void CreateUser()
+        public void AddUser()
         {
-            UserService userService;
-
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
             using (var context = new ApplicationDbContext(Options))
             {
-                userService = new UserService(context);
+                UserService service = new UserService(context);
+                var myUser = CreateUser();
 
-                userService.UpsertUser(user);
-            }
+                var persistedUser = service.AddUser(myUser);
 
-            using (var context = new ApplicationDbContext(Options))
-            {
-                userService = new UserService(context);
-
-                user = userService.Find(1);
-
-                Assert.AreEqual("Inigo", user.FirstName);
+                Assert.AreNotEqual(0, persistedUser.Id);
             }
         }
 
         [TestMethod]
-        public void UpdateUser()
+        public void FindUser()
         {
-            UserService userService;
-
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
+            // arrange
             using (var context = new ApplicationDbContext(Options))
             {
-                userService = new UserService(context);
+                UserService service = new UserService(context);
+                var myUser = CreateUser();
 
-                userService.UpsertUser(user);
+                var persistedUser = service.AddUser(myUser);
             }
 
+            // act
             using (var context = new ApplicationDbContext(Options))
             {
-                userService = new UserService(context);
+                UserService service = new UserService(context);
+                var fetchedUser = service.Find(1);
 
-                user = userService.Find(1);
-                user.FirstName = "Princess";
-                user.LastName = "Buttercup";
-
-                userService.UpsertUser(user);
-            }
-
-            using (var context = new ApplicationDbContext(Options))
-            {
-                userService = new UserService(context);
-
-                user = userService.Find(1);
-
-                Assert.AreEqual("Princess", user.FirstName);
+                // assert
+                Assert.AreEqual(1, fetchedUser.Posts.Count);
             }
         }
     }

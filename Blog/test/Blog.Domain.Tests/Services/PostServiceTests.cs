@@ -6,12 +6,60 @@ using Blog.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace Blog.Domain.Tests.Services
 {
     [TestClass]
     public class PostServiceTests
     {
+        ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name,
+                               LogLevel.Information);
+            });
+            return serviceCollection.BuildServiceProvider().
+            GetService<ILoggerFactory>();
+        }
+
+        Post CreateNewPost()
+        {
+            var user = new User
+            {
+                FirstName = "Inigo",
+                LastName = "Montoya"
+            };
+
+            var post = new Post
+            {
+                Title = "My First Post",
+                Content = "Here is some great content",
+                IsPublished = false,
+                PostedOn = DateTime.Now,
+                Slug = "my-first-post",
+                User = user
+            };
+
+            var tag = new Tag
+            {
+                Name = "C#"
+            };
+
+            post.PostTags = new List<PostTag>();
+            post.PostTags.Add(new PostTag
+            {
+                Tag = tag
+            });
+
+            return post;
+        }
+
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
@@ -23,6 +71,8 @@ namespace Blog.Domain.Tests.Services
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .Options;
 
             using (var context = new ApplicationDbContext(Options))
@@ -38,136 +88,76 @@ namespace Blog.Domain.Tests.Services
         }
 
         [TestMethod]
-        public void CreatePost()
+        public void AddPost()
         {
-            PostService postService;
-
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
-
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var myPost = CreateNewPost();
 
-                postService.UpsertPost(post);
-            }
+                var persistedPost = service.AddPost(myPost);
 
-            using (var context = new ApplicationDbContext(Options))
-            {
-                postService = new PostService(context);
-
-                post = postService.Find(1);
-
-                Assert.AreEqual("First Post", post.Title);
+                Assert.AreNotEqual(0, persistedPost.Id);
             }
         }
 
         [TestMethod]
-        public void UpdatePost()
+        public void FindPost()
         {
-            PostService postService;
-
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
-
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var myPost = CreateNewPost();
 
-                postService.UpsertPost(post);
+                service.AddPost(myPost);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var fetchedPost = service.Find(1);
 
-                post = postService.Find(1);
-
-                Assert.IsFalse(post.IsPublished);
-
-                post.IsPublished = true;
-
-                postService.UpsertPost(post);
-            }
-
-            using (var context = new ApplicationDbContext(Options))
-            {
-                postService = new PostService(context);
-
-                post = postService.Find(1);
-
-                Assert.IsTrue(post.IsPublished);
+                Assert.AreEqual("My First Post", fetchedPost.Title);
+                Assert.AreEqual("Inigo", fetchedPost.User.FirstName);
+                Assert.AreEqual("C#", fetchedPost.PostTags[0].Tag.Name);
             }
         }
 
         [TestMethod]
-        public void DeletePost()
+        public void UpdateUserOnPost()
         {
-            PostService postService;
-
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
-
-            Post post = new Post
-            {
-                Title = "First Post",
-                Body = "Simple body for a blog post",
-                CreatedOn = DateTime.Now,
-                IsPublished = false,
-                Slug = "first-post",
-                User = user
-            };
-
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var myPost = CreateNewPost();
 
-                postService.UpsertPost(post);
+                service.AddPost(myPost);
+
+                UserService userService = new UserService(context);
+                var myUser = new User { FirstName = "Princess", LastName = "Buttercup" };
+                userService.AddUser(myUser);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var fetchedPost = service.Find(1);
 
-                postService.DeletePost(1);
+                Assert.AreEqual("My First Post", fetchedPost.Title);
+                Assert.AreEqual("Inigo", fetchedPost.User.FirstName);
+
+                fetchedPost.UserId = 2;
+
+                service.UpdatePost(fetchedPost);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                postService = new PostService(context);
+                PostService service = new PostService(context);
+                var fetchedPost = service.Find(1);
 
-                post = postService.Find(1);
-
-                Assert.IsNull(post);
+                Assert.AreEqual("My First Post", fetchedPost.Title);
+                Assert.AreEqual("Princess", fetchedPost.User.FirstName);
             }
         }
     }

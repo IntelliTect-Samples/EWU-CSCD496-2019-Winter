@@ -9,36 +9,24 @@ namespace Blog.Domain.Services
 {
     public class UserService
     {
-        private ApplicationDbContext DbContext { get; }
-        public UserService(ApplicationDbContext context)
+        private ApplicationDbContext DbContext { get; set; }
+        public UserService(ApplicationDbContext dbContext)
         {
-            DbContext = context;
+            DbContext = dbContext;
         }
 
-        public void UpsertUser(User user)
+        public User AddUser(User user)
         {
-            if (user.Id == default(int))
-            {
-                DbContext.Users.Add(user);
-            }
-            else
-            {
-                DbContext.Users.Update(user);
-            }
+            DbContext.Users.Add(user);
+
             DbContext.SaveChanges();
+
+            return user;
         }
 
         public User Find(int id)
         {
-            return DbContext.Users.Find(id);
-        }
-
-        public List<User> FetchAll()
-        {
-            var userTask = DbContext.Users.ToListAsync();
-            userTask.Wait();
-
-            return userTask.Result;
+            return DbContext.Users.Include(u => u.Posts).SingleOrDefault(u => u.Id == id);
         }
     }
 }
