@@ -14,13 +14,13 @@ namespace SecretSanta.Domain.Tests.Services
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
-        [TestInitialize]
+        /*[TestInitialize]
         public void OpenConnection()
         {
             SqliteConnection = new SqliteConnection("DataSource=:memory:");
             SqliteConnection.Open();
 
             
-        }
+        }*/
     }
 }
