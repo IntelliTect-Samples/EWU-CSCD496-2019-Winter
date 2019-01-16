@@ -48,7 +48,7 @@ namespace SecretSanta.Domain.Services
         public void AddUser(User user, int id)
         {
             Group group = FindGroup(id);
-            UserGroup userGroup = new UserGroup() { Group = group, GroupId = group.Id, User = user, UserId = user.Id };
+            UserGroup userGroup = DbContext.UserGroups.Find(user.Id, id);
 
             if (group != null)
             {
@@ -66,14 +66,14 @@ namespace SecretSanta.Domain.Services
         public void RemoveUser(User user, int id)
         {
             Group group = FindGroup(id);
-            UserGroup userGroup = new UserGroup() { Group = group, GroupId = group.Id, User = user, UserId = user.Id };
+            UserGroup userGroup = DbContext.UserGroups.Find(user.Id, id);
 
             if (group != null)
             {
                 if (HasUser(user.Id, id))
                 {
-                    //DbContext.UserGroups.Remove(userGroup);
-                    //user.UserGroups.Remove(userGroup);
+                    DbContext.UserGroups.Remove(userGroup);
+                    user.UserGroups.Remove(userGroup);
                     group.UserGroups.Remove(userGroup);
                 }
                 DbContext.Groups.Update(group);
