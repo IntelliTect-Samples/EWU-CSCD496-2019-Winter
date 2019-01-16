@@ -54,6 +54,7 @@ namespace SecretSanta.Domain.Services
             {
                 if(!group.UserGroups.Contains(userGroup))
                 {
+                    user.UserGroups.Add(userGroup);
                     group.UserGroups.Add(userGroup);
                     DbContext.UserGroups.Add(userGroup);
                 }
@@ -67,12 +68,13 @@ namespace SecretSanta.Domain.Services
             Group group = FindGroup(id);
             UserGroup userGroup = new UserGroup() { Group = group, GroupId = group.Id, User = user, UserId = user.Id };
 
-            if(group != null)
+            if (group != null)
             {
-                if(group.UserGroups.Contains(userGroup))
+                if (HasUser(user.Id, id))
                 {
+                    //DbContext.UserGroups.Remove(userGroup);
+                    //user.UserGroups.Remove(userGroup);
                     group.UserGroups.Remove(userGroup);
-                    DbContext.UserGroups.Remove(userGroup);
                 }
                 DbContext.Groups.Update(group);
                 DbContext.SaveChanges();
@@ -81,12 +83,16 @@ namespace SecretSanta.Domain.Services
 
         public bool HasUser(User user, int id)
         {
+            return HasUser(user.Id, id);
+        }
+
+        public bool HasUser(int uid, int gid)
+        {
             bool test = false;
 
-            Group group = FindGroup(id);
+            if (DbContext.UserGroups.Find(uid, gid) != null)
+                test = true;
 
-            test = group.UserIsPartOf(user);
-            
             return test;
         }
 
