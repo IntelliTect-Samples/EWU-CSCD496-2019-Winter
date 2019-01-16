@@ -19,7 +19,22 @@ namespace src.Services
             return _db.Users.Find(usersId);
         }
 
-        public void AddGift(int userId, Gift gift)
+        public Gift FindGift(int giftId)
+        {
+            return _db.Gifts.Find(giftId);
+        }
+
+        public void AddGiftToDb(Gift gift)
+        {
+            Gift possibleGift = FindGift(gift.Id);
+            if (IsGiftNull(possibleGift))
+            {
+                _db.Gifts.Add(possibleGift);
+                _db.SaveChangesAsync().Wait();
+            }
+        }
+
+        public void AddGiftToUser(int userId, Gift gift)
         {
             //Group foundGroup = FindGroup(id);
             /*if (user.FirstName == null || user.LastName == null)
@@ -30,13 +45,13 @@ namespace src.Services
             {
                 User foundUser = _db.Users.Find(userId);
                 foundUser.GiftList.Add(gift);
-                _db.Gifts.Add(gift);
+                //_db.Gifts.Add(gift);
                 var saveChanges = _db.SaveChangesAsync();
                 saveChanges.Wait();
             }
         }
 
-        public void EditGift(int userId, Gift gift)
+        public void EditGiftOfUser(int userId, Gift gift)
         {
             User foundUser = _db.Users.Find(userId);
             foundUser.GiftList.Remove(gift);
@@ -44,7 +59,7 @@ namespace src.Services
             saveChanges.Wait();
         }
 
-        public void RemoveGift(int userId, Gift gift)
+        public void RemoveGiftOfUser(int userId, Gift gift)
         {
             User foundUser = _db.Users.Find(userId);
             foundUser.GiftList.Remove(gift);
@@ -57,7 +72,7 @@ namespace src.Services
             return user == null;
         }
 
-        private bool IsGroupNull(Group group)
+        private bool IsGiftNull(Gift group)
         {
             return group == null;
         }

@@ -7,17 +7,17 @@ namespace src.Services
 {
     public class GroupsService
     {
-        private ApplicationDbContext _db { get; }
+        private ApplicationDbContext Db { get; }
 
         public GroupsService(ApplicationDbContext db)
         {
-            _db = db;
+            Db = db;
         }
 
 
         private Group FindGroup(int groupId)
         {
-            return _db.Groups.Find(groupId);
+            return Db.Groups.Find(groupId);
         }
 
         public void AddGroup(Group group)
@@ -29,8 +29,8 @@ namespace src.Services
             }
             else*/
             {
-                _db.Groups.Add(group);
-                var saveChanges = _db.SaveChangesAsync();
+                Db.Groups.Add(group);
+                var saveChanges = Db.SaveChangesAsync();
                 saveChanges.Wait();
             }
         }
@@ -45,7 +45,7 @@ namespace src.Services
             else
             {
                 group.UsersPartOfGroup.Add(user);
-                _db.SaveChanges();
+                Db.SaveChanges();
             }
         }
 
@@ -59,7 +59,7 @@ namespace src.Services
             else
             {
                 group.UsersPartOfGroup.Remove(user);
-                _db.SaveChanges();
+                Db.SaveChanges();
             }
         }
 

@@ -7,14 +7,15 @@ namespace src.Services
 {
     public class UsersService
     {
-        private ApplicationDbContext _db { get; }
+        private ApplicationDbContext Db { get; }
 
         public UsersService(ApplicationDbContext db)
         {
-            _db = db;
+            Db = db;
         }
 
-        public void AddUser(User user)
+        //not required
+        /*public void RemoveUser(User user)
         {
             if (user.FirstName == null || user.LastName == null)
             {
@@ -22,11 +23,13 @@ namespace src.Services
             }
             else
             {
-                _db.Users.Add(user);
-                var saveChanges = _db.SaveChangesAsync();
+                Db.Users.Add(user);
+
+                Db.Remove.
+                var saveChanges = Db.SaveChangesAsync();
                 saveChanges.Wait();
             }
-        }
+        }*/
 
         public void UpdateUser(User user)
         {
@@ -36,7 +39,7 @@ namespace src.Services
             }
             else
             {
-                User actualUser = _db.Users.Find(user);
+                User actualUser = Db.Users.Find(user);
 
                 if (IsUserNull(actualUser))
                 {
@@ -60,8 +63,8 @@ namespace src.Services
                     actualUser.GroupList = user.GroupList;
                 }
                 */
-                _db.Users.Update(user);
-                var saveChanges = _db.SaveChangesAsync();
+                Db.Users.Update(user);
+                var saveChanges = Db.SaveChangesAsync();
                 saveChanges.Wait();
             }
         }
