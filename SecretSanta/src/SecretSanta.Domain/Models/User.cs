@@ -11,7 +11,5 @@ namespace SecretSanta.Domain.Models
         List<Gift> UserGifts { set; get; }
         List<Group> UserGroups { set; get; }
 
-
-
     }
 }
