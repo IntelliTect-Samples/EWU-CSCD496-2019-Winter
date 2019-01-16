@@ -15,6 +15,11 @@ namespace SecretSanta.Domain.Models
 
         public SecretSantaDbContext(DbContextOptions<SecretSantaDbContext> options) : base(options)
         {
+            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
 
         }
     }

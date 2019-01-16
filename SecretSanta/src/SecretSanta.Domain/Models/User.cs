@@ -8,12 +8,12 @@ namespace SecretSanta.Domain.Models
     {
         public string First { get; set; }
         public string Last { get; set; }
-        public ICollection<Group> Groups { get; set; }
+        public ICollection<UserGroup> Groups { get; set; }
         public ICollection<Gift> Gifts { get; set; }
         
-        /*public User()
+        public User()
         {
-            //EntityType = "User";
-        }*/
+            EntityType = "User";
+        }
     }
 }
