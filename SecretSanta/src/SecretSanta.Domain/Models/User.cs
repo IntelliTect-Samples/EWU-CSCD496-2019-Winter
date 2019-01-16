@@ -9,7 +9,8 @@ namespace SecretSanta.Domain.Models
         string FirstName { set; get; }
         string LastName { set; get; }
         List<Gift> UserGifts { set; get; }
-        List<Group> UserGroups { set; get; }
+        //commented for basic testing until many-to-many connection is made
+        //List<Group> UserGroups { set; get; }
 
     }
 }
