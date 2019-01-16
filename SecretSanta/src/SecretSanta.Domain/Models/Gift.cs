@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    class Gift
+    public class Gift
     {
         string Title { set; get; }
         int OrderOfImportance { set; get; }

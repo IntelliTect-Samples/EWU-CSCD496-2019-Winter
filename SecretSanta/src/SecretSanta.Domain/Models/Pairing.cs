@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    class Pairing
+    public class Pairing
     {
         User Recipient { set; get; }
         User Santa { set; get; }

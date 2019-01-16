@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    class Group
+    public class Group
     {
         string Title { set; get; }
         List<User> GroupUsers { set; get; }

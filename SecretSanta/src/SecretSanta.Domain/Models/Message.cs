@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    class Message
+    public class Message
     {
         String MessageContent { set; get; }
     }
