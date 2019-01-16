@@ -1,9 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SecretSanta.Domain.Tests
+namespace SecretSanta.Domain.Tests.Models
 {
     [TestClass]
-    public class UnitTest1
+    public class UserServiceTests
     {
         [TestMethod]
         public void TestMethod1()
