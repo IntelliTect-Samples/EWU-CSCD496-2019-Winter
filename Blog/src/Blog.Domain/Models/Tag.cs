@@ -8,6 +8,6 @@ namespace Blog.Domain.Models
     {
         public string Name { get; set; }
 
-        public ICollection<PostTag> PostTags { get; set; }
+        public List<PostTag> PostTags { get; set; }
     }
 }

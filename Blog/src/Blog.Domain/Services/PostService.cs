@@ -3,58 +3,43 @@ using Blog.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Blog.Domain.Services
 {
     public class PostService
     {
-        private ApplicationDbContext DbContext { get; }
-        public PostService(ApplicationDbContext context)
+        private ApplicationDbContext DbContext { get; set; }
+        public PostService(ApplicationDbContext dbContext)
         {
-            DbContext = context;
+            DbContext = dbContext;
         }
 
-        public void UpsertPost(Post post)
+        public Post AddPost(Post post)
         {
-            if (post.Id == default(int))
-            {
-                DbContext.Posts.Add(post);
-            }
-            else
-            {
-                DbContext.Posts.Update(post);
-            }
+            DbContext.Posts.Add(post);
 
-            var saveChangesTask = DbContext.SaveChangesAsync();
-            saveChangesTask.Wait();
-        }
+            DbContext.SaveChanges();
 
-        public void DeletePost(int id)
-        {
-            var postToDelete = Find(id);
-            DbContext.Posts.Remove(postToDelete);
-
-            var saveChangesTask = DbContext.SaveChangesAsync();
-            saveChangesTask.Wait();
+            return post;
         }
 
         public Post Find(int id)
         {
-            var findTask = DbContext.Posts.Include(p => p.User).SingleOrDefaultAsync(p => p.Id == id);
-
-            //var findTask = DbContext.Posts.FindAsync(id);
-
-            findTask.Wait();
-
-            return findTask.Result;
+            return DbContext.Posts
+                .Include(p => p.User)
+                .Include(p => p.PostTags)
+                    .ThenInclude(pt => pt.Tag)
+                .SingleOrDefault(p => p.Id == id);
         }
 
-        public List<Post> FetchAll()
+        public Post UpdatePost(Post post)
         {
-            var postTask = DbContext.Posts.ToListAsync();
-            postTask.Wait();
+            DbContext.Posts.Update(post);
 
-            return postTask.Result;
+            DbContext.SaveChanges();
+
+            return post;
         }
     }
 }
