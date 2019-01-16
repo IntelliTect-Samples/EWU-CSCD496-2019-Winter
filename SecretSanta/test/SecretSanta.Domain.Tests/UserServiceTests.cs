@@ -39,24 +39,35 @@ namespace SecretSanta.Domain.Tests
         public void CreateUser()
         {
             UserService userService;
+            GroupService groupService;
 
-            Group group1 = new Group() { Title = "Toasters", Users = new List<User>() };
-            User user = new User { First = "Brad", Last = "Howard" };
-
-            group1.Users.Add(user);
-
-            user.Groups.Add(group1);
+            Group group = new Group() { Title = "Toasters", UserGroups = new List<UserGroup>() };
+            User user = new User() { First = "Brad", Last = "Howard" };
+            UserGroup userGroup;
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 userService = new UserService(context);
+                groupService = new GroupService(context);
 
                 userService.UpsertUser(user);
+                groupService.CreateGroup(group.Title);
+
+                userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
+
+                user = userService.Find(1);
+                user.UserGroups.Add(userGroup);
+                userService.UpsertUser(user);
+
+                group = groupService.FindGroup(1);
+                group.UserGroups.Add(userGroup);
+                groupService.UpdateGroup(group);
             }
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 userService = new UserService(context);
+                groupService = new GroupService(context);
 
                 user = userService.Find(1);
 
@@ -68,24 +79,35 @@ namespace SecretSanta.Domain.Tests
         public void UpdateUser()
         {
             UserService userService;
+            GroupService groupService;
 
-            Group group1 = new Group() { Title = "Toasters", Users = new List<User>() };
-            User user = new User { First = "Brad", Last = "Howard" };
-
-            group1.Users.Add(user);
-
-            user.Groups.Add(group1);
+            Group group = new Group() { Title = "Toasters", UserGroups = new List<UserGroup>() };
+            User user = new User() { First = "Brad", Last = "Howard" };
+            UserGroup userGroup;
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 userService = new UserService(context);
+                groupService = new GroupService(context);
 
                 userService.UpsertUser(user);
+                groupService.CreateGroup(group.Title);
+
+                userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
+
+                user = userService.Find(1);
+                user.UserGroups.Add(userGroup);
+                userService.UpsertUser(user);
+
+                group = groupService.FindGroup(1);
+                group.UserGroups.Add(userGroup);
+                groupService.UpdateGroup(group);
             }
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 userService = new UserService(context);
+                groupService = new GroupService(context);
 
                 user = userService.Find(1);
                 user.First = "Toast";

@@ -38,21 +38,37 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void AddUser()
         {
+            UserService userService;
             GroupService groupService;
 
-            User user = new User() { First = "Brad", Last = "Howard", Groups = new List<Group>(), Gifts = new List<Gift>() };
+            Group group = new Group() { Title = "Toasters", UserGroups = new List<UserGroup>() };
+            User user = new User() { First = "Brad", Last = "Howard" };
+            UserGroup userGroup;
 
             using (var context = new SecretSantaDbContext(Options))
             {
+                userService = new UserService(context);
                 groupService = new GroupService(context);
 
-                groupService.CreateGroup("test");
+                userService.UpsertUser(user);
+                groupService.CreateGroup(group.Title);
 
-                groupService.AddUser(user, 1);
+                userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
+
+                user = userService.Find(1);
+                user.UserGroups.Add(userGroup);
+                userService.UpsertUser(user);
+
+                group = groupService.FindGroup(1);
+                group.UserGroups.Add(userGroup);
+                groupService.UpdateGroup(group);
+
+                Assert.AreEqual(true, groupService.HasUser(user, 1));
             }
 
             using (var context = new SecretSantaDbContext(Options))
             {
+                userService = new UserService(context);
                 groupService = new GroupService(context);
 
                 Assert.AreEqual(true, groupService.HasUser(user, 1));
@@ -62,21 +78,37 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void RemoveUser()
         {
+            UserService userService;
             GroupService groupService;
 
-            User user = new User() { First = "Brad", Last = "Howard", Groups = new List<Group>(), Gifts = new List<Gift>() };
+            Group group = new Group() { Title = "Toasters", UserGroups = new List<UserGroup>() };
+            User user = new User() { First = "Brad", Last = "Howard" };
+            UserGroup userGroup;
 
             using (var context = new SecretSantaDbContext(Options))
             {
+                userService = new UserService(context);
                 groupService = new GroupService(context);
 
-                groupService.CreateGroup("test");
+                userService.UpsertUser(user);
+                groupService.CreateGroup(group.Title);
 
-                groupService.AddUser(user, 1);
+                userGroup = new UserGroup() { Group = groupService.FindGroup(1), GroupId = 1, User = userService.Find(1), UserId = 1 };
+
+                user = userService.Find(1);
+                user.UserGroups.Add(userGroup);
+                userService.UpsertUser(user);
+
+                group = groupService.FindGroup(1);
+                group.UserGroups.Add(userGroup);
+                groupService.UpdateGroup(group);
+
+                Assert.AreEqual(true, groupService.HasUser(user, 1));
             }
 
             using (var context = new SecretSantaDbContext(Options))
             {
+                userService = new UserService(context);
                 groupService = new GroupService(context);
 
                 groupService.RemoveUser(user, 1);

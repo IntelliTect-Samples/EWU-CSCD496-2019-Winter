@@ -18,9 +18,29 @@ namespace SecretSanta.Domain.Services
         {
             Group newGroup = new Group { Title = title };
 
-            if(DbContext.Groups.Find(title) == null)
+            DbContext.Groups.Add(newGroup);
+
+            DbContext.SaveChanges();
+        }
+
+        public void CreateGroup(Group group)
+        {
+            if (DbContext.Groups.Find(group.Id) == null)
             {
-                DbContext.Groups.Add(newGroup);
+                DbContext.Groups.Add(group);
+            }
+            DbContext.SaveChanges();
+        }
+
+        public void UpdateGroup(Group group)
+        {
+            if(group.Id == default(int))
+            {
+                DbContext.Groups.Add(group);
+            }
+            else
+            {
+                DbContext.Groups.Update(group);
             }
             DbContext.SaveChanges();
         }
@@ -28,12 +48,14 @@ namespace SecretSanta.Domain.Services
         public void AddUser(User user, int id)
         {
             Group group = FindGroup(id);
+            UserGroup userGroup = new UserGroup() { Group = group, GroupId = group.Id, User = user, UserId = user.Id };
 
-            if(group != null)
+            if (group != null)
             {
-                if(!group.Users.Contains(user))
+                if(!group.UserGroups.Contains(userGroup))
                 {
-                    group.Users.Add(user);
+                    group.UserGroups.Add(userGroup);
+                    DbContext.UserGroups.Add(userGroup);
                 }
                 DbContext.Groups.Update(group);
                 DbContext.SaveChanges();
@@ -43,12 +65,14 @@ namespace SecretSanta.Domain.Services
         public void RemoveUser(User user, int id)
         {
             Group group = FindGroup(id);
+            UserGroup userGroup = new UserGroup() { Group = group, GroupId = group.Id, User = user, UserId = user.Id };
 
             if(group != null)
             {
-                if(group.Users.Contains(user))
+                if(group.UserGroups.Contains(userGroup))
                 {
-                    group.Users.Remove(user);
+                    group.UserGroups.Remove(userGroup);
+                    DbContext.UserGroups.Remove(userGroup);
                 }
                 DbContext.Groups.Update(group);
                 DbContext.SaveChanges();
@@ -61,12 +85,12 @@ namespace SecretSanta.Domain.Services
 
             Group group = FindGroup(id);
 
-            test = group.Users.Contains(user);
-
+            test = group.UserIsPartOf(user);
+            
             return test;
         }
 
-        private Group FindGroup(int id)
+        public Group FindGroup(int id)
         {
             return DbContext.Groups.Find(id);
         }

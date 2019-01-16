@@ -62,5 +62,10 @@ namespace SecretSanta.Domain.Services
         {
             return user.Gifts.Contains(gift);
         }
+
+        public Gift FindGift(User user, int id)
+        {
+            return null;
+        }
     }
 }

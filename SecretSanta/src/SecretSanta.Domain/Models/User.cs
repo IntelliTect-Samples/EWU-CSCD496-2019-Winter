@@ -8,11 +8,13 @@ namespace SecretSanta.Domain.Models
     {
         public string First { get; set; }
         public string Last { get; set; }
-        public ICollection<UserGroup> Groups { get; set; }
+        public ICollection<UserGroup> UserGroups { get; set; }
         public ICollection<Gift> Gifts { get; set; }
         
         public User()
         {
+            Gifts = new List<Gift>();
+            UserGroups = new List<UserGroup>();
             EntityType = "User";
         }
     }
