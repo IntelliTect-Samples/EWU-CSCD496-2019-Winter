@@ -39,6 +39,7 @@ namespace SecretSanta.Domain.Tests
         public void CreatePairing()
         {
             PairingService pairingService;
+            UserService userService;
 
             User santa = new User() { First = "Rena", Last = "Hau" };
             User reciver = new User() { First = "Fox", Last = "Hau" };
@@ -46,15 +47,24 @@ namespace SecretSanta.Domain.Tests
             using (var context = new SecretSantaDbContext(Options))
             {
                 pairingService = new PairingService(context);
+                userService = new UserService(context);
 
-                pairingService.CreatePairing(santa, reciver);
+                Pairing pair = new Pairing { Santa = santa, UserFor = reciver };
+
+                userService.UpsertUser(santa);
+                userService.UpsertUser(reciver);
+
+                pair.SantaId = santa.Id;
+                pair.UserForId = reciver.Id;
+
+                pairingService.CreatePairing(pair);
             }
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 pairingService = new PairingService(context);
 
-                Assert.AreEqual("Rena", pairingService.FindPairing(1).Santa.First);
+                Assert.AreEqual(1, pairingService.FindPairing(1).SantaId);
             }
         }
     }

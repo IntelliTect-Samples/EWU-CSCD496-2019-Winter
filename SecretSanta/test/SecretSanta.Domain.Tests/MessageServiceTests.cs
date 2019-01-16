@@ -39,16 +39,24 @@ namespace SecretSanta.Domain.Tests
         public void StoreMassage()
         {
             MessageService messageService;
+            UserService userService;
 
-            User from = new User() { First = "Brad", Last = "Howard" };
-            User to = new User() { First = "Rena", Last = "Hau" };
+            User uFrom = new User() { First = "Brad", Last = "Howard" };
+            User uTo = new User() { First = "Rena", Last = "Hau" };
             string body = "This is a test body";
 
-            Message message = new Message() { UserFrom = from, UserTo = to, MessageBody = body };
+            Message message = new Message() { UserFrom = uFrom, UserTo = uTo, MessageBody = body };
 
             using (var context = new SecretSantaDbContext(Options))
             {
                 messageService = new MessageService(context);
+                userService = new UserService(context);
+
+                userService.UpsertUser(uFrom);
+                userService.UpsertUser(uTo);
+
+                message.UserToId = uTo.Id;
+                message.UserFromId = uFrom.Id;
 
                 messageService.StoreMassage(message);
             }
@@ -56,8 +64,9 @@ namespace SecretSanta.Domain.Tests
             using (var context = new SecretSantaDbContext(Options))
             {
                 messageService = new MessageService(context);
+                userService = new UserService(context);
 
-                Assert.AreEqual("Brad", messageService.FindMessage(1).UserFrom.First);
+                Assert.AreEqual(1, messageService.FindMessage(1).UserFromId);
             }
         }
     }

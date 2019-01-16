@@ -105,7 +105,7 @@ namespace SecretSanta.Domain.Tests
                 if(giftService.HasGift(user, gift))
                 {
                     List<Gift> giftList = (List<Gift>)user.Gifts;
-                    Assert.AreEqual("amazon.com/Toaster/", giftList[giftList.IndexOf(gift)]);
+                    Assert.AreEqual("amazon.com/Toaster/", giftList[giftList.IndexOf(gift)].URL);
                 }
             }
         }

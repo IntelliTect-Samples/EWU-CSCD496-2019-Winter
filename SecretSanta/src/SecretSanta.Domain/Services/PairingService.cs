@@ -22,6 +22,19 @@ namespace SecretSanta.Domain.Services
             DbContext.SaveChanges();
         }
 
+        public void CreatePairing(Pairing pair)
+        {
+            if(pair.Id == default(int))
+            {
+                DbContext.Pairs.Add(pair);
+            }
+            else
+            {
+                DbContext.Pairs.Update(pair);
+            }
+            DbContext.SaveChanges();
+        }
+
         public Pairing FindPairing(int id)
         {
             return DbContext.Pairs.Find(id);
