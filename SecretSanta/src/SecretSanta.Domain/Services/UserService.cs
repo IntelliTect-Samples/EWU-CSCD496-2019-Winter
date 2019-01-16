@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 
@@ -13,18 +14,21 @@ namespace SecretSanta.Domain.Services
 
         private ApplicationDbContext DbContext { get; }
 
-        public void AddUser(User user)
+        public User AddUser(User user)
         {
             if (user.Id == default(int))
                 DbContext.Users.Add(user);
             else
                 DbContext.Users.Update(user);
             DbContext.SaveChanges();
+
+            return user;
         }
 
         public User Find(int id)
         {
-            return DbContext.Users.Find(id);
+            return DbContext.Users.Include(u => u.Gifts)
+                .SingleOrDefault(u => u.Id == id);
         }
 
         public List<User> FetchAll()

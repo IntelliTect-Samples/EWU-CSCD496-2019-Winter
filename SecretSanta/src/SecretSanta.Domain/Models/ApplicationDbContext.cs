@@ -10,10 +10,5 @@ namespace SecretSanta.Domain.Models
         }
 
         public DbSet<User> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("DataSource=:memory:");
-        }
     }
 }
