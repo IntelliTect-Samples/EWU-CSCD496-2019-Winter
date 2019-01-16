@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 
