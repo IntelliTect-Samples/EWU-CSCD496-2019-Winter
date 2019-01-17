@@ -9,12 +9,19 @@ namespace SecretSanta.Domain.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Gift> Gifts { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Pairing> Pairings { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
+        // Code needing updating to handle relationships
         /*
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // modelBuilder.Entity<UserGroup>().HasKey(userGroup => new { userGroup.UserId, userGroup.GroupId });
+
+            
             modelBuilder.Entity<PostTag>().HasKey(pt => new { pt.PostId, pt.TagId });
 
             modelBuilder.Entity<PostTag>()
@@ -26,6 +33,7 @@ namespace SecretSanta.Domain.Models
                 .HasOne(pt => pt.Tag)
                 .WithMany(t => t.PostTags)
                 .HasForeignKey(pt => pt.TagId);
+            
         }
         */
     }

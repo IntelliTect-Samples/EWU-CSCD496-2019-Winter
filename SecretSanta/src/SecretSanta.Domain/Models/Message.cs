@@ -6,7 +6,8 @@ namespace SecretSanta.Domain.Models
 {
     public class Message : Entity
     {
-        // FIXME: Unsure what properties Message should have
-        public string MessageContent { get; set; }
+        public User ToUser { get; set; }
+        public User FromUser { get; set; }
+        public string Content { get; set; }
     }
 }
