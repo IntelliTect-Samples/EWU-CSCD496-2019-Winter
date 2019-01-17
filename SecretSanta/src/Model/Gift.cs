@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace src.Models
+namespace src.Model
 {
     public class Gift : Entity
     {
@@ -12,15 +12,5 @@ namespace src.Models
         public string Description { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
-
-        /*public Gift(string title, int orderOfImportance, string url, string description, User user)
-        {
-            Title = title;
-            OrderOfImportance = orderOfImportance;
-            Url = url;
-            Description = description;
-            User = user;
-            UserId = user.Id;
-        }*/
     }
 }

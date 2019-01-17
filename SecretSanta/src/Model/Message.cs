@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace src.Models
+namespace src.Model
 {
     public class Message : Entity
     {
@@ -10,6 +10,5 @@ namespace src.Models
         public User Recipient { get; set; }
 
         public string MessagePost { get; set; }
-
     }
 }

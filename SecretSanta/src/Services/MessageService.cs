@@ -8,18 +8,18 @@ using System.Text;
 
 namespace src.Services
 {
-    public class PairingService
+    public class MessageService
     {
         private ApplicationDbContext Db { get; }
 
-        public PairingService(ApplicationDbContext db)
+        public MessageService(ApplicationDbContext db)
         {
             Db = db;
         }
 
-        public void AddPairing(Pairing pair)
+        public void AddMessage(Message message)
         {
-            Db.Pairs.AddAsync(pair).Wait();
+            Db.Messages.AddAsync(message).Wait();
             Db.SaveChangesAsync();
         }
     }

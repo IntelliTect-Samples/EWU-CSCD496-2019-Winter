@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace src.Models
+namespace src.Model
 {
     public class Pairing : Entity
     {
         public User Santa { get; set; }
         public User Recepiant { get; set; }
-
-        public Pairing(User santa, User recepiant)
-        {
-            Santa = santa;
-            Recepiant = recepiant;
-        }
+        //public List<Message> Messages { get; set; }
     }
 }
