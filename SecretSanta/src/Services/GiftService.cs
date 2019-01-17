@@ -81,12 +81,13 @@ namespace src.Services
             return possibleGift;
         }
 
-        private bool IsUserNull(User user)
+        /*
+        public bool IsUserNull(User user)
         {
             return user == null;
-        }
+        }*/
 
-        private bool IsGiftNull(Gift group)
+        public bool IsGiftNull(Gift group)
         {
             return group == null;
         }

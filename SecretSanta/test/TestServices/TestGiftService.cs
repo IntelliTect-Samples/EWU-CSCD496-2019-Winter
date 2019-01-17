@@ -180,5 +180,28 @@ namespace test.TestServices
             }
         }
 
+        [TestMethod]
+        public void IsGiftNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                GiftService = new GiftsService(context);
+                bool isGiftNull = GiftService.IsGiftNull(Gift);
+                Assert.IsFalse(isGiftNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsGiftNull_Incorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                GiftService = new GiftsService(context);
+                Gift = null;
+                bool isGiftNull = GiftService.IsGiftNull(Gift);
+                Assert.IsTrue(isGiftNull);
+            }
+        }
+
     }
 }

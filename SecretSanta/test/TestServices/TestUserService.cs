@@ -124,5 +124,121 @@ namespace test.TestServices
                 Assert.IsNull(User);
             }
         }
+
+        [TestMethod]
+        public void IsFirstNameNotNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                bool isNull = UsersService.IsFirstNameNotNull(User);
+                Assert.IsTrue(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsFirstNameNotNull_InCorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                User.FirstName = null;
+                bool isNull = UsersService.IsFirstNameNotNull(User);
+                Assert.IsFalse(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsLastNameNotNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                bool isNull = UsersService.IsLastNameNotNull(User);
+                Assert.IsTrue(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsLastNameNotNull_InCorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                User.LastName = null;
+                bool isNull = UsersService.IsLastNameNotNull(User);
+                Assert.IsFalse(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsFullNameNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                bool isNotNull = UsersService.IsFullNameNull(User);
+                Assert.IsFalse(isNotNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsFullNameNull_Incorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                User.FirstName = null;
+                User.LastName = null;
+                bool isNotNull = UsersService.IsFullNameNull(User);
+                Assert.IsTrue(isNotNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsGiftListNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                bool isNull = UsersService.IsGiftListNull(User);
+                Assert.IsFalse(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsGiftListNull_Incorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                User.GiftList = null;
+                bool isNull = UsersService.IsGiftListNull(User);
+                Assert.IsTrue(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsUserNull_Correct()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                bool isNull = UsersService.IsUserNull(User);
+                Assert.IsFalse(isNull);
+            }
+        }
+
+        [TestMethod]
+        public void IsUserNull_Incorrect()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UsersService = new UsersService(context);
+                User testUser = null;
+                bool isNull = UsersService.IsUserNull(testUser);
+                Assert.IsTrue(isNull);
+            }
+        }
     }
 }

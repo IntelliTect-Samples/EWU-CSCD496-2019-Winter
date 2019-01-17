@@ -19,7 +19,7 @@ namespace src.Services
 
         public void AddUser(User user)
         {
-            if (IsNameNotNull(user) || IsUserNull(user))
+            if (IsFullNameNull(user) || IsUserNull(user))
             {
                 //do not add;
             }
@@ -32,7 +32,7 @@ namespace src.Services
 
         public void UpdateUser(User user)
         {
-            if (IsNameNotNull(user) || IsUserNull(user))
+            if (IsFullNameNull(user) || IsUserNull(user))
             {
                 //do not add;
             }
@@ -50,28 +50,28 @@ namespace src.Services
                 .SingleOrDefault(u => u.Id == id);
         }
 
-        private bool IsFirstNameNotNull(User user)
+        public bool IsFirstNameNotNull(User user)
         {
             return user.FirstName != null;
         }
 
-        private bool IsLastNameNotNull(User user)
+        public bool IsLastNameNotNull(User user)
         {
             return user.LastName != null;
         }
 
-        private bool IsNameNotNull(User user)
+        public bool IsFullNameNull(User user)
         {
             return !(IsFirstNameNotNull(user) || IsLastNameNotNull(user));
         }
 
-        private bool IsGiftListNull(User user)
+        public bool IsGiftListNull(User user)
         {
             return user.GiftList == null;
         }
 
 
-        private bool IsUserNull(User user)
+        public bool IsUserNull(User user)
         {
             return user == null;
         }
