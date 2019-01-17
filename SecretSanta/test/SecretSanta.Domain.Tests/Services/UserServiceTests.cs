@@ -110,6 +110,6 @@ namespace SecretSanta.Domain.Tests.Services
 
                 Assert.AreEqual("Update FirstName", fetchedUser.FirstName);
             }
-        }        
+        }    
     }
 }
