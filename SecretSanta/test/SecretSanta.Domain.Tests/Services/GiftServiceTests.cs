@@ -62,9 +62,9 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new GiftService(context);
                 var myGift = CreateGift();
 
-                var persistedUser = service.UpsertGift(myGift);
+                var addedGift = service.UpsertGift(myGift);
                 
-                Assert.AreEqual(1, persistedUser.Id);
+                Assert.AreEqual(1, addedGift.Id);
             }
         }
         
@@ -110,9 +110,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new GiftService(context);
 
-                var persistedUser = service.UpsertGift(myGift);
+                var addedGift = service.UpsertGift(myGift);
                 
-                Assert.AreEqual(1, persistedUser.Id);
+                Assert.AreEqual(1, addedGift.Id);
             }
             
             // Remove gift from DB
@@ -134,9 +134,9 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new GiftService(context);
                 var myGift = CreateGift();
 
-                var persistedUser = service.UpsertGift(myGift);
+                var addedGift = service.UpsertGift(myGift);
                 
-                Assert.AreEqual(1, persistedUser.Id);
+                Assert.AreEqual(1, addedGift.Id);
             }
             
             // Remove gift from DB
@@ -148,6 +148,7 @@ namespace SecretSanta.Domain.Tests.Services
                 var foundGift = service.Find(1);
                 
                 Assert.AreEqual(1, foundGift.Id);
+                Assert.AreEqual(1, foundGift.User.Id);
             }
         }
     }

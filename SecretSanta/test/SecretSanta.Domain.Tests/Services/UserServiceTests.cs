@@ -77,9 +77,9 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new UserService(context);
                 var myUser = CreateUser();
 
-                var persistedUser = service.UpsertUser(myUser);
+                var addedUser = service.UpsertUser(myUser);
 
-                Assert.AreNotEqual(0, persistedUser.Id);
+                Assert.AreNotEqual(0, addedUser.Id);
             }
         }
         
@@ -135,6 +135,7 @@ namespace SecretSanta.Domain.Tests.Services
 
                 // assert
                 Assert.AreEqual(1, fetchedUser.Id);
+                Assert.AreEqual(1, fetchedUser.Gifts[0].Id);
             }
         }
 
