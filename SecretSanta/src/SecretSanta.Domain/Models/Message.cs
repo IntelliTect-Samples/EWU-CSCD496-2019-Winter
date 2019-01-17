@@ -4,8 +4,8 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class Message
+    public class Message : Entity
     {
-        String MessageContent { set; get; }
+        public String MessageContent { set; get; }
     }
 }

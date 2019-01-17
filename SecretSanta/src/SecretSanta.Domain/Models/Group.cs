@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class Group
+    public class Group : Entity
     {
-        string Title { set; get; }
-        List<User> GroupUsers { set; get; }
+        public string Title { set; get; }
+        public List<User> GroupUsers { set; get; }
 
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
-    class UserServices
+    public class UserServices
     {
         private ApplicationDbContext DbContext { get; set; }
 

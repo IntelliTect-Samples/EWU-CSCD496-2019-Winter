@@ -4,13 +4,13 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class User
+    public class User : Entity
     {
-        string FirstName { set; get; }
-        string LastName { set; get; }
-        List<Gift> UserGifts { set; get; }
+        public string FirstName { set; get; }
+        public string LastName { set; get; }
+        public List<Gift> UserGifts { set; get; }
         //commented for basic testing until many-to-many connection is made
-        //List<Group> UserGroups { set; get; }
+        //public List<Group> UserGroups { set; get; }
 
     }
 }

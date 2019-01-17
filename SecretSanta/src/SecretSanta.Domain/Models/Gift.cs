@@ -4,12 +4,12 @@ using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
-    public class Gift
+    public class Gift : Entity
     {
-        string Title { set; get; }
-        int OrderOfImportance { set; get; }
-        string Url { set; get; }
-        string description { set; get; }
-        User User { set; get; }
+        public string Title { set; get; }
+        public int OrderOfImportance { set; get; }
+        public string Url { set; get; }
+        public string description { set; get; }
+        public User User { set; get; }
     }
 }
