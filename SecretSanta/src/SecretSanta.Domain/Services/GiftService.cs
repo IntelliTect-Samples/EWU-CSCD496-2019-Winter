@@ -1,62 +1,59 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSanta.Domain.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
     public class GiftService
     {
-        /*
-        public Gift(string title, int importance, string url, string description, User user)
+        private ApplicationDbContext DbContext { get; }
+
+        public GiftService(ApplicationDbContext dbContext)
         {
-            if (title != null && url != null && description != null && user != null)
-            {
-                Title = title;
-                Importance = importance;
-                URL = url;
-                Description = description;
-                User = user;
-            }
-            else
-            {
-                throw new Exception("Gift constructor passed parameter was null");
-            }
+            DbContext = dbContext;
         }
 
-        public bool EditGift(string title, int importance, string url, string description, User user)
+        public Gift AddGift (Gift gift)
         {
-            if (title != null && url != null && description != null && user != null)
-            {
-                Title = title;
-                Importance = importance;
-                URL = url;
-                Description = description;
-                User = user;
+            DbContext.Gifts.Add(gift);
+            DbContext.SaveChanges();
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return gift;
         }
 
-        public bool DeleteGift(User user)
+        public Gift UpdateGift (Gift gift)
         {
-            if (user != null)
-            {
-                if (user.Gifts.Contains(this))
-                {
-                    user.Gifts.Remove(this);
-                }
+            DbContext.Gifts.Update(gift);
+            DbContext.SaveChanges();
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return gift;
         }
-        */
+
+        public Gift RemoveGift (Gift gift)
+        {
+            DbContext.Gifts.Remove(gift);
+            DbContext.SaveChanges();
+
+            return gift;
+        }
+
+        public Gift Find (int giftId)
+        {
+            return DbContext.Gifts
+                .Include(gift => gift.User)
+                .SingleOrDefault(gift => gift.Id == giftId);
+        }
+
+        public List<Gift> FetchAllUserGifts(int userId)
+        {
+            var user = DbContext.Users
+                .Include(u => u.Gifts)
+                .SingleOrDefault(u => u.Id == userId);
+
+            return user.Gifts.ToList();
+        }
     }
 }

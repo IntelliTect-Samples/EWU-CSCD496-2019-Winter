@@ -9,7 +9,7 @@ namespace SecretSanta.Domain.Services
 {
     public class UserService
     {
-        private ApplicationDbContext DbContext { get; }
+        private ApplicationDbContext DbContext { get; set; }
 
         public UserService(ApplicationDbContext dbContext)
         {
@@ -32,9 +32,12 @@ namespace SecretSanta.Domain.Services
             return user;
         }
 
-        public User Find (int id)
+        public User Find (int userId)
         {
-            return DbContext.Users.Include(user => user.Groups).SingleOrDefault(user => user.Id == id);
+            return DbContext.Users
+                .Include(user => user.Groups)
+                .Include(user => user.Gifts)
+                .SingleOrDefault(user => user.Id == userId);
         }
     }
 }

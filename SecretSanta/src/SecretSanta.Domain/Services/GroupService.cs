@@ -1,58 +1,63 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSanta.Domain.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
     public class GroupService
     {
-        /*
-        public Group(string title, ICollection<User> users)
+        private ApplicationDbContext DbContext { get; set; }
+
+        public GroupService(ApplicationDbContext dbContext)
         {
-            if (title != null && users != null)
-            {
-                Title = title;
-                Users = users;
-            }
-            else
-            {
-                throw new Exception("Group constructor parameters were null");
-            }
+            DbContext = dbContext;
         }
 
-        public bool AddUser (User user)
+        public Group AddGroup(Group group)
         {
-            if (user != null)
-            {
-                if(!Users.Contains(user))
-                {
-                    Users.Add(user);
-                }
+            DbContext.Groups.Add(group);
+            DbContext.SaveChanges();
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return group;
         }
 
-        public bool RemoveUser (User user)
+        public void AddUserToGroup (int groupId, User user)
         {
-            if (user != null)
-            {
-                if (Users.Contains(user))
-                {
-                    Users.Remove(user);
-                }
+            // FIXME: uncomment once many-to-many is understood.
+            // I think this is how it goes though.
+            /*
+            var group = DbContext.Groups
+                .Include(g => g.Users)
+                .SingleOrDefault(g => g.Id == groupId);
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            group.Users.Add(user);
+            DbContext.SaveChanges();
+            */
         }
-        */
+
+        public void RemoveUserFromGroup (int groupId, User user)
+        {
+            // FIXME: Uncomment once many-to-many is understood.
+            /*
+            var group = DbContext.Groups
+                .Include(g => g.Users)
+                .SingleOrDefault(g => g.Id == groupId);
+
+            group.Users.Remove(user);
+            DbContext.SaveChanges();
+            */
+        }
+
+        public void Find(int groupId)
+        {
+            /*
+            return DbContext.Groups
+                .Include(group => group.Users)
+                .SingleOrDefault(Group => Group.Id == groupId);
+            */
+        }
     }
 }
