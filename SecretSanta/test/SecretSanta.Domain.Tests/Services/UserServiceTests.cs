@@ -37,7 +37,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
-        User CreateUser()
+        private User CreateUser()
         {
             var user = new User
             {
@@ -50,8 +50,8 @@ namespace SecretSanta.Domain.Tests.Services
             var gift = new Gift
             {
                 Title = "My Gift",
-                Importance = 1,
-                URL = "https://google.com",
+                OrderOfImportance = 1,
+                Url = "store.com",
                 Description = "This gift is blue.",
                 User = user,
             };
@@ -59,9 +59,9 @@ namespace SecretSanta.Domain.Tests.Services
             var group = new Group
             {
                 Title = "The Group",
-                Users = new List<User>()
+                //Users = new List<User>()
             };
-            group.Users.Add(user);
+            //group.Users.Add(user);
 
             user.Gifts.Add(gift);
             user.Groups.Add(group);
@@ -75,12 +75,41 @@ namespace SecretSanta.Domain.Tests.Services
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 UserService service = new UserService(dbContext);
-                var user = CreateUser();
+                User user = CreateUser();
 
-                var persistedUser = service.AddUser(user);
+                service.AddUser(user);
+            }
 
-                Assert.AreNotEqual(0, persistedUser.Id);
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                UserService service = new UserService(dbContext);
+                var fetchedUser = service.Find(1);
+
+                Assert.AreEqual("Billy", fetchedUser.FirstName);
             }
         }
+
+        [TestMethod]
+        public void UpdateUser()
+        {
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                UserService service = new UserService(dbContext);
+                User user = CreateUser();
+
+                service.AddUser(user);
+
+                user.FirstName = "Update FirstName";
+                service.UpdateUser(user);
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                UserService service = new UserService(dbContext);
+                var fetchedUser = service.Find(1);
+
+                Assert.AreEqual("Update FirstName", fetchedUser.FirstName);
+            }
+        }        
     }
 }
