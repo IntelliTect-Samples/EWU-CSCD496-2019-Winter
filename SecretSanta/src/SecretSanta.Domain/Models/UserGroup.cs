@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SecretSanta.Domain.Models
+﻿namespace SecretSanta.Domain.Models
 {
     public class UserGroup
     {
@@ -10,10 +6,5 @@ namespace SecretSanta.Domain.Models
         public User User { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
-
-        public bool HasUserGroup(int uid, int gid)
-        {
-            return uid == UserId && gid == GroupId;
-        }
     }
 }
