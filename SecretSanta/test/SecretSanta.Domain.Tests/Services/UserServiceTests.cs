@@ -29,7 +29,7 @@ namespace SecretSanta.Domain.Tests.Services
                     OrderOfImportance = 1,
                     Url = "www.someUrl.com",
                     Description = "Never vacuum again",
-                    GiftUser = user
+                    User = user
                 }
             };
 
@@ -70,21 +70,53 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
-        public void AddUser_TestWithStaticUser_UserIsAddedIntoDatabase()
+        public void UpsertUser_TestAddStaticUser_Success()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
                 var myUser = CreateUser();
 
-                var persistedUser = service.AddUser(myUser);
+                var persistedUser = service.UpsertUser(myUser);
 
                 Assert.AreNotEqual(0, persistedUser.Id);
             }
         }
+        
+        [TestMethod]
+        public void UpsertUser_TestUpdateUser_Success()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var myUser = CreateUser();
+
+                // Add user
+                service.UpsertUser(myUser);
+            }
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var retrievedUser = service.Find(1);
+
+                // Update user
+                retrievedUser.LastName = "Osborn";
+                service.UpsertUser(retrievedUser);
+            }
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var retrievedUser = service.Find(1);
+
+                // Validate change
+                Assert.AreEqual("Osborn", retrievedUser.LastName);
+            }
+        }
 
         [TestMethod]
-        public void FindUser_TestWithStaticUser_StaticUserIsRetrievedFromDatabase()
+        public void FindUser_TestWithStaticUser_Success()
         {
             // arrange
             using (var context = new ApplicationDbContext(Options))
@@ -92,7 +124,7 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new UserService(context);
                 var myUser = CreateUser();
 
-                var persistedUser = service.AddUser(myUser);
+                service.UpsertUser(myUser);
             }
 
             // act
@@ -107,7 +139,7 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
-        public void FetchUser_TestWithStaticUsers_AllUsersReturnedFromDatabase()
+        public void FetchUser_TestWithStaticUsers_Success()
         {
             // arrange
             using (var context = new ApplicationDbContext(Options))
@@ -115,7 +147,7 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new UserService(context);
                 var usersToAdd = CreateUsers();
 
-                foreach (var cur in usersToAdd) service.AddUser(cur);
+                foreach (var cur in usersToAdd) service.UpsertUser(cur);
             }
 
             // act

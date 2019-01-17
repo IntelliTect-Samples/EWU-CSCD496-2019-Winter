@@ -10,5 +10,6 @@ namespace SecretSanta.Domain.Models
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Gift> Gifts { get; set; }
     }
 }
