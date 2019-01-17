@@ -10,9 +10,9 @@ namespace SecretSanta.Domain.Services
     public class UserService
     {
         private ApplicationDbContext DbContext { get; set; }
-        public UserService(ApplicationDbContext dbContext)
+        public UserService(ApplicationDbContext context)
         {
-            DbContext = dbContext;
+            DbContext = context;
         }
 
         public User UpsertUser(User user)
@@ -32,7 +32,11 @@ namespace SecretSanta.Domain.Services
 
         public User Find(int id)
         {
-            return DbContext.Users.Include(u => u.Gifts).SingleOrDefault(u => u.Id == id);
+            return DbContext.Users
+                .Include(u => u.Gifts)
+                .Include(u => u.UserGroups)
+                    .ThenInclude(ug => ug.Group)
+                .SingleOrDefault(u => u.Id == id);
         }
 
         public List<User> FetchAll()
