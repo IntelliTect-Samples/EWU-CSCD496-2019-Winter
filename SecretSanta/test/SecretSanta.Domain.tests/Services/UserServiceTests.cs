@@ -39,14 +39,49 @@ namespace SecretSanta.Domain.Tests.Services
         //helper methods
         public User CreateUser()
         {
-            var user = new User
-            {
-                FirstName = "fname",
-                LastName = "lname"
-            };
+                var user = new User
+                {
+                    FirstName = "fname",
+                    LastName = "lname"
+                };
 
             return user;
         }
+
+        [TestMethod]
+        public void AddSingleNewUser()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UserServices userServices = new UserServices(context);
+                User u = CreateUser();
+
+                User persistedUser = userServices.AddUpdateUser(u);
+                Assert.AreEqual(1, persistedUser.Id);
+            }
+            
+        }
+
+        [TestMethod]
+        public void AddMultipleNewUsers()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UserServices userServices = new UserServices(context);
+                User u1 = CreateUser();
+                User u2 = CreateUser();
+                User u3 = CreateUser();
+
+                User persistedUser1 = userServices.AddUpdateUser(u1);
+                User persistedUser2 = userServices.AddUpdateUser(u2);
+                User persistedUser3 = userServices.AddUpdateUser(u3);
+
+                Assert.AreEqual(1, persistedUser1.Id);
+                Assert.AreEqual(2, persistedUser2.Id);
+                Assert.AreEqual(3, persistedUser3.Id);
+            }
+        }
+
 
     }
 }
