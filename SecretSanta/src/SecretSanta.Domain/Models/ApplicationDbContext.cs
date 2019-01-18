@@ -10,6 +10,8 @@ namespace SecretSanta.Domain.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Gift> Gift { get; set; }
         public DbSet<Pairing> Parings { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
