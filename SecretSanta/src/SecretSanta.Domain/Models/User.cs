@@ -9,6 +9,6 @@ namespace SecretSanta.Domain.Models
         public string LastName { get; set; }
         public List<Gift> Gifts { get; set; }
 
-        [NotMapped] public List<Group> Groups { get; set; } // Could be multiple groups
+        [NotMapped] public List<Group> Groups { get; set; } // Ignoring the many-many connection for now
     }
 }
