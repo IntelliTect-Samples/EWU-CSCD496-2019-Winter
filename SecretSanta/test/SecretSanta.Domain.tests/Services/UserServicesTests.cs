@@ -11,7 +11,7 @@ namespace SecretSanta.Domain.Tests.Services
 {
 
     [TestClass]
-    public class UserServiceTests
+    public class UserServicesTests
     {
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
