@@ -11,10 +11,5 @@ namespace SecretSanta.Domain.Models
         public User UserFrom { get; set; }
         public int UserFromId { get; set; }
         public string MessageBody { get; set; }
-
-        public Message()
-        {
-            EntityType = "Message";
-        }
     }
 }
