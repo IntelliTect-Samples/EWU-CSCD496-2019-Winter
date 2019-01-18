@@ -15,7 +15,6 @@ namespace SecretSanta.Domain.Models
         {
             Gifts = new List<Gift>();
             UserGroups = new List<UserGroup>();
-            EntityType = "User";
         }
     }
 }

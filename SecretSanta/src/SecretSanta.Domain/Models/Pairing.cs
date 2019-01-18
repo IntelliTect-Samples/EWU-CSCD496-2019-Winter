@@ -10,10 +10,5 @@ namespace SecretSanta.Domain.Models
         public int UserForId { get; set; }
         public User Santa { get; set; }
         public int SantaId { get; set; }
-
-        public Pairing()
-        {
-            EntityType = "Pairing";
-        }
     }
 }

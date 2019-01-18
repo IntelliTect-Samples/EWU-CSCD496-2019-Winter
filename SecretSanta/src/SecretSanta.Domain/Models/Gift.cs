@@ -11,10 +11,5 @@ namespace SecretSanta.Domain.Models
         public string Description { get; set; }
         public string URL { get; set; }
         public User WhoWantIt { get; set; }
-
-        public Gift()
-        {
-            EntityType = "Gift";
-        }
     }
 }

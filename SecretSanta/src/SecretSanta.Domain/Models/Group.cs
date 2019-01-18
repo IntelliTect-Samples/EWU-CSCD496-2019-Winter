@@ -12,7 +12,6 @@ namespace SecretSanta.Domain.Models
         public Group()
         {
             UserGroups = new List<UserGroup>();
-            EntityType = "Group";
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using SecretSanta.Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
@@ -14,7 +12,6 @@ namespace SecretSanta.Domain.Services
             DbContext = context;
         }
 
-        // TODO: Create, Edit, Delete gifts for a given User.
         public void CreateGift(User user, Gift gift)
         {
             DbContext.Gifts.Add(gift);
