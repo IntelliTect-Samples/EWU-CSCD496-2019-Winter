@@ -61,7 +61,7 @@ namespace SecretSanta.Domain.Tests
                 group.UserGroups.Add(userGroup);
                 groupService.UpdateGroup(group);
 
-                Assert.AreEqual(true, groupService.HasUser(user, 1));
+                Assert.AreEqual<bool>(true, groupService.HasUser(user, 1));
             }
 
             using (var context = new SecretSantaDbContext(Options))
@@ -69,7 +69,7 @@ namespace SecretSanta.Domain.Tests
                 userService = new UserService(context);
                 groupService = new GroupService(context);
 
-                Assert.AreEqual(true, groupService.HasUser(user, 1));
+                Assert.AreEqual<bool>(true, groupService.HasUser(user, 1));
             }
         }
 
@@ -101,7 +101,7 @@ namespace SecretSanta.Domain.Tests
                 group.UserGroups.Add(userGroup);
                 groupService.UpdateGroup(group);
 
-                Assert.AreEqual(true, groupService.HasUser(user, 1));
+                Assert.AreEqual<bool>(true, groupService.HasUser(user, 1));
             }
 
             using (var context = new SecretSantaDbContext(Options))
@@ -111,7 +111,7 @@ namespace SecretSanta.Domain.Tests
 
                 groupService.RemoveUser(user, 1);
 
-                Assert.AreEqual(false, groupService.HasUser(1, 1));
+                Assert.AreEqual<bool>(false, groupService.HasUser(1, 1));
             }
         }
     }

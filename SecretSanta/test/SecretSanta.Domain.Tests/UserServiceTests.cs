@@ -71,7 +71,7 @@ namespace SecretSanta.Domain.Tests
 
                 user = userService.Find(1);
 
-                Assert.AreEqual("Brad", user.First);
+                Assert.AreEqual<string>("Brad", user.First);
             }
         }
 
@@ -122,7 +122,7 @@ namespace SecretSanta.Domain.Tests
 
                 user = userService.Find(1);
 
-                Assert.AreEqual("Toast", user.First);
+                Assert.AreEqual<string>("Toast", user.First);
             }
         }
     }

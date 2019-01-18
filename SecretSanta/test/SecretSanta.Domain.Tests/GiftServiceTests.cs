@@ -60,7 +60,7 @@ namespace SecretSanta.Domain.Tests
             {
                 giftService = new GiftService(context);
 
-                Assert.AreEqual(true, giftService.HasGift(user, gift));
+                Assert.AreEqual<bool>(true, giftService.HasGift(user, gift));
             }
         }
 
@@ -103,7 +103,7 @@ namespace SecretSanta.Domain.Tests
                 if(giftService.HasGift(user, gift))
                 {
                     List<Gift> giftList = (List<Gift>)user.Gifts;
-                    Assert.AreEqual("amazon.com/Toaster/", giftList[giftList.IndexOf(gift)].URL);
+                    Assert.AreEqual<string>("amazon.com/Toaster/", giftList[giftList.IndexOf(gift)].URL);
                 }
             }
         }
@@ -142,7 +142,7 @@ namespace SecretSanta.Domain.Tests
             {
                 giftService = new GiftService(context);
 
-                Assert.AreEqual(false, giftService.HasGift(user, gift));
+                Assert.AreEqual<bool>(false, giftService.HasGift(user, gift));
             }
         }
     }
