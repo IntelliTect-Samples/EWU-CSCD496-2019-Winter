@@ -33,7 +33,9 @@ namespace SecretSanta.Domain.Services
 
         public List<Group> FetchAll()
         {
-            var groupTask = DbContext.Groups.ToListAsync();
+            // not including here until many-many association is made
+            var groupTask = DbContext.Groups
+                .ToListAsync();
             groupTask.Wait();
 
             return groupTask.Result;

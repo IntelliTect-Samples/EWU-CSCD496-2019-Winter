@@ -136,6 +136,7 @@ namespace SecretSanta.Domain.Tests.Services
                 // assert
                 Assert.AreEqual(1, fetchedUser.Id);
                 Assert.AreEqual(1, fetchedUser.Gifts[0].Id);
+                Assert.AreEqual("Never vacuum again", fetchedUser.Gifts[0].Description);
             }
         }
 

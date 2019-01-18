@@ -37,13 +37,15 @@ namespace SecretSanta.Domain.Services
         public Gift Find(int id)
         {
             return DbContext.Gifts
-                .Include(g => g.User)
-                .SingleOrDefault(g => g.Id == id);
+                .Include(gift => gift.User)
+                .SingleOrDefault(gift => gift.Id == id);
         }
 
         public List<Gift> FetchAll()
         {
-            var giftTask = DbContext.Gifts.ToListAsync();
+            var giftTask = DbContext.Gifts
+                .Include(gift => gift.User)
+                .ToListAsync();
             giftTask.Wait();
 
             return giftTask.Result;

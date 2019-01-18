@@ -37,14 +37,17 @@ namespace SecretSanta.Domain.Services
         public Message Find(int id)
         {
             return DbContext.Messages
-                .Include(m => m.Recipient)
-                .Include(m => m.Sender)
-                .SingleOrDefault(m => m.Id == id);
+                .Include(message => message.Recipient)
+                .Include(message => message.Sender)
+                .SingleOrDefault(message => message.Id == id);
         }
 
         public List<Message> FetchAll()
         {
-            var messageTask = DbContext.Messages.ToListAsync();
+            var messageTask = DbContext.Messages
+                .Include(message => message.Sender)
+                .Include(message => message.Recipient)
+                .ToListAsync();
             messageTask.Wait();
 
             return messageTask.Result;

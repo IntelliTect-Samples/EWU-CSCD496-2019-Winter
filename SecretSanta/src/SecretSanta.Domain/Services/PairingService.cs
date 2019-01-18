@@ -45,7 +45,11 @@ namespace SecretSanta.Domain.Services
 
         public List<Pairing> FetchAll()
         {
-            var pairingTask = DbContext.Pairings.ToListAsync();
+            var pairingTask = DbContext.Pairings
+                .Include(pairing => pairing.Recipient)
+                .Include(pairing => pairing.Santa)
+                .Include(pairing => pairing.Group)
+                .ToListAsync();
             pairingTask.Wait();
 
             return pairingTask.Result;
