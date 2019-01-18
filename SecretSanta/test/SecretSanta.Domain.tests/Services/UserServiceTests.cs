@@ -15,7 +15,7 @@ namespace SecretSanta.Domain.Tests.Services
     {
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
-        /*
+        
         [TestInitialize]
         public void OpenConnection()
         {
@@ -35,7 +35,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-        
+        /*
         //helper methods
         public User CreateUser()
         {
