@@ -9,12 +9,12 @@ namespace SecretSanta.Domain.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Gift> Gifts { get; set; }
-        public DbSet<Group> Groups { get; set; }
         public DbSet<Pairing> Pairings { get; set; }
         public DbSet<Message> Messages { get; set; }
+        // public DbSet<Group> Groups { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserGroups>().HasKey(ug => new { ug.UserId, ug.GroupId });
 
@@ -27,6 +27,6 @@ namespace SecretSanta.Domain.Models
                 .HasOne(ug => ug.Group)
                 .WithMany(g => g.UserGroups)
                 .HasForeignKey(ug => ug.GroupId);
-        }
+        }*/
     }
 }

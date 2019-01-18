@@ -34,8 +34,8 @@ namespace SecretSanta.Domain.Services
         {
             return DbContext.Users
                 .Include(u => u.Gifts)
-                .Include(u => u.UserGroups)
-                    .ThenInclude(ug => ug.Group)
+                //.Include(u => u.UserGroups)
+                //    .ThenInclude(ug => ug.Group)
                 .SingleOrDefault(u => u.Id == id);
         }
 
@@ -45,6 +45,11 @@ namespace SecretSanta.Domain.Services
             userTask.Wait();
 
             return userTask.Result;
+        }
+
+        public static User CreateUser(string first, string last)
+        {
+            return new User { FirstName = first, LastName = last };
         }
     }
 }

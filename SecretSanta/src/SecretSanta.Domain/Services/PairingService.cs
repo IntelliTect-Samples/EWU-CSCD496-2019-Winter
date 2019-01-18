@@ -35,7 +35,6 @@ namespace SecretSanta.Domain.Services
             return DbContext.Pairings
                 .Include(p => p.Santa)
                 .Include(p => p.Recipient)
-                .Include(p => p.Group)
                 .Include(p => p.Messages)
                 .SingleOrDefault(p => p.Id == id);
         }

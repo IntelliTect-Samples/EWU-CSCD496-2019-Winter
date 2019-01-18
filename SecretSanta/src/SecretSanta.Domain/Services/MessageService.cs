@@ -37,5 +37,11 @@ namespace SecretSanta.Domain.Services
                 .SingleOrDefault(m => m.Id == id);
         }
 
+        public Pairing StoreMessage(Pairing pairing, Message message)
+        {
+            pairing.Messages.Add(message);
+            return pairing;
+        }
+
     }
 }

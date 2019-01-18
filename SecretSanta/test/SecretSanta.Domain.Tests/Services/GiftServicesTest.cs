@@ -20,7 +20,8 @@ namespace SecretSanta.Domain.Tests.Services
             User user = new User
             {
                 FirstName = "Conner",
-                LastName = "Verret"
+                LastName = "Verret",
+                Gifts = new List<Gift>()
             };
 
             Gift gift = new Gift
