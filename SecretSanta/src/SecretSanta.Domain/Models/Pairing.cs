@@ -6,7 +6,7 @@ namespace SecretSanta.Domain.Models
 {
     public class Pairing : Entity
     {
-        public User Recipient { set; get; }
-        public User Santa { set; get; }
+        public User Recipient { get; set; }
+        public User Santa { get; set; }
     }
 }

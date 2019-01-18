@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
-    class GiftServices
+    public class GiftServices
     {
         private ApplicationDbContext DbContext { get; set; }
 
@@ -15,16 +15,13 @@ namespace SecretSanta.Domain.Services
         }
 
         //TODO
-        public Gift AddGift(Gift gift)
+        public Gift AddUpdateGift(Gift gift)
         {
-            DbContext.Gift.Add(gift);
-            DbContext.SaveChanges();
-            return gift;
-        }
+            if (gift.Id == default(int))
+                DbContext.Gift.Add(gift);
+            else
+                DbContext.Gift.Update(gift);
 
-        public Gift UpdateGift(Gift gift)
-        {
-            DbContext.Gift.Update(gift);
             DbContext.SaveChanges();
             return gift;
         }
