@@ -72,111 +72,111 @@ namespace test.TestServices
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                GiftService.AddGiftToDb(Gift);
+                GiftService.Add(Gift);
                 Assert.AreEqual(1, Gift.Id);
             }
         }
 
         [TestMethod]
-        public void UpdateGiftAfterAdd()
+        public void UpdateAfterAdd()
         {
             Gift = CreateGift();
 
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                GiftService.AddGiftToDb(Gift);
-                Assert.IsNotNull(GiftService.FindGift(1));
+                GiftService.Add(Gift);
+                Assert.IsNotNull(GiftService.Find(1));
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Gift = GiftService.FindGift(1);
+                Gift = GiftService.Find(1);
                 Gift.Title = "Charmander";
-                GiftService.UpdateGift(Gift);
+                GiftService.Update(Gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Gift = GiftService.FindGift(1);
+                Gift = GiftService.Find(1);
                 Assert.AreEqual("Charmander", Gift.Title);
             }
         }
 
         [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
-        public void UpdateGiftThatIsNotThere()
+        public void UpdateThatIsNotThere()
         {
             Gift = CreateGift();
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Gift = GiftService.FindGift(1);
+                Gift = GiftService.Find(1);
                 Assert.IsNull(Gift);
                 Gift.Title = "Charmander";
-                GiftService.UpdateGift(Gift);
+                GiftService.Update(Gift);
             }
         }
 
         [TestMethod]
-        public void FindGift()
+        public void Find()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Assert.IsNull(GiftService.FindGift(1));
-                GiftService.AddGiftToDb(Gift);
-                Assert.IsNotNull(GiftService.FindGift(1));
+                Assert.IsNull(GiftService.Find(1));
+                GiftService.Add(Gift);
+                Assert.IsNotNull(GiftService.Find(1));
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Gift foundGift = GiftService.FindGift(1);
+                Gift foundGift = GiftService.Find(1);
                 Assert.IsNotNull(foundGift);
             }
         }
 
         [TestMethod]
-        public void NotFindGift()
+        public void NotFind()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Gift = GiftService.FindGift(1);
+                Gift = GiftService.Find(1);
                 Assert.IsNull(Gift);
             }
         }
 
         [TestMethod]
-        public void DeleteGift()
+        public void Delete()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Assert.IsNull(GiftService.FindGift(1));
-                GiftService.AddGiftToDb(Gift);
-                Assert.IsNotNull(GiftService.FindGift(1));
+                Assert.IsNull(GiftService.Find(1));
+                GiftService.Add(Gift);
+                Assert.IsNotNull(GiftService.Find(1));
             }
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                GiftService.DeleteGift(Gift);
-                Assert.IsNull(GiftService.FindGift(1));
+                GiftService.Delete(Gift);
+                Assert.IsNull(GiftService.Find(1));
             }
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void NotDeleteGift()
+        public void NotDelete()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService = new GiftsService(context);
-                Assert.IsNull(GiftService.FindGift(1));
-                GiftService.DeleteGift(Gift);
+                Assert.IsNull(GiftService.Find(1));
+                GiftService.Delete(Gift);
             }
         }
 

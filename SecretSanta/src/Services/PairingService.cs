@@ -17,10 +17,40 @@ namespace src.Services
             Db = db;
         }
 
-        public void AddPairing(Pairing pair)
+        public bool Add(Pairing pairing)
         {
-            Db.Pairs.AddAsync(pair).Wait();
-            Db.SaveChangesAsync();
+            if (!IsPairingNull(pairing))
+            {
+                Db.Pairs.AddAsync(pairing);
+                Db.SaveChanges();
+                return true;
+            }
+            return false;
         }
+
+        public bool Update(Pairing pairing)
+        {
+            if (!IsPairingNull(pairing))
+            {
+                Db.Pairs.Update(pairing);
+                Db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public Pairing Find(int id)
+        {
+            return Db.Pairs
+                .Include(pairing => pairing.Recepiant)
+                .Include(pairing => pairing.Santa)
+                .SingleOrDefault(pairing => pairing.Id == id);
+        }
+
+        public bool IsPairingNull(Pairing pairing)
+        {
+            return pairing == null;
+        }
+
     }
 }

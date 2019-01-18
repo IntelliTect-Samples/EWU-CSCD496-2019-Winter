@@ -17,33 +17,35 @@ namespace src.Services
             Db = db;
         }
 
-        public void AddUser(User user)
+        public bool Add(User user)
         {
             if (IsFullNameNull(user) || IsUserNull(user))
             {
-                //do not add;
+                return false;
             }
             else
             {
                 Db.Users.Add(user);
                 Db.SaveChangesAsync().Wait();
+                return true;
             }
         }
 
-        public void UpdateUser(User user)
+        public bool Update(User user)
         {
             if (IsFullNameNull(user) || IsUserNull(user))
             {
-                //do not add;
+                return false;
             }
             else
             {
                 Db.Users.Update(user);
                 Db.SaveChangesAsync().Wait();
+                return true;
             }
         }
 
-        public User FindUser(int id)
+        public User Find(int id)
         {
             return Db.Users
                 .Include(u => u.GiftList)

@@ -18,22 +18,23 @@ namespace src.Services
             Db = db;
         }
 
-        public Gift FindGift(int giftId)
+        public Gift Find(int giftId)
         {
             return Db.Gifts
                 .Include(g => g.User)
                 .SingleOrDefault(g => g.Id == giftId);
         }
 
-        public Gift AddGiftToDb(Gift gift)
+        public bool Add(Gift gift)
         {
-            Gift possibleGift = FindGift(gift.Id);
+            Gift possibleGift = Find(gift.Id);
             if (IsGiftNull(possibleGift))
             {
                 Db.Gifts.Add(gift);
                 Db.SaveChangesAsync().Wait();
+                return true;
             }
-            return possibleGift;
+            return false;
         }
 
         /*public void AddGiftToUser(int userId, Gift gift)
@@ -44,15 +45,16 @@ namespace src.Services
             Db.SaveChangesAsync();
         }*/
 
-        public Gift UpdateGift(Gift gift)
+        public bool Update(Gift gift)
         {
-            Gift possibleGift = FindGift(gift.Id);
+            Gift possibleGift = Find(gift.Id);
             if (!IsGiftNull(possibleGift))
             {
                 Db.Gifts.Update(gift);
                 Db.SaveChangesAsync().Wait();
+                return true;
             }
-            return possibleGift;
+            return false;
         }
 
         /*public void EditGiftOfUser(int userId, Gift gift)
@@ -71,7 +73,7 @@ namespace src.Services
             saveChanges.Wait();
         }*/
 
-        public Gift DeleteGift(Gift possibleGift)
+        public Gift Delete(Gift possibleGift)
         {
             if (possibleGift != null)
             {

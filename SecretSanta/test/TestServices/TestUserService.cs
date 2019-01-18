@@ -62,7 +62,7 @@ namespace test.TestServices
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                UsersService.AddUser(User);
+                UsersService.Add(User);
                 Assert.AreEqual(1, User.Id);
             }
         }
@@ -73,23 +73,23 @@ namespace test.TestServices
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                UsersService.AddUser(User);
-                Assert.IsNotNull(UsersService.FindUser(1));
+                UsersService.Add(User);
+                Assert.IsNotNull(UsersService.Find(1));
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                User tempUser = UsersService.FindUser(1);
+                User tempUser = UsersService.Find(1);
                 tempUser.FirstName = "Gary";
                 tempUser.LastName = "Oak";
-                UsersService.UpdateUser(tempUser);
+                UsersService.Update(tempUser);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                User = UsersService.FindUser(1);
+                User = UsersService.Find(1);
                 Assert.AreEqual("Gary", User.FirstName);
                 Assert.AreEqual("Oak", User.LastName);
             }
@@ -101,15 +101,15 @@ namespace test.TestServices
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                Assert.IsNull(UsersService.FindUser(1));
-                UsersService.AddUser(User);
-                Assert.IsNotNull(UsersService.FindUser(1));
+                Assert.IsNull(UsersService.Find(1));
+                UsersService.Add(User);
+                Assert.IsNotNull(UsersService.Find(1));
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                User foundUser = UsersService.FindUser(1);
+                User foundUser = UsersService.Find(1);
                 Assert.IsNotNull(foundUser);
             }
         }
@@ -120,7 +120,7 @@ namespace test.TestServices
             using (var context = new ApplicationDbContext(Options))
             {
                 UsersService = new UsersService(context);
-                User = UsersService.FindUser(1);
+                User = UsersService.Find(1);
                 Assert.IsNull(User);
             }
         }
