@@ -47,18 +47,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
-        [TestMethod]
-        public void AddUser()
-        {
-            using (var context = new ApplicationDbContext(Options))
-            {
-                UserServices service = new UserServices(context);
-                var myUser = CreateUser();
-                var persistedUser = service.AddUser(myUser);
-
-                Assert.AreNotEqual(0, persistedUser.Id);
-            }
-        }
+        
 
     }
 }
