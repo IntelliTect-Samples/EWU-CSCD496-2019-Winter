@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +12,7 @@ namespace SecretSanta.Domain.Tests.Services
     {
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
-        
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -34,26 +35,21 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
-        private static Message CreateMessage()
+        private static Message CreateMessage(string recipientFirstName = "Inigo", string recipientLastName = "Montoya")
         {
-            /*
-             * public User Recipient { get; set; }
-             * public User Sender { get; set; }
-             * public string Text { get; set; }
-             */
-            var recipient = new User()
+            var recipient = new User
             {
                 FirstName = "Inigo",
                 LastName = "Montoya"
             };
-            
-            var sender = new User()
+
+            var sender = new User
             {
                 FirstName = "Princess",
                 LastName = "Buttercup"
             };
 
-            var message = new Message()
+            var message = new Message
             {
                 Recipient = recipient,
                 Sender = sender,
@@ -61,6 +57,15 @@ namespace SecretSanta.Domain.Tests.Services
             };
 
             return message;
+        }
+
+        private static List<Message> CreateMessages(int numberToCreate = 2)
+        {
+            var messages = new List<Message>();
+
+            for (var i = 0; i < numberToCreate; i++) messages.Add(CreateMessage($"firstName{i}", $"lastName{i}"));
+
+            return messages;
         }
 
         [TestMethod]
@@ -72,11 +77,11 @@ namespace SecretSanta.Domain.Tests.Services
                 var myMessage = CreateMessage();
 
                 var addedMessage = service.UpsertMessage(myMessage);
-                
+
                 Assert.AreEqual(1, addedMessage.Id);
             }
         }
-        
+
         [TestMethod]
         public void UpsertMessage_TestUpdateMessage_Success()
         {
@@ -88,7 +93,7 @@ namespace SecretSanta.Domain.Tests.Services
                 // Add message
                 service.UpsertMessage(myMessage);
             }
-            
+
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new MessageService(context);
@@ -98,7 +103,7 @@ namespace SecretSanta.Domain.Tests.Services
                 retrievedMessage.Text = "Updated Text";
                 service.UpsertMessage(retrievedMessage);
             }
-            
+
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new MessageService(context);
@@ -113,17 +118,17 @@ namespace SecretSanta.Domain.Tests.Services
         public void DeleteMessage_TestRemoveStaticMessage_Success()
         {
             var myMessage = CreateMessage();
-            
+
             // Add message into DB
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new MessageService(context);
 
                 var addedMessage = service.UpsertMessage(myMessage);
-                
+
                 Assert.AreEqual(1, addedMessage.Id);
             }
-            
+
             // Remove message from DB
             using (var context = new ApplicationDbContext(Options))
             {
@@ -144,10 +149,10 @@ namespace SecretSanta.Domain.Tests.Services
                 var myMessage = CreateMessage();
 
                 var persistedUser = service.UpsertMessage(myMessage);
-                
+
                 Assert.AreEqual(1, persistedUser.Id);
             }
-            
+
             // Remove message from DB
             using (var context = new ApplicationDbContext(Options))
             {
@@ -155,10 +160,34 @@ namespace SecretSanta.Domain.Tests.Services
                 var myMessage = CreateMessage();
 
                 var foundMessage = service.Find(1);
-                
+
                 Assert.AreEqual(1, foundMessage.Id);
                 Assert.AreNotEqual(0, foundMessage.Sender.Id);
                 Assert.AreNotEqual(0, foundMessage.Recipient.Id);
+            }
+        }
+
+        [TestMethod]
+        public void FetchMessages_TestWithStaticMessages_Success()
+        {
+            // arrange
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new MessageService(context);
+                var messages = CreateMessages();
+
+                foreach (var cur in messages) service.UpsertMessage(cur);
+            }
+
+            // act
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new MessageService(context);
+                var fetchedMessages = service.FetchAll();
+
+                // assert
+                for (var i = 0; i < fetchedMessages.Count; i++)
+                    Assert.AreEqual(i + 1, fetchedMessages[i].Id);
             }
         }
     }

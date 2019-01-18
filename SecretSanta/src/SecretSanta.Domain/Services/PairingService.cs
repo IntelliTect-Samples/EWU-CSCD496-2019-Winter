@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
@@ -38,7 +39,16 @@ namespace SecretSanta.Domain.Services
             return DbContext.Pairings
                 .Include(pairing => pairing.Recipient)
                 .Include(pairing => pairing.Santa)
+                .Include(pairing => pairing.Group)
                 .SingleOrDefault(pairing => pairing.Id == id);
+        }
+
+        public List<Pairing> FetchAll()
+        {
+            var pairingTask = DbContext.Pairings.ToListAsync();
+            pairingTask.Wait();
+
+            return pairingTask.Result;
         }
     }
 }

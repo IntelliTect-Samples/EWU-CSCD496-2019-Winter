@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
@@ -39,6 +40,14 @@ namespace SecretSanta.Domain.Services
                 .Include(m => m.Recipient)
                 .Include(m => m.Sender)
                 .SingleOrDefault(m => m.Id == id);
+        }
+
+        public List<Message> FetchAll()
+        {
+            var messageTask = DbContext.Messages.ToListAsync();
+            messageTask.Wait();
+
+            return messageTask.Result;
         }
     }
 }

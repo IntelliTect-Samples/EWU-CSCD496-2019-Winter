@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
@@ -24,9 +26,17 @@ namespace SecretSanta.Domain.Services
         }
 
         // TODO: Find
-        
+
         // TODO: Add users
-        
+
         // TODO: Remove users
+
+        public List<Group> FetchAll()
+        {
+            var groupTask = DbContext.Groups.ToListAsync();
+            groupTask.Wait();
+
+            return groupTask.Result;
+        }
     }
 }

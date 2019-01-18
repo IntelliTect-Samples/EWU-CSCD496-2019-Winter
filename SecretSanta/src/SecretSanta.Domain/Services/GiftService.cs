@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
@@ -20,10 +21,10 @@ namespace SecretSanta.Domain.Services
             else
                 DbContext.Gifts.Update(gift);
             DbContext.SaveChanges();
-            
+
             return gift;
         }
-        
+
         public Gift DeleteGift(Gift toDelete)
         {
             DbContext.Gifts.Remove(toDelete);
@@ -38,6 +39,14 @@ namespace SecretSanta.Domain.Services
             return DbContext.Gifts
                 .Include(g => g.User)
                 .SingleOrDefault(g => g.Id == id);
+        }
+
+        public List<Gift> FetchAll()
+        {
+            var giftTask = DbContext.Gifts.ToListAsync();
+            giftTask.Wait();
+
+            return giftTask.Result;
         }
     }
 }
