@@ -64,7 +64,7 @@ namespace SecretSanta.Domain.Tests
             {
                 pairingService = new PairingService(context);
 
-                Assert.AreEqual(1, pairingService.FindPairing(1).SantaId);
+                Assert.AreEqual<int>(1, pairingService.FindPairing(1).SantaId);
             }
         }
     }

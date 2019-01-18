@@ -63,7 +63,7 @@ namespace SecretSanta.Domain.Tests
                 messageService = new MessageService(context);
                 userService = new UserService(context);
 
-                Assert.AreEqual(1, messageService.FindMessage(1).UserFromId);
+                Assert.AreEqual<int>(1, messageService.FindMessage(1).UserFromId);
             }
         }
     }
