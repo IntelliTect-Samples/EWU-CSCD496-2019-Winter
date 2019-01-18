@@ -97,10 +97,49 @@ namespace SecretSanta.Domain.Tests.Services
                 User persistedUser2 = userServices.AddUpdateUser(u1);
 
                 Assert.AreEqual(persistedUser1.Id, persistedUser2.Id);
-
             }
         }
 
-    
+        [TestMethod]
+        public void AddNewUserThenUpdateTwice()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UserServices userServices = new UserServices(context);
+                User u1 = CreateUser();
+
+                User persistedUser1 = userServices.AddUpdateUser(u1);
+
+                u1.FirstName = "New";
+
+                userServices.AddUpdateUser(u1);
+
+                u1.FirstName = "NewNew";
+
+                User persistedUser3 = userServices.AddUpdateUser(u1);
+
+                Assert.AreEqual(persistedUser1.Id, persistedUser3.Id);
+            }
+        }
+
+        [TestMethod]
+        public void AddNewUser_ThenUpdateUser_ThenAddNewUser()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                UserServices userServices = new UserServices(context);
+                User u1 = CreateUser();
+                User u2 = CreateUser();
+
+                userServices.AddUpdateUser(u1);
+                u1.FirstName = "New";
+                User persistedUser1 = userServices.AddUpdateUser(u1);
+
+                User persistedUser2 = userServices.AddUpdateUser(u2);
+
+                Assert.AreEqual(1, persistedUser1.Id);
+                Assert.AreEqual(2, persistedUser2.Id);
+            }
+        }
     }
 }
