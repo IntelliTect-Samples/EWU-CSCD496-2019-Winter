@@ -26,11 +26,12 @@ namespace SecretSanta.Domain.Services
             return gift;
         }
 
-        public Gift RemoveGift(Gift gift)
+        public int RemoveGift(Gift gift)
         {
+            int Id = gift.Id;
             DbContext.Gift.Remove(gift);
             DbContext.SaveChanges();
-            return gift;
+            return Id;
         }
     }
 }

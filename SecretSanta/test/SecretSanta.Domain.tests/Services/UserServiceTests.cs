@@ -36,7 +36,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
         
-        //helper methods
+        //helper method
         public User CreateUser()
         {
                 var user = new User
