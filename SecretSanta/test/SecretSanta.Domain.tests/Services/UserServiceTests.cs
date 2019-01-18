@@ -10,9 +10,9 @@ using System.Text;
 namespace SecretSanta.Domain.Tests.Services
 {
 
-    /*[TestClass]
+    [TestClass]
     public class UserServiceTests
-    {
+    {/*
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
@@ -101,6 +101,6 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-    
-    }*/
+    */
+    }
 }
