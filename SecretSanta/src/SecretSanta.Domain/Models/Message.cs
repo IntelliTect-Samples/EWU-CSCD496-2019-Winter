@@ -8,5 +8,6 @@ namespace SecretSanta.Domain.Models
     {
         public string Content { get; set; }
         public Pairing Pairing { get; set; }
+        public int PairingId { get; set; }
     }
 }

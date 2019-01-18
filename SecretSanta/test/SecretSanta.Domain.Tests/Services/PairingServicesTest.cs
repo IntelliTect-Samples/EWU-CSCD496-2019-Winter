@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +13,29 @@ namespace SecretSanta.Domain.Tests.Services
     public class PairingServicesTest
     {
         private SqliteConnection SqliteConnection { get; set; }
-        private ApplicationDbContext Options { get; set; }
+        private DbContextOptions<ApplicationDbContext> Options { get; set; }
+
+        [TestInitialize]
+        public void OpenConnection()
+        {
+            SqliteConnection = new SqliteConnection("DataSource=:memory:");
+            SqliteConnection.Open();
+
+            Options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlite(SqliteConnection)
+                .Options;
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Database.EnsureCreated();
+            }
+        }
+
+        [TestCleanup]
+        public void CloseConnection()
+        {
+            SqliteConnection.Close();
+        }
 
         private Pairing CreatePairing()
         {
@@ -28,35 +52,25 @@ namespace SecretSanta.Domain.Tests.Services
                 LastName = "Descartes"
             };
 
-            Group group = new Group
-            {
-                Title = "Philosophers",
-                UserGroups = new List<UserGroups>()
-            };
-
-            UserGroups santaBind = new UserGroups
-            {
-                User = santa,
-                Group = group
-            };
-
-            UserGroups recipientBind = new UserGroups
-            {
-                User = recipient,
-                Group = group
-            };
-
-            group.UserGroups.Add(santaBind);
-            group.UserGroups.Add(recipientBind);
-
             Pairing pairing = new Pairing
             {
                 Santa = santa,
-                Recipient = recipient,
-                Group = group
+                Recipient = recipient
             };
 
             return pairing;
+        }
+
+        [TestMethod]
+        public void AddPairing()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                PairingService pairingService = new PairingService(context);
+                Pairing pairing = CreatePairing();
+                Pairing addedPairing = pairingService.UpsertPairing(pairing);
+                Assert.AreNotEqual(0, addedPairing.Id);
+            }
         }
 
     }

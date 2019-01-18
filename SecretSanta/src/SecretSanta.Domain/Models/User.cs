@@ -9,6 +9,8 @@ namespace SecretSanta.Domain.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public List<Gift> Gifts { get; set; }
-        public List<UserGroups> UserGroups { get; set; }
+        // public List<UserGroups> UserGroups { get; set; }
     }
+
+
 }
