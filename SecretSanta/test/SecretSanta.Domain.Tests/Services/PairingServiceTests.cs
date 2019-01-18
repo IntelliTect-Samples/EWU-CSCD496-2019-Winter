@@ -191,9 +191,9 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new PairingService(context);
-                var messages = CreatePairings();
+                var pairings = CreatePairings();
 
-                foreach (var cur in messages) service.UpsertPairing(cur);
+                foreach (var cur in pairings) service.UpsertPairing(cur);
             }
 
             // act
