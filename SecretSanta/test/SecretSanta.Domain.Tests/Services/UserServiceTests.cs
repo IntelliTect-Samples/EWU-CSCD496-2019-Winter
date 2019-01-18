@@ -13,12 +13,12 @@ namespace SecretSanta.Domain.Tests.Services
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
-        private static User CreateUser(string fName = "Inigo", string lName = "Montoya", string giftName = "Roomba")
+        private static User CreateUser(string firstName = "Inigo", string lastName = "Montoya", string giftName = "Roomba")
         {
             var user = new User
             {
-                FirstName = fName,
-                LastName = lName
+                FirstName = firstName,
+                LastName = lastName
             };
 
             var giftsToAdd = new List<Gift>

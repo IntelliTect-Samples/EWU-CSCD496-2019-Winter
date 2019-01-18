@@ -35,12 +35,12 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
-        private static Gift CreateGift(string fName = "Inigo", string lName = "Montoya", string giftName = "Roomba")
+        private static Gift CreateGift(string firstName = "Inigo", string lastName = "Montoya", string giftName = "Roomba")
         {
             var user = new User
             {
-                FirstName = fName,
-                LastName = lName
+                FirstName = firstName,
+                LastName = lastName
             };
 
             var gift = new Gift
