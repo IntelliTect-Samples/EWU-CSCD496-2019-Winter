@@ -1,26 +1,12 @@
 using System.Collections.Generic;
 
-namespace SecretSanta.Domain
+namespace SecretSanta.Domain.Models
 {
-    public class User
+    public class User : Entity
     {
-        string FirstName { set; get; }
-        string LastName { set; get; }
-        List<Gift> UserGifts { set; get; }
-        List<Group> UserGroups { set; get; }
-
-        public User(string firstName, string lastName, Gift gift = null, Group group = null)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            UserGifts = new List<Gift>();
-            UserGroups = new List<Group>();
-
-            if (gift != null)
-                UserGifts.Add(gift);
-            if (group != null)
-                UserGroups.Add(group);
-        }
-
+        public string FirstName { set; get; }
+        public string LastName { set; get; }
+        public List<Gift> UserGifts { set; get; }
+        //public List<Group> UserGroups { set; get; }   will unstub when many-to-many relationship is implemented got future assignment
     }
 }

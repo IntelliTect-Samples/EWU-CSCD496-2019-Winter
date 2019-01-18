@@ -1,17 +1,12 @@
 using System.Collections.Generic;
 
-namespace SecretSanta.Domain
+namespace SecretSanta.Domain.Models
 {
-    public class Message
+    public class Message : Entity
     {
-        string Content { set; get; }
-
-        public Message(string message)
-        {
-            Content = message;
-        }
-
-
-
+        public User Sender { set; get; }
+        public User Reciever { set; get; }
+        public string Content { set; get; }
+        //int MessageId { set; get; }
     }
 }

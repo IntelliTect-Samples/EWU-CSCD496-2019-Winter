@@ -1,18 +1,10 @@
 using System.Collections.Generic;
 
-namespace SecretSanta.Domain
+namespace SecretSanta.Domain.Models
 {
-    public class Group
+    public class Group : Entity
     {
-        string Title { set; get; }
-        List<User> Members { set; get; }
-
-        public Group(string title)
-        {
-            Title = title;
-            Members = new List<User>();
-        }
-
- 
+        public string Title { set; get; }
+        public List<User> Members { set; get; }
     }
 }

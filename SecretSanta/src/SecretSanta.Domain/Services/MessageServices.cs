@@ -1,10 +1,23 @@
-namespace SecretSanta.Domain
+using SecretSanta.Domain.Models;
+using System.Collections.Generic;
+
+namespace SecretSanta.Domain.Services
 {
-    public class MessageService
+    public class MessageService : ApplicationService
     {
-        public void AddMessage(string message, string id)
+        public MessageService(ApplicationDbContext dbContext) : base(dbContext) { }
+
+        public Message AddMessage(Message message)
         {
-            //pin id to start of each message - id either "Santa" or "Recipient"
+            DbContext.Messages.Add(message);
+            DbContext.SaveChanges();
+
+            return message;
+        }
+
+        public List<Message> GetConversation(Pairing pairing)
+        {
+            return new List<Message>();     //TODO
         }
     }
 }

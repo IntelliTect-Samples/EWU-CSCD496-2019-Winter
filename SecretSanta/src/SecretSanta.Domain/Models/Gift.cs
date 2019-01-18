@@ -1,17 +1,11 @@
-namespace SecretSanta.Domain
+namespace SecretSanta.Domain.Models
 {
-    public class Gift
+    public class Gift : Entity
     {
-        string Title { set; get; }
-        string URL { set; get; }
-        string Description { set; get; }
-        int OrderOfImportance { set; get; }
-        User User { set; get; }
-
-        public Gift(string title, string url, string description, int order, User user)
-        {
-
-        }
-
+        public string Title { set; get; }
+        public string URL { set; get; }
+        public string Description { set; get; }
+        public int OrderOfImportance { set; get; }
+        public User User { set; get; }
     }
 }
