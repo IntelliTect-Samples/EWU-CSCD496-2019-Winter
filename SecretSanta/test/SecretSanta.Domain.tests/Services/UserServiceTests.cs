@@ -35,7 +35,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-        /*
+        
         //helper methods
         public User CreateUser()
         {
@@ -101,6 +101,6 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-    */
+    
     }
 }
