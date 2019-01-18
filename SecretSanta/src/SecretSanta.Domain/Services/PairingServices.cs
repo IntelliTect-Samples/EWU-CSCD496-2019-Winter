@@ -14,17 +14,12 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext;
         }
 
-        public Pairing AddPairing(User recipient, User santa)
+        public Pairing AddPairing(Pairing paring)
         {
-            Pairing p = new Pairing()
-            {
-                Recipient = recipient,
-                Santa = santa
-            };
-
-            DbContext.Parings.Add(p);
+            
+            DbContext.Parings.Add(paring);
             DbContext.SaveChanges();
-            return p;
+            return paring;
         }
     }
 }
