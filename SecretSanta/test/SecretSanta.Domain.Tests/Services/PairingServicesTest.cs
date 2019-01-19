@@ -73,5 +73,25 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
+        [TestMethod]
+        public void FindPairing()
+        {
+            PairingService pairingService;
+            Pairing pairing = CreatePairing();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                pairingService = new PairingService(context);
+                pairingService.UpsertPairing(pairing);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                pairingService = new PairingService(context);
+                pairing = pairingService.Find(1);
+                Assert.AreEqual("Alan", pairing.Santa.FirstName);
+            }
+        }
+
     }
 }
