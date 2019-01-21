@@ -9,8 +9,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Tests.Services
 {
-    public class UserServicesTest
-    {
+
         [TestClass]
         public class UserServiceTests
         {
@@ -127,5 +126,4 @@ namespace SecretSanta.Domain.Tests.Services
                 }
             }
         }
-    }
 }
