@@ -27,5 +27,56 @@ namespace SecretSanta.Import
 
             return name;
         }
+
+        public string[] ParseName(string word)
+        {
+            bool hasComma = false;
+            string[] name = new string[2];
+
+            string[] temp = word.Split(':');
+
+            if(temp.Length == 2)
+            {
+                temp[1] = temp[1].Trim();
+
+                if (temp[1].Contains(","))
+                {
+                    temp = temp[1].Split(",");
+                    hasComma = true;
+                }
+                else if(temp[1].Contains(" "))
+                {
+                    temp = temp[1].Split(" ");
+                }
+                else
+                {
+                    throw new IOException("Missing first or last name.");
+                }
+            }
+            else
+            {
+                throw new IOException("Missing name after the :");
+            }
+
+            temp[0] = temp[0].Trim();
+            temp[1] = temp[1].Trim();
+
+            if (temp.Length != 2)
+            {
+                throw new IOException("String Parsing error");
+            }
+
+            if (hasComma)
+            {
+                name[0] = temp[1];
+                name[1] = temp[0];
+            }
+            else
+            {
+                name = temp;
+            }
+
+            return name;
+        }
     }
 }

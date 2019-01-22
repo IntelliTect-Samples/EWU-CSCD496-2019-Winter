@@ -38,7 +38,8 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void OpenFileForImport_CanRead()
         {
-            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\imputFile.txt");
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile.txt");
             
             Assert.AreEqual<bool>(true, importService.Istream.CanRead);
         }
@@ -46,9 +47,25 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ReadFileForImport_ReadName()
         {
-            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\imputFile.txt");
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile.txt");
 
             Assert.AreEqual<string>("Name: Brad Howard", importService.ReadName());
+        }
+
+        [TestMethod]
+        public void ParseName_FirstNameFirst()
+        {
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile.txt");
+
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+        }
+
+        [TestMethod]
+        public void ParseName_LastNameFirst()
+        {
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile2.txt");
+
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
         }
     }
 }
