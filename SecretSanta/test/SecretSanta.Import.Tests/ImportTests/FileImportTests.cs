@@ -10,23 +10,25 @@ namespace SecretSanta.Import.Tests.FileImportTests
     public class FileImportTests
     {
         public string TempFileName { get; set; }
-        public string TempFileLocation { get; set; }
+        public string TempFileDirectory { get; set; }
 
         [TestInitialize]
         public void CreateTestFile()
         {
-            TempFileLocation = Path.GetTempPath();
-            TempFileName = Path.GetTempFileName();
+            TempFileDirectory = Path.GetTempPath();
+            TempFileName = Path.GetTempFileName(); // if this exist, ask for another one
             FileInfo fileInfo = new FileInfo(TempFileName);
             fileInfo.Attributes = FileAttributes.Temporary;
         }
 
         private void WriteLineToTempFile(string line)
         {
-            var streamWriter = File.CreateText(TempFileName);
-            streamWriter.WriteLine(line);
-            streamWriter.Flush();
-            streamWriter.Close();
+            using (StreamWriter sw = File.CreateText(TempFileName))
+            {
+                sw.WriteLine(line);
+                sw.Flush();
+                sw.Close();
+            }
         }
 
         [TestMethod]
@@ -74,7 +76,7 @@ namespace SecretSanta.Import.Tests.FileImportTests
         [ExpectedException(typeof(ArgumentException))]
         public void ReadFile_WithEmptyHeader()
         {
-            WriteLineToTempFile(String.Empty);
+            WriteLineToTempFile(string.Empty);
             FileImport.ReadHeaderFromFile(TempFileName);
         }
 

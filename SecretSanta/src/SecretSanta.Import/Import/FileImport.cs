@@ -1,9 +1,7 @@
 ﻿using SecretSanta.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SecretSanta.Import.Import
 {
@@ -17,13 +15,14 @@ namespace SecretSanta.Import.Import
             }
 
             string filePath, fileLine;
-            StreamReader streamReader;
+            filePath = Path.Combine(System.Reflection.Assembly.GetExecutingAssembly().Location, fileName);
 
             try
             {
-                filePath = Path.Combine(System.Reflection.Assembly.GetExecutingAssembly().Location, fileName);
-                streamReader = new StreamReader(filePath);
-                fileLine = streamReader.ReadLine();
+                using(var sr = new StreamReader(filePath))
+                {
+                    fileLine = sr.ReadLine();
+                }
             } 
             catch (ArgumentException e)
             {
