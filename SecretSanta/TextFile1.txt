@@ -1,0 +1,17 @@
+Test Name:	ReadNext_BlankLine_ReturnsEmptyString
+Test FullName:	SecretSanta.UserGiftImport.Tests.UserGiftImporterTests.ReadNext_BlankLine_ReturnsEmptyString
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.UserGiftImport.Tests\UserGiftImporterTests.cs : line 71
+Test Outcome:	Failed
+Test Duration:	0:00:00.0323509
+
+Result StackTrace:	
+at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
+   at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options)
+   at System.IO.FileStream..ctor(String path, FileMode mode)
+   at SecretSanta.UserGiftImport.UserGiftImporter.Open(String path) in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.UserGiftImport\UserGiftImporter.cs:line 22
+   at SecretSanta.UserGiftImport.Tests.UserGiftImporterTests.ReadNext_BlankLine_ReturnsEmptyString() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.UserGiftImport.Tests\UserGiftImporterTests.cs:line 74
+Result Message:	
+Test method SecretSanta.UserGiftImport.Tests.UserGiftImporterTests.ReadNext_BlankLine_ReturnsEmptyString threw exception: 
+System.IO.IOException: The process cannot access the file 'C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.UserGiftImport.Tests\bin\Debug\netcoreapp2.2\TestFile.txt' because it is being used by another process.
+
