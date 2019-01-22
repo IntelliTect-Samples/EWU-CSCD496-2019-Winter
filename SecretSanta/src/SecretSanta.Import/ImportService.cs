@@ -12,16 +12,18 @@ namespace SecretSanta.Import
 
         public ImportService(string path)
         {
-            Istream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            if (File.Exists(path))
+            {
+                Istream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            }
+            else
+            {
+                throw new FileNotFoundException("File does not exist error");
+            }
         }
 
         public string ReadName()
         {
-            if(!Istream.CanRead)
-            {
-                throw new IOException("File Handling Error");
-            }
-
             StreamReader streamReader = new StreamReader(Istream);
             string name = streamReader.ReadLine();
 
@@ -32,8 +34,16 @@ namespace SecretSanta.Import
         {
             bool hasComma = false;
             string[] name = new string[2];
+            string[] temp;
 
-            string[] temp = word.Split(':');
+            if (word.Contains(":"))
+            {
+                temp = word.Split(':');
+            }
+            else
+            {
+                throw new FormatException("The word passed in does not meet the define standard.");
+            }
 
             if(temp.Length == 2)
             {
@@ -50,12 +60,17 @@ namespace SecretSanta.Import
                 }
                 else
                 {
-                    throw new IOException("Missing first or last name.");
+                    throw new FormatException("Missing first or last name.");
                 }
             }
             else
             {
-                throw new IOException("Missing name after the :");
+                throw new FormatException("Missing name after the :");
+            }
+
+            if(temp[0].Length == 0 || temp[1].Length == 0)
+            {
+                throw new FormatException("Missing first or last name.");
             }
 
             temp[0] = temp[0].Trim();
@@ -63,7 +78,7 @@ namespace SecretSanta.Import
 
             if (temp.Length != 2)
             {
-                throw new IOException("String Parsing error");
+                throw new FormatException("String Parsing error");
             }
 
             if (hasComma)

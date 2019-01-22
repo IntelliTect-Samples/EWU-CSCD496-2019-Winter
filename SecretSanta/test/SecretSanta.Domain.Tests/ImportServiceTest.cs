@@ -5,6 +5,7 @@ using SecretSanta.Domain.Models;
 using SecretSanta.Import;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace SecretSanta.Domain.Tests
@@ -64,6 +65,33 @@ namespace SecretSanta.Domain.Tests
         public void ParseName_LastNameFirst()
         {
             ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile2.txt");
+
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseName_MissingNameAfterColon()
+        {
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile3.txt");
+
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseName_MissingFirstName()
+        {
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile7.txt");
+
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void ReadFileForImport_FileNotFound()
+        {
+            ImportService importService = new ImportService(@"D:\CScD Class\CScD 496\Repo\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\inputFile8.txt");
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
         }
