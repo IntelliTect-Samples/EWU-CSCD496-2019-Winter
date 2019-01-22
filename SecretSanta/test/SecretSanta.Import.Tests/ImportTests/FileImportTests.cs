@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecretSanta.Domain.Models;
 using SecretSanta.Import.Import;
 using System;
 using System.IO;
@@ -22,7 +23,7 @@ namespace SecretSanta.Import.Tests.FileImportTests
 
         private void WriteLineToTempFile(string line)
         {
-            var streamWriter = File.AppendText(TempFileName);
+            var streamWriter = File.CreateText(TempFileName);
             streamWriter.WriteLine(line);
             streamWriter.Flush();
             streamWriter.Close();
@@ -32,20 +33,48 @@ namespace SecretSanta.Import.Tests.FileImportTests
         public void ReadFileFormat_FirstName_LastName()
         {
             WriteLineToTempFile("Alan Watts");
-            FileImport.ReadHeaderFromFile(TempFileName);
+            User user = FileImport.ReadHeaderFromFile(TempFileName);
+
+            Assert.AreEqual("Alan", user.FirstName);
+            Assert.AreEqual("Watts", user.LastName);
         }
 
         [TestMethod]
         public void ReadFileFormat_LastName_Comma_FirstName()
         {
             WriteLineToTempFile("Watts, Alan");
-            FileImport.ReadHeaderFromFile(TempFileName);
+            User user = FileImport.ReadHeaderFromFile(TempFileName);
+
+            Assert.AreEqual("Alan", user.FirstName);
+            Assert.AreEqual("Watts", user.LastName);
         }
 
         [TestMethod]
+        public void ReadFileFormat_EmptySpace_LastName_Comma_FirstName()
+        {
+            WriteLineToTempFile("    Watts, Alan");
+            User user = FileImport.ReadHeaderFromFile(TempFileName);
+
+            Assert.AreEqual("Alan", user.FirstName);
+            Assert.AreEqual("Watts", user.LastName);
+
+        }
+
+        [TestMethod]
+        public void ReadFileFormat_FirstName_LastName_EmptySpace()
+        {
+            WriteLineToTempFile("Alan Watts    ");
+            User user = FileImport.ReadHeaderFromFile(TempFileName);
+
+            Assert.AreEqual("Alan", user.FirstName);
+            Assert.AreEqual("Watts", user.LastName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void ReadFile_WithEmptyHeader()
         {
-            WriteLineToTempFile(" ");
+            WriteLineToTempFile(String.Empty);
             FileImport.ReadHeaderFromFile(TempFileName);
         }
 

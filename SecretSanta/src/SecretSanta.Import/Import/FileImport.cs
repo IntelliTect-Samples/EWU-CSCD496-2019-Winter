@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SecretSanta.Import.Import
 {
     public class FileImport
     {
-        public static void ReadHeaderFromFile(string fileName)
+        public static User ReadHeaderFromFile(string fileName)
         {
             if(fileName is null)
             {
@@ -29,12 +30,37 @@ namespace SecretSanta.Import.Import
                 throw new ArgumentException($"{e}");
             }
 
-            User user = ExtractUser(fileLine);   
+            return ExtractUser(fileLine);   
         }
 
         public static User ExtractUser(string str)
         {
-            User user = new User();
+            string[] userNames;
+            User user;
+            str = str.Trim();
+
+            if (str == String.Empty)
+            {
+                throw new ArgumentException("Passed in string was empty.");
+            }
+            else if (str.Contains(','))
+            {
+                userNames = str.Split(',');
+                user = new User
+                {
+                    FirstName = userNames[1].Trim(),
+                    LastName = userNames[0]
+                };
+            }
+            else
+            {
+                userNames = str.Split(' ');
+                user = new User
+                {
+                    FirstName = userNames[0],
+                    LastName = userNames[1]
+                };
+            }
             return user;
         }
     }
