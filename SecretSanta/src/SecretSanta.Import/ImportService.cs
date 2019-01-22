@@ -1,25 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Microsoft.Win32.SafeHandles;
 
 namespace SecretSanta.Import
 {
-    public class ImportService
+    public class ImportService : IDisposable
     {
-        public FileStream Istream { get; set; }
+        public static int InstanceCount { get; set; }
+        public FileStream Istream { get; private set; }
 
         public ImportService(string path)
         {
             if (File.Exists(path))
             {
                 Istream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                InstanceCount++;
             }
             else
             {
                 throw new FileNotFoundException("File does not exist error");
             }
+        }
+
+        ~ImportService()
+        {
+            Dispose();
         }
 
         public string ReadName()
@@ -45,7 +49,7 @@ namespace SecretSanta.Import
                 throw new FormatException("The word passed in does not meet the define standard.");
             }
 
-            if(temp.Length == 2)
+            if(temp.Length == 2 && temp[0].Length != 0 && temp[1].Length != 0)
             {
                 temp[1] = temp[1].Trim();
 
@@ -76,11 +80,6 @@ namespace SecretSanta.Import
             temp[0] = temp[0].Trim();
             temp[1] = temp[1].Trim();
 
-            if (temp.Length != 2)
-            {
-                throw new FormatException("String Parsing error");
-            }
-
             if (hasComma)
             {
                 name[0] = temp[1];
@@ -92,6 +91,16 @@ namespace SecretSanta.Import
             }
 
             return name;
+        }
+
+        public void Dispose()
+        {
+            Istream?.Close();
+            Istream?.Dispose();
+
+            Istream = null;
+
+            InstanceCount--;
         }
     }
 }
