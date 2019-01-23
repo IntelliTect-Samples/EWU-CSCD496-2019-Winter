@@ -23,6 +23,19 @@ namespace SecretSanta.UserGiftImport.Tests
 
         }
 
+        private void CreateFile(string[] lines)
+        {
+            File.WriteAllLines(TestFilePath, lines);
+        }
+
+        private void DeleteFile()
+        {
+            if (File.Exists(TestFilePath))
+            {
+                File.Delete(TestFilePath);
+            }
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Open_NullPath_ArgumentNullException()
@@ -59,5 +72,22 @@ namespace SecretSanta.UserGiftImport.Tests
 
             Assert.AreEqual("", line);
         }
+
+        [TestMethod]
+        public void MyTestMethod()
+        {
+            string[] lines = new string[] { "line1", "line2" };
+            CreateFile(lines);
+
+            
+            string[] lines2 = File.ReadAllLines(TestFilePath);
+
+            Assert.AreEqual("line1", lines2[0]);
+            Assert.AreEqual("line2", lines2[1]);
+            
+
+            DeleteFile();
+        }
+
     }
 }
