@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Import.Tests
 {
     [TestClass]
     public class ImportUtilityTests
     {
-        public List<string> CreatedFiles { get; } = new List<string>();
+        private List<string> CreatedFiles { get; } = new List<string>();
 
         [TestCleanup]
         public void Cleanup()
@@ -30,14 +31,15 @@ namespace SecretSanta.Import.Tests
             return tempFileName;
         }
         
-        //[TestCleanup]
-        
-        
         [TestMethod]
         public void Import_WithProperlyFormattedHeader_Success()
         {
-            var tempFileName = WriteTemporaryFile("TestStuff");
-            Assert.IsNotNull(tempFileName);
+            var tempFileName = WriteTemporaryFile("Inigo Montoya");
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual("Inigo", user.FirstName);
+            Assert.AreEqual("Montoya", user.LastName);
         }
     }
 }
