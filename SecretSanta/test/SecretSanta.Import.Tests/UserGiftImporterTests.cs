@@ -43,6 +43,7 @@ namespace SecretSanta.UserGiftImport.Tests
             Importer.Open(null);
         }
 
+        /*
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Open_NonExistingFile_ArgumentException()
@@ -88,6 +89,7 @@ namespace SecretSanta.UserGiftImport.Tests
 
             DeleteFile();
         }
+        */
 
     }
 }
