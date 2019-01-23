@@ -21,25 +21,50 @@ namespace SecretSanta.Import.Tests
             }
         }
         
-        private string WriteTemporaryFile(string toWrite)
+        private string WriteTemporaryFile(List<string> toWrite)
         {
             string tempFileName = Path.GetTempFileName();
             
-            File.WriteAllText(tempFileName, toWrite);
-            CreatedFiles.Add(tempFileName);
+            using (StreamWriter streamWriter = new StreamWriter(tempFileName))
+            {
+                foreach (string cur in toWrite)
+                {
+                    streamWriter.WriteLine(cur);
+                    CreatedFiles.Add(tempFileName);
+                }
+            }
 
             return tempFileName;
         }
         
-        [TestMethod]
-        public void Import_WithProperlyFormattedHeader_Success()
+        [DataTestMethod]
+        [DataRow("Name: Inigo Montoya", "Inigo", "Montoya")]
+        [DataRow("Name: Princess Buttercup", "Princess", "Buttercup")]
+        [DataRow("Name: Person McName", "Person", "McName")]
+        [DataRow("Name: Person Hyphen-Name", "Person", "Hyphen-Name")]
+        public void Import_FirstnameLastname_ProperFormat_Success(string toWrite, string firstName, string lastName)
         {
-            var tempFileName = WriteTemporaryFile("Inigo Montoya");
+            var tempFileName = WriteTemporaryFile(new List<string>(){ toWrite });
 
             User user = ImportUtility.Import(tempFileName);
             
-            Assert.AreEqual("Inigo", user.FirstName);
-            Assert.AreEqual("Montoya", user.LastName);
+            Assert.AreEqual(firstName, user.FirstName);
+            Assert.AreEqual(lastName, user.LastName);
+        }
+        
+        [DataTestMethod]
+        [DataRow("Name: Montoya, Inigo", "Inigo", "Montoya")]
+        [DataRow("Name: Buttercup, Princess", "Princess", "Buttercup")]
+        [DataRow("Name: McName, Person", "Person", "McName")]
+        [DataRow("Name: Hyphen-Name, Person", "Person", "Hyphen-Name")]
+        public void Import_LastnameCommaFirstname_ProperFormat_Success(string toWrite, string firstName, string lastName)
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ toWrite });
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual(firstName, user.FirstName);
+            Assert.AreEqual(lastName, user.LastName);
         }
     }
 }
