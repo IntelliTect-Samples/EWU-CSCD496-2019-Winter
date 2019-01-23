@@ -207,5 +207,12 @@ namespace SecretSanta.Import.Tests
 
             User user = ImportUtility.Import(tempFileName);
         }
+        
+        [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void Import_FileDoesNotExist_FileNotFoundException()
+        {
+            User user = ImportUtility.Import("doesNotExist.txt");
+        }
     }
 }
