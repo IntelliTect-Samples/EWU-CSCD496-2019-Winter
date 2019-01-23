@@ -16,7 +16,7 @@ namespace SecretSanta.Import
         
         public static User Import(string fileName)
         {
-            if(String.IsNullOrEmpty(fileName)) { throw new NullReferenceException(); }
+            if(string.IsNullOrEmpty(fileName)) { throw new NullReferenceException(); }
             
             string headerLine = GetHeader(fileName).Trim();
 
@@ -49,7 +49,7 @@ namespace SecretSanta.Import
             string firstName = splitName[0].Trim();
             string lastName = splitName[1].Trim();
 
-            if (String.IsNullOrEmpty(firstName) || String.IsNullOrEmpty(lastName))
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
             {
                 throw new ArgumentException(ProperFormatException, headerLine);
             }
