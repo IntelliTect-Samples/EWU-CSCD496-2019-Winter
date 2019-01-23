@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Import.Import;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SecretSanta.Import.Tests.FileImportTests
@@ -15,27 +16,29 @@ namespace SecretSanta.Import.Tests.FileImportTests
         [TestInitialize]
         public void CreateTestFile()
         {
+            if (TempFileName != null) File.Delete(Path.Combine(TempFileDirectory, TempFileName));
+
             TempFileDirectory = Path.GetTempPath();
-            TempFileName = Path.GetTempFileName(); // if this exist, ask for another one
-            FileInfo fileInfo = new FileInfo(TempFileName);
-            fileInfo.Attributes = FileAttributes.Temporary;
+            TempFileName = Path.GetTempFileName();
         }
 
-        private void WriteLineToTempFile(string line)
+        [TestCleanup]
+        public void DeleteTestFile()
         {
-            using (StreamWriter sw = File.CreateText(TempFileName))
-            {
-                sw.WriteLine(line);
-                sw.Flush();
-                sw.Close();
-            }
+            File.Delete(Path.Combine(TempFileDirectory, TempFileName));
+        }
+
+        private void WriteLinesToTempFile(string[] lines)
+        {
+            File.WriteAllLines(Path.Combine(TempFileDirectory, TempFileName), lines);
         }
 
         [TestMethod]
         public void ReadFileFormat_FirstName_LastName()
         {
-            WriteLineToTempFile("Alan Watts");
-            User user = FileImport.ReadHeaderFromFile(TempFileName);
+            WriteLinesToTempFile(new string[] { "Name: Alan Watts" });
+
+            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
 
             Assert.AreEqual("Alan", user.FirstName);
             Assert.AreEqual("Watts", user.LastName);
@@ -44,47 +47,70 @@ namespace SecretSanta.Import.Tests.FileImportTests
         [TestMethod]
         public void ReadFileFormat_LastName_Comma_FirstName()
         {
-            WriteLineToTempFile("Watts, Alan");
-            User user = FileImport.ReadHeaderFromFile(TempFileName);
+            WriteLinesToTempFile(new string[] { "Name: Watts, Alan" });
+
+            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
 
             Assert.AreEqual("Alan", user.FirstName);
             Assert.AreEqual("Watts", user.LastName);
         }
 
         [TestMethod]
-        public void ReadFileFormat_EmptySpace_LastName_Comma_FirstName()
+        public void ReadFileFormat_ValidUser_3Gifts()
         {
-            WriteLineToTempFile("    Watts, Alan");
-            User user = FileImport.ReadHeaderFromFile(TempFileName);
+            string[] lines = new string[]
+            {
+                "Name: Alan Watts",
+                "Nintendo Switch",
+                "Tesla",
+                "Dog"
+            };
 
-            Assert.AreEqual("Alan", user.FirstName);
-            Assert.AreEqual("Watts", user.LastName);
+            WriteLinesToTempFile(lines);
 
+            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+
+            Assert.AreEqual("Nintendo Switch", gifts[0].Title);
+            Assert.AreEqual("Tesla", gifts[1].Title);
+            Assert.AreEqual("Dog", gifts[2].Title);
         }
 
         [TestMethod]
-        public void ReadFileFormat_FirstName_LastName_EmptySpace()
+        public void ReadFileFormat_ValidUser_EmptyLinesBetweenValidGifts()
         {
-            WriteLineToTempFile("Alan Watts    ");
-            User user = FileImport.ReadHeaderFromFile(TempFileName);
+            string[] lines = new string[]
+            {
+                "Name: Alan Watts",
+                "Nintendo Switch",
+                " ",
+                "Tesla",
+                " ",
+                "Dog",
+                " "
+            };
 
-            Assert.AreEqual("Alan", user.FirstName);
-            Assert.AreEqual("Watts", user.LastName);
+            WriteLinesToTempFile(lines);
+
+            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+
+            Assert.AreEqual("Nintendo Switch", gifts[0].Title);
+            Assert.AreEqual("Tesla", gifts[1].Title);
+            Assert.AreEqual("Dog", gifts[2].Title);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ReadFile_WithEmptyHeader()
         {
-            WriteLineToTempFile(string.Empty);
-            FileImport.ReadHeaderFromFile(TempFileName);
+            WriteLinesToTempFile(new string[] { string.Empty });
+            FileImportService.ImportFile(TempFileName);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ReadHeader_PassedInNull()
         {
-            FileImport.ReadHeaderFromFile(null);
+            FileImportService.ImportFile(null);
         }
     }
 }
