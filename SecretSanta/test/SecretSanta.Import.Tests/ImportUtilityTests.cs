@@ -198,5 +198,14 @@ namespace SecretSanta.Import.Tests
 
             User user = ImportUtility.Import(tempFileName);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_EmptyFile_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "" });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
     }
 }

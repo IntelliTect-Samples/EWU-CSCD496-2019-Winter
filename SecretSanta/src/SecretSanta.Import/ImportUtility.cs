@@ -18,12 +18,7 @@ namespace SecretSanta.Import
         {
             if(string.IsNullOrEmpty(fileName)) { throw new NullReferenceException(); }
             
-            string headerLine = GetHeader(fileName).Trim();
-
-            if (!headerLine.StartsWith("Name:"))
-            {
-                throw new ArgumentException("Header must start with \"Name:\"", headerLine);
-            }
+            string headerLine = GetHeader(fileName);
 
             headerLine = headerLine.Replace("Name: ", "").Trim();
             
@@ -63,7 +58,10 @@ namespace SecretSanta.Import
 
         private static string GetHeader(string fileName)
         {
-            return File.ReadLines(fileName).First();
+            string headerLine = File.ReadLines(fileName).First().Trim();
+            
+            return (headerLine.StartsWith("Name:")) ? headerLine : 
+                throw new ArgumentException("Header must start with \"Name:\"", headerLine) ;
         }
     }
 }
