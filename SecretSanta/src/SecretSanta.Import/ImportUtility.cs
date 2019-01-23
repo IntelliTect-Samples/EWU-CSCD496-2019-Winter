@@ -18,17 +18,14 @@ namespace SecretSanta.Import
         {
             if(String.IsNullOrEmpty(fileName)) { throw new NullReferenceException(); }
             
-            string headerLine = GetHeader(fileName);
-            
-            Console.WriteLine(headerLine);
+            string headerLine = GetHeader(fileName).Trim();
 
             if (!headerLine.StartsWith("Name:"))
             {
                 throw new ArgumentException("Header must start with \"Name:\"", headerLine);
             }
 
-            headerLine = headerLine.Replace("Name: ", "")
-                .Trim();
+            headerLine = headerLine.Replace("Name: ", "").Trim();
             
             Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
             headerLine = regex.Replace(headerLine, " ");

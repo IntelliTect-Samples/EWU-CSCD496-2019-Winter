@@ -90,8 +90,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Import_MalformedNameLineStarter_LeadingSpaces_ArgumentException()
+        public void Import_MalformedNameLineStarter_LeadingSpaces_Success()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "   Name:     Inigo     Montoya " });
 
