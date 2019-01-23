@@ -25,7 +25,7 @@ namespace SecretSanta.Domain.Tests
 
         public void BuildTestFile(string input, string fileName)
         {
-            string path = System.IO.Path.GetTempPath() + @"\" + fileName;
+            string path = Path.Combine(System.IO.Path.GetTempPath(), fileName);
 
             if(!File.Exists(path))
             {
@@ -40,7 +40,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void OpenFileForImport_CanRead()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt");
             ImportService importService = new ImportService(path);
             
             Assert.AreEqual<bool>(true, importService.Istream.CanRead);
@@ -49,7 +49,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ReadFileForImport_ReadName()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Name: Brad Howard", importService.ReadName());
@@ -60,7 +60,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ParseName_FirstNameFirst()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -71,7 +71,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ParseName_LastNameFirst()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile2.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile2.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -83,7 +83,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void ParseName_MissingNameAfterColon()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile3.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile3.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -95,7 +95,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void PasrseName_MalformedInput()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile4.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile4.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -107,7 +107,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void PasrseName_MissingLastName()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile5.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile5.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -119,7 +119,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void ParseName_MissingFirstName()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile6.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile6.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -131,7 +131,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FileNotFoundException))]
         public void ReadFileForImport_FileNotFound()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile8.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile8.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -142,7 +142,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void Dispose_Called()
         {
-            string path = Path.Combine(System.IO.Path.GetTempPath() + @"\", "inputFile.txt");
+            string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt");
             ImportService importService;
 
             using (importService = new ImportService(path))
