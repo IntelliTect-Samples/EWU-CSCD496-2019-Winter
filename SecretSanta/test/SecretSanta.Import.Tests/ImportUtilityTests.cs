@@ -42,7 +42,7 @@ namespace SecretSanta.Import.Tests
         [DataRow("Name: Princess Buttercup", "Princess", "Buttercup")]
         [DataRow("Name: Person McName", "Person", "McName")]
         [DataRow("Name: Person Hyphen-Name", "Person", "Hyphen-Name")]
-        public void Import_FirstnameLastname_ProperFormat_Success(string toWrite, string firstName, string lastName)
+        public void Import_HeaderWithFirstnameLastname_ProperFormat_Success(string toWrite, string firstName, string lastName)
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ toWrite });
 
@@ -57,7 +57,7 @@ namespace SecretSanta.Import.Tests
         [DataRow("Name: Buttercup, Princess", "Princess", "Buttercup")]
         [DataRow("Name: McName, Person", "Person", "McName")]
         [DataRow("Name: Hyphen-Name, Person", "Person", "Hyphen-Name")]
-        public void Import_LastnameCommaFirstname_ProperFormat_Success(string toWrite, string firstName, string lastName)
+        public void Import_HeaderWithLastnameCommaFirstname_ProperFormat_Success(string toWrite, string firstName, string lastName)
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ toWrite });
 
@@ -68,7 +68,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        public void Import_LastnameFirstName_TooManySpaces_Success()
+        public void Import_HeaderWithLastnameFirstName_TooManySpaces_Success()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:     Inigo     Montoya " });
 
@@ -79,7 +79,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        public void Import_LastnameCommaFirstname_TooManySpaces_Success()
+        public void Import_HeaderWithLastnameCommaFirstname_TooManySpaces_Success()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:     Montoya    ,     Inigo " });
 
@@ -90,7 +90,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        public void Import_MalformedNameLineStarter_LeadingSpaces_Success()
+        public void Import_HeaderWithMalformedNameLineStarter_LeadingSpaces_Success()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "   Name:     Inigo     Montoya " });
 
@@ -102,14 +102,11 @@ namespace SecretSanta.Import.Tests
         
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Import_MalformedNameLineStarter_SpacesBetweenWordAndColon_ArgumentException()
+        public void Import_HeaderWithMalformedNameLineStarter_SpacesBetweenWordAndColon_ArgumentException()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name :     Inigo     Montoya " });
 
             User user = ImportUtility.Import(tempFileName);
-            
-            Assert.AreEqual("Inigo", user.FirstName);
-            Assert.AreEqual("Montoya", user.LastName);
         }
         
         [DataTestMethod]
@@ -123,7 +120,7 @@ namespace SecretSanta.Import.Tests
         
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Import_TooManyNamesSeparatedBySpaces_ArgumentException()
+        public void Import_HeaderWithTooManyNamesSeparatedBySpaces_ArgumentException()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: Inigo Montoya Princess Buttercup" });
 
@@ -132,7 +129,7 @@ namespace SecretSanta.Import.Tests
         
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Import_TooManyNamesWithCommas_ArgumentException()
+        public void Import_HeaderWithTooManyNamesWithCommas_ArgumentException()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: Montoya, Inigo Buttercup, Princess" });
 
@@ -141,7 +138,7 @@ namespace SecretSanta.Import.Tests
         
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Import_NoNamesAllCommas_ArgumentException()
+        public void Import_HeaderWithNoNamesAllCommas_ArgumentException()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: ,,,," });
 
@@ -150,9 +147,54 @@ namespace SecretSanta.Import.Tests
         
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Import_NoNamesJustSpaces_ArgumentException()
+        public void Import_HeaderWithNoNamesJustSpaces_ArgumentException()
         {
             var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:   " });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_HeaderWithCharFollowedBySpaces_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: a  " });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_HeaderWithSingleSpace_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: " });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_OnlyHeader_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:" });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_MissingHeaderWithComma_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ " , " });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_MissingHeaderWithSpaces_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "       " });
 
             User user = ImportUtility.Import(tempFileName);
         }
