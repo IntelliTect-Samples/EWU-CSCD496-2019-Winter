@@ -3,23 +3,23 @@ using System.IO;
 
 namespace SecretSanta.UserGiftImport
 {
-    public class UserGiftImporter
+    public class UserGiftImporter : IDisposable
     {
         public StreamReader StreamReader { get; set; }
 
-        public void Open(string path)
+        public void Open(string fileName)
         {
-            if (path == null)
+            if (fileName == null)
             {
                 throw new ArgumentNullException();
             }
-            else if (!File.Exists(path))
+            else if (!File.Exists(fileName))
             {
                 throw new ArgumentException("File does not exist.");
             }
-            else if (File.Exists(path))
+            else if (File.Exists(fileName))
             {
-                StreamReader = new StreamReader(path);
+                StreamReader = new StreamReader(fileName);
             }
         }
 
@@ -30,12 +30,19 @@ namespace SecretSanta.UserGiftImport
                 StreamReader.Close();
                 StreamReader = null;
             }
-
         }
 
         public string ReadNext()
         {
             return StreamReader.ReadLine();
+        }
+
+        public void Dispose()
+        {
+            if (StreamReader != null)
+            {
+                StreamReader.Dispose();
+            }
         }
     }
 }

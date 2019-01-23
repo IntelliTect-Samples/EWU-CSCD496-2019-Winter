@@ -13,8 +13,9 @@ namespace SecretSanta.UserGiftImport.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            Importer = new UserGiftImporter();
             TestFilePath = Environment.CurrentDirectory + "\\TestFile.txt";
+            DeleteFile();
+            
         }
 
         [TestCleanup]
@@ -23,7 +24,7 @@ namespace SecretSanta.UserGiftImport.Tests
 
         }
 
-        private void CreateFile(string[] lines)
+        private void CreateWriteToFile(string[] lines)
         {
             File.WriteAllLines(TestFilePath, lines);
         }
@@ -40,40 +41,74 @@ namespace SecretSanta.UserGiftImport.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Open_NullPath_ArgumentNullException()
         {
-            Importer.Open(null);
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Open(null);
+            }
         }
 
-        /*
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Open_NonExistingFile_ArgumentException()
         {
-            Importer.Open("nonExistingFile.txt");
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Open("nonExistingFile.txt");
+            }
         }
 
         [TestMethod]
-        public void Open_ExistingFile_OpenStream() //FIXME: Test alternates in passing/failing because
-                                                   // file owned by another process error.
+        public void Open_ExistingFile_OpenStream()
         {
-            //CreateTestFile();
-            Importer.Open(TestFilePath);
+            string[] lines = new string[] { };
+            CreateWriteToFile(lines);
 
-            Assert.AreEqual(TestFilePath, Importer.StreamReader);
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Open(TestFilePath);
 
-            Importer.Close();
-            // DeleteTestFile();
+                Assert.AreEqual(TestFilePath, ((FileStream)Importer.StreamReader.BaseStream).Name);
+            }
+                
+            DeleteFile();
+        }
+        
+        [TestMethod]
+        public void ReadNext_BlankLine_ReturnNull()
+        {
+            string[] lines = new string[] { };
+            CreateWriteToFile(lines);
+
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Open(TestFilePath);
+                string line = Importer.ReadNext();
+
+                Assert.AreEqual(line, null);
+            }
+
+            DeleteFile();
         }
 
         [TestMethod]
-        public void ReadNext_BlankLine_ReturnsEmptyString()
+        public void ReadNext_ValidLine_ReturnLine()
         {
-            Importer.Open(TestFilePath);
+            string[] lines = new string[] { "First line of the file" };
+            CreateWriteToFile(lines);
 
-            string line = Importer.ReadNext();
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Open(TestFilePath);
+                string line = Importer.ReadNext();
 
-            Assert.AreEqual("", line);
+                Assert.AreEqual("First line of the file", line);
+            }
+
+            DeleteFile();
         }
 
+
+        /*
         [TestMethod]
         public void MyTestMethod()
         {
