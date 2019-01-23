@@ -37,7 +37,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void OpenFileForImport_CanRead()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile.txt");
             ImportService importService = new ImportService(path);
             
             Assert.AreEqual<bool>(true, importService.Istream.CanRead);
@@ -46,7 +46,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ReadFileForImport_ReadName()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Name: Brad Howard", importService.ReadName());
@@ -55,7 +55,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ParseName_FirstNameFirst()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -64,7 +64,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void ParseName_LastNameFirst()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile2.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile2.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -74,7 +74,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void ParseName_MissingNameAfterColon()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile3.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile3.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -84,7 +84,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void PasrseName_MalformedInput()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile4.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile4.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -94,7 +94,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void PasrseName_MissingLastName()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile5.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile5.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -104,7 +104,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FormatException))]
         public void ParseName_MissingFirstName()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile6.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile6.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -114,7 +114,7 @@ namespace SecretSanta.Domain.Tests
         [ExpectedException(typeof(FileNotFoundException))]
         public void ReadFileForImport_FileNotFound()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile8.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile8.txt");
             ImportService importService = new ImportService(path);
 
             Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
@@ -123,7 +123,7 @@ namespace SecretSanta.Domain.Tests
         [TestMethod]
         public void Dispose_Called()
         {
-            string path = System.Environment.CurrentDirectory + "\\inputFile.txt";
+            string path = Path.Combine(System.Environment.CurrentDirectory + @"\", "inputFile.txt");
             ImportService importService;
 
             using (importService = new ImportService(path))
