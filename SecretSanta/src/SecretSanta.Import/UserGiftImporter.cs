@@ -1,4 +1,5 @@
 ﻿using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,32 +80,6 @@ namespace SecretSanta.UserGiftImport
             }
         }
 
-        public void ImportUserGifts()
-        {
-            string[] header = ExtractHeader(ReadNext());
-            string firstName = header[1];
-            string lastName = header[2];
-
-            List<string> gifts = new List<string>();
-            while (!StreamReader.EndOfStream)
-            {
-                gifts.Add(ReadNext());
-            }
-
-
-            // Final code:
-            /*
-            string[] header = ExtractHeader(ReadNext());
-            string firstName = header[1];
-            string lastName = header[2];
-
-            List<string> gifts = ReadGifts();
-
-            User user = new User { FirstName = firstName, LastName = lastName, Gifts = gifts };
-            // service.Add(user);
-            */
-        }
-
         public List<string> ReadGifts()
         {
             List<string> giftNames = new List<string>();
@@ -138,6 +113,15 @@ namespace SecretSanta.UserGiftImport
             }
 
             return new User { FirstName = firstName, LastName = lastName, Gifts = gifts };
+        }
+
+        public void Import(string fileName)
+        {
+            User user = PopulateUser(fileName);
+
+            // FIXME: Add the user to the database
+            // UserService userService = new UserService(new ApplicationDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ApplicationDbContext>()));
+            // userService.AddUser(user);
         }
     }
 }

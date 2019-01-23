@@ -146,7 +146,7 @@ namespace SecretSanta.UserGiftImport.Tests
         [TestMethod]
         public void ReadGifts_ValidGifts_ReturnListOfGiftsNoBlanks()
         {
-            string[] lines = new string[] { "Gift1", "", "Gift2", "", "Gift3" };
+            string[] lines = new string[] { "", "Gift1", "", "Gift2", "", "Gift3", "" };
             CreateWriteToFile(lines);
 
             using (Importer = new UserGiftImporter())
@@ -199,6 +199,23 @@ namespace SecretSanta.UserGiftImport.Tests
                 Assert.AreEqual("Gift2", gifts[1].Title);
                 Assert.AreEqual("Gift3", gifts[2].Title);
             }
+
+            DeleteFile();
+        }
+
+        [TestMethod]
+        public void Import_ValidFile_UserImported()
+        {
+            string[] lines = new string[] { "Name: Richard Teller", "Gift1", "Gift2", "", "Gift3" };
+            CreateWriteToFile(lines);
+
+            using (Importer = new UserGiftImporter())
+            {
+                Importer.Import(TestFilePath);
+            }
+
+            // Check to make sure User was inserted into database
+            // FIXME: access the database to make sure it was inserted
 
             DeleteFile();
         }
