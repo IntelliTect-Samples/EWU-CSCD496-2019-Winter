@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
+using System.Text.RegularExpressions;
 using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Import
@@ -24,9 +26,12 @@ namespace SecretSanta.Import
             {
                 throw new ArgumentException("Header must start with \"Name:\"", headerLine);
             }
-            
+
             headerLine = headerLine.Replace("Name: ", "")
-                .Trim().Replace(@"\s+", " ");
+                .Trim();
+            
+            Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
+            headerLine = regex.Replace(headerLine, " ");
             
             List<string> splitName;
             

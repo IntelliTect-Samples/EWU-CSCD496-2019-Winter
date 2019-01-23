@@ -66,5 +66,96 @@ namespace SecretSanta.Import.Tests
             Assert.AreEqual(firstName, user.FirstName);
             Assert.AreEqual(lastName, user.LastName);
         }
+
+        [TestMethod]
+        public void Import_LastnameFirstName_TooManySpaces_Success()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:     Inigo     Montoya " });
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual("Inigo", user.FirstName);
+            Assert.AreEqual("Montoya", user.LastName);
+        }
+
+        [TestMethod]
+        public void Import_LastnameCommaFirstname_TooManySpaces_Success()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:     Montoya    ,     Inigo " });
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual("Inigo", user.FirstName);
+            Assert.AreEqual("Montoya", user.LastName);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_MalformedNameLineStarter_LeadingSpaces_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "   Name:     Inigo     Montoya " });
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual("Inigo", user.FirstName);
+            Assert.AreEqual("Montoya", user.LastName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_MalformedNameLineStarter_SpacesBetweenWordAndColon_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name :     Inigo     Montoya " });
+
+            User user = ImportUtility.Import(tempFileName);
+            
+            Assert.AreEqual("Inigo", user.FirstName);
+            Assert.AreEqual("Montoya", user.LastName);
+        }
+        
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void Import_FilenameEmptyOrNull_ArgumentException(string fileName)
+        {
+            User user = ImportUtility.Import(fileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_TooManyNamesSeparatedBySpaces_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: Inigo Montoya Princess Buttercup" });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_TooManyNamesWithCommas_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: Montoya, Inigo Buttercup, Princess" });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_NoNamesAllCommas_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name: ,,,," });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_NoNamesJustSpaces_ArgumentException()
+        {
+            var tempFileName = WriteTemporaryFile(new List<string>(){ "Name:   " });
+
+            User user = ImportUtility.Import(tempFileName);
+        }
     }
 }
