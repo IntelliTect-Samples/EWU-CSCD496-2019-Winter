@@ -27,6 +27,8 @@ namespace SecretSanta.Import.Tests
                     streamWriter.WriteLine(cur);
                     CreatedFiles.Add(tempFileName);
                 }
+
+                streamWriter.Close();
             }
 
             return tempFileName;
