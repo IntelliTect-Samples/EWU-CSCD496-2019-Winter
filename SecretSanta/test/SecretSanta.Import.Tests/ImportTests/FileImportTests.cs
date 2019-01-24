@@ -38,7 +38,7 @@ namespace SecretSanta.Import.Tests.FileImportTests
         {
             WriteLinesToTempFile(new string[] { "Name: Alan Watts" });
 
-            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+            User user = FileImportService.ImportFile(TempFileName);
 
             Assert.AreEqual("Alan", user.FirstName);
             Assert.AreEqual("Watts", user.LastName);
@@ -49,7 +49,7 @@ namespace SecretSanta.Import.Tests.FileImportTests
         {
             WriteLinesToTempFile(new string[] { "Name: Watts, Alan" });
 
-            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+            User user = FileImportService.ImportFile(TempFileName);
 
             Assert.AreEqual("Alan", user.FirstName);
             Assert.AreEqual("Watts", user.LastName);
@@ -68,11 +68,11 @@ namespace SecretSanta.Import.Tests.FileImportTests
 
             WriteLinesToTempFile(lines);
 
-            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+            User user = FileImportService.ImportFile(TempFileName);
 
-            Assert.AreEqual("Nintendo Switch", gifts[0].Title);
-            Assert.AreEqual("Tesla", gifts[1].Title);
-            Assert.AreEqual("Dog", gifts[2].Title);
+            Assert.AreEqual("Nintendo Switch", user.Gifts[0].Title);
+            Assert.AreEqual("Tesla", user.Gifts[1].Title);
+            Assert.AreEqual("Dog", user.Gifts[2].Title);
         }
 
         [TestMethod]
@@ -91,11 +91,11 @@ namespace SecretSanta.Import.Tests.FileImportTests
 
             WriteLinesToTempFile(lines);
 
-            (User user, List<Gift> gifts) = FileImportService.ImportFile(TempFileName);
+            User user = FileImportService.ImportFile(TempFileName);
 
-            Assert.AreEqual("Nintendo Switch", gifts[0].Title);
-            Assert.AreEqual("Tesla", gifts[1].Title);
-            Assert.AreEqual("Dog", gifts[2].Title);
+            Assert.AreEqual("Nintendo Switch", user.Gifts[0].Title);
+            Assert.AreEqual("Tesla", user.Gifts[1].Title);
+            Assert.AreEqual("Dog", user.Gifts[2].Title);
         }
 
         [TestMethod]

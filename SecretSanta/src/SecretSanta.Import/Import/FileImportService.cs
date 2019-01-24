@@ -8,7 +8,7 @@ namespace SecretSanta.Import.Import
 {
     public static class FileImportService
     {
-        public static (User user, List<Gift> gifts) ImportFile(string fileName)
+        public static User ImportFile(string fileName)
         {
             if(fileName is null)
             {
@@ -31,7 +31,7 @@ namespace SecretSanta.Import.Import
                         Gift gift = ExtractGift(fileLine);
                         if(gift != null)
                         {
-                            gifts.Add(ExtractGift(fileLine));
+                            gifts.Add(gift);
                         }
                     }
                     sr.Close();
@@ -41,7 +41,8 @@ namespace SecretSanta.Import.Import
             {
                 throw new ArgumentException($"{e}");
             }
-            return (user, gifts);
+            user.Gifts = gifts;
+            return user;
         }
 
         private static Gift ExtractGift(string fileLine)
