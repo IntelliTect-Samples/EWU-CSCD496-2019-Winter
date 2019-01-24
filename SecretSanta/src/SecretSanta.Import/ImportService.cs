@@ -29,9 +29,7 @@ namespace SecretSanta.Import
         public string ReadName()
         {
             StreamReader streamReader = new StreamReader(Istream);
-            string name = streamReader.ReadLine();
-
-            return name;
+            return streamReader.ReadLine();
         }
 
         public string[] ParseName(string word)
@@ -46,7 +44,7 @@ namespace SecretSanta.Import
             }
             else
             {
-                throw new FormatException("The word passed in does not meet the define standard.");
+                throw new FormatException("The line passed in (" + word + ") does not meet the define standard.");
             }
 
             if(temp.Length == 2 && temp[0].Length != 0 && temp[1].Length != 0)
@@ -101,6 +99,7 @@ namespace SecretSanta.Import
             Istream = null;
 
             InstanceCount--;
+            System.GC.SuppressFinalize(this);
         }
     }
 }

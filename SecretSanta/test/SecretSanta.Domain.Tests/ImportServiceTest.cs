@@ -11,8 +11,8 @@ namespace SecretSanta.Domain.Tests
     [TestClass]
     public class ImportServiceTest
     {
-       [TestInitialize]
-       public void MakeTestFiles()
+        [TestInitialize]
+        public void MakeTestFiles()
         {
             BuildTestFile("Name: Brad Howard", "inputFile.txt");
             BuildTestFile("Name: Howard, Brad", "inputFile2.txt");
@@ -21,6 +21,20 @@ namespace SecretSanta.Domain.Tests
             BuildTestFile("Name: Howard", "inputFile5.txt");
             BuildTestFile("Name: Howard,", "inputFile6.txt");
             BuildTestFile("Name:Howard,", "inputFile7.txt");
+        }
+
+        [TestCleanup]
+        public void CleanupFiles()
+        {
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile2.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile3.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile4.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile5.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile6.txt"));
+            System.IO.File.Delete(Path.Combine(System.IO.Path.GetTempPath(), "inputFile7.txt"));
         }
 
         public void BuildTestFile(string input, string fileName)
