@@ -63,7 +63,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(System.IO.Path.GetTempPath(), "inputFile.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Name: Brad Howard", importService.ReadName());
+            Assert.AreEqual<string>("Name: Brad Howard", importService.ReadLine());
 
             importService.Dispose();
         }
@@ -74,7 +74,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -85,7 +85,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile2.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -97,7 +97,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile3.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -109,7 +109,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile4.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -121,7 +121,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile5.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -133,7 +133,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile6.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }
@@ -145,7 +145,7 @@ namespace SecretSanta.Domain.Tests
             string path = Path.Combine(Path.GetTempPath(), "inputFile8.txt");
             ImportService importService = new ImportService(path);
 
-            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadName())[0]);
+            Assert.AreEqual<string>("Brad", importService.ParseName(importService.ReadLine())[0]);
 
             importService.Dispose();
         }

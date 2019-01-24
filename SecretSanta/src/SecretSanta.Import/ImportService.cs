@@ -26,7 +26,7 @@ namespace SecretSanta.Import
             Dispose();
         }
 
-        public string ReadName()
+        public string ReadLine()
         {
             StreamReader streamReader = new StreamReader(Istream);
             return streamReader.ReadLine();
