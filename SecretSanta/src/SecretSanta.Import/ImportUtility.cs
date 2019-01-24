@@ -30,13 +30,13 @@ namespace SecretSanta.Import
             else
                 splitName = headerLine.Split().ToList();
 
-            if (splitName.Count != 2) throw new ArgumentException(ProperFormatException, headerLine);
+            if (splitName.Count != 2) throw new ArgumentException(ProperFormatException, nameof(headerLine));
 
             var firstName = splitName[0].Trim();
             var lastName = splitName[1].Trim();
 
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
-                throw new ArgumentException(ProperFormatException, headerLine);
+                throw new ArgumentException(ProperFormatException, nameof(headerLine));
 
             return new User
             {
@@ -51,7 +51,7 @@ namespace SecretSanta.Import
 
             return headerLine.StartsWith("Name:")
                 ? headerLine
-                : throw new ArgumentException("Header must start with \"Name:\"", headerLine);
+                : throw new ArgumentException("Header must start with \"Name:\"", nameof(headerLine));
         }
     }
 }
