@@ -27,4 +27,4 @@ The following are ideas of items to consider for going above and beyond (in addi
 
 In the future, the above items will be expected for all homework.
 
-Make sure you follow the [coding standards](https://github.com/IntelliTect-Samples/EWU-CSCD496-2019-Winter/wiki/Coding-Guidelines)
+Make sure you follow  the [coding standards](https://github.com/IntelliTect-Samples/EWU-CSCD496-2019-Winter/wiki/Coding-Guidelines)
