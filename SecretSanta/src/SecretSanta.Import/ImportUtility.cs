@@ -65,7 +65,7 @@ namespace SecretSanta.Import
             return File.ReadLines(fileName)
                 .Skip(1)
                 .Select(line => line.Trim())
-                .Where(line => line != "")
+                .Where(line => !string.IsNullOrEmpty(line))
                 .Select(line => new Gift
                 {
                     Title = line,
