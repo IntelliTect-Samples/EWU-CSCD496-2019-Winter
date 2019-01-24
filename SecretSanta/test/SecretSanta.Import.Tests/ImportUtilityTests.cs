@@ -174,7 +174,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IOException))]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void Import_FileDoesNotExist_FileNotFoundException()
         {
             ImportUtility.Import("doesNotExist.txt");

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using SecretSanta.Domain.Models;
 
@@ -15,9 +14,9 @@ namespace SecretSanta.Import
 
         public static User Import(string fileName)
         {
-            var properlyQualifiedFilename = GetProperlyQualifiedFilename(fileName);
+            if (string.IsNullOrEmpty(fileName)) throw new NullReferenceException();
 
-            var headerLine = GetHeader(properlyQualifiedFilename);
+            var headerLine = GetHeader(fileName);
 
             headerLine = headerLine.Replace("Name:", "").Trim();
 
@@ -45,7 +44,7 @@ namespace SecretSanta.Import
                 LastName = lastName
             };
 
-            var test = GetGifts(properlyQualifiedFilename, toReturn);
+            var test = GetGifts(fileName, toReturn);
 
             toReturn.Gifts = test;
 
@@ -61,9 +60,9 @@ namespace SecretSanta.Import
                 : throw new ArgumentException("Header must start with \"Name:\"", nameof(headerLine));
         }
 
-        private static List<Gift> GetGifts(string properlyQualifiedFilename, User user)
+        private static List<Gift> GetGifts(string fileName, User user)
         {
-            return File.ReadLines(properlyQualifiedFilename)
+            return File.ReadLines(fileName)
                 .Skip(1)
                 .Select(line => line.Trim())
                 .Where(line => line != "")
@@ -73,15 +72,6 @@ namespace SecretSanta.Import
                     User = user
                 })
                 .ToList();
-        }
-
-        private static string GetProperlyQualifiedFilename(string fileName)
-        {
-            if (fileName is null) throw new NullReferenceException();
-
-            return !File.Exists(fileName)
-                ? Path.Combine(Assembly.GetExecutingAssembly().Location, fileName)
-                : fileName;
         }
     }
 }
