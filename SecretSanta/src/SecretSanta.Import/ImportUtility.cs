@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using SecretSanta.Domain.Models;
 
@@ -14,9 +15,9 @@ namespace SecretSanta.Import
 
         public static User Import(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName)) throw new NullReferenceException();
+            var properlyQualifiedFilename = GetProperlyQualifiedFilename(fileName);
 
-            var headerLine = GetHeader(fileName);
+            var headerLine = GetHeader(properlyQualifiedFilename);
 
             headerLine = headerLine.Replace("Name:", "").Trim();
 
@@ -38,20 +39,49 @@ namespace SecretSanta.Import
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
                 throw new ArgumentException(ProperFormatException, nameof(headerLine));
 
-            return new User
+            var toReturn = new User
             {
                 FirstName = firstName,
                 LastName = lastName
             };
+
+            var test = GetGifts(properlyQualifiedFilename, toReturn);
+
+            toReturn.Gifts = test;
+
+            return toReturn;
         }
 
-        private static string GetHeader(string fileName)
+        private static string GetHeader(string properlyQualifiedFilename)
         {
-            var headerLine = File.ReadLines(fileName).First().Trim();
+            var headerLine = File.ReadLines(properlyQualifiedFilename).First().Trim();
 
             return headerLine.StartsWith("Name:")
                 ? headerLine
                 : throw new ArgumentException("Header must start with \"Name:\"", nameof(headerLine));
+        }
+
+        private static List<Gift> GetGifts(string properlyQualifiedFilename, User user)
+        {
+            return File.ReadLines(properlyQualifiedFilename)
+                .Skip(1)
+                .Select(line => line.Trim())
+                .Where(line => line != "")
+                .Select(line => new Gift
+                {
+                    Title = line,
+                    User = user
+                })
+                .ToList();
+        }
+
+        private static string GetProperlyQualifiedFilename(string fileName)
+        {
+            if (fileName is null) throw new NullReferenceException();
+
+            return !File.Exists(fileName)
+                ? Path.Combine(Assembly.GetExecutingAssembly().Location, fileName)
+                : fileName;
         }
     }
 }
