@@ -17,7 +17,6 @@ namespace SecretSanta.UserGiftImport.Tests
         {
             TestFilePath = System.IO.Path.GetTempFileName();
             DeleteFile();
-            
         }
 
         [TestCleanup]
@@ -71,8 +70,6 @@ namespace SecretSanta.UserGiftImport.Tests
 
                 Assert.AreEqual(TestFilePath, ((FileStream)Importer.StreamReader.BaseStream).Name);
             }
-                
-            DeleteFile();
         }
         
         [TestMethod]
@@ -88,8 +85,6 @@ namespace SecretSanta.UserGiftImport.Tests
 
                 Assert.AreEqual(line, null);
             }
-
-            DeleteFile();
         }
 
         [TestMethod]
@@ -105,8 +100,6 @@ namespace SecretSanta.UserGiftImport.Tests
 
                 Assert.AreEqual("First line of the file", line);
             }
-
-            DeleteFile();
         }
 
         [TestMethod]
@@ -159,8 +152,6 @@ namespace SecretSanta.UserGiftImport.Tests
                 Assert.AreEqual("Gift2", gifts[1]);
                 Assert.AreEqual("Gift3", gifts[2]);
             }
-
-            DeleteFile();
         }
 
         [TestMethod]
@@ -176,19 +167,17 @@ namespace SecretSanta.UserGiftImport.Tests
 
                 Assert.AreEqual(0, gifts.Count);
             }
-
-            DeleteFile();
         }
 
         [TestMethod]
-        public void PopulateUser_ValidFile_UserAdded()
+        public void Import_ValidFile_UserAdded()
         {
             string[] lines = new string[] { "Name: Richard Teller", "Gift1", "Gift2", "", "Gift3" };
             CreateWriteToFile(lines);
 
             using (Importer = new UserGiftImporter())
             {
-                User user = Importer.PopulateUser(TestFilePath);
+                User user = Importer.Import(TestFilePath);
 
                 Assert.AreEqual(user.FirstName, "Richard");
                 Assert.AreEqual(user.LastName, "Teller");
@@ -199,25 +188,38 @@ namespace SecretSanta.UserGiftImport.Tests
                 Assert.AreEqual("Gift2", gifts[1].Title);
                 Assert.AreEqual("Gift3", gifts[2].Title);
             }
-
-            DeleteFile();
         }
 
         [TestMethod]
-        public void Import_ValidFile_UserImported()
+        public void Dispose_StreamReaderOpened_StreamReaderIsNull()
         {
-            string[] lines = new string[] { "Name: Richard Teller", "Gift1", "Gift2", "", "Gift3" };
+            string[] lines = new string[] { };
             CreateWriteToFile(lines);
 
             using (Importer = new UserGiftImporter())
             {
-                Importer.Import(TestFilePath);
+                Assert.IsNull(Importer.StreamReader);
+
+                Importer.Open(TestFilePath);
+
+                Assert.IsNotNull(Importer.StreamReader);
             }
 
-            // Check to make sure User was inserted into database
-            // FIXME: access the database to make sure it was inserted
+            Assert.IsNull(Importer.StreamReader);
+        }
 
-            DeleteFile();
+        [TestMethod]
+        public void Dispose_StreamReaderUnopened_StreamReaderIsNull()
+        {
+            string[] lines = new string[] { };
+            CreateWriteToFile(lines);
+
+            using (Importer = new UserGiftImporter())
+            {
+                Assert.IsNull(Importer.StreamReader);
+            }
+
+            Assert.IsNull(Importer.StreamReader);
         }
     }
 }

@@ -31,7 +31,6 @@ namespace SecretSanta.UserGiftImport
             if (StreamReader != null)
             {
                 StreamReader.Close();
-                StreamReader = null;
             }
         }
 
@@ -40,14 +39,8 @@ namespace SecretSanta.UserGiftImport
             return StreamReader.ReadLine();
         }
 
-        public void Dispose()
-        {
-            if (StreamReader != null)
-            {
-                StreamReader.Dispose();
-            }
-        }
-
+        // Given the first line in the file is of the format Name: <first name> <last name>
+        // or Name: <last name>, <first name>
         public string[] ExtractHeader(string header)
         {
             if (header == null)
@@ -80,6 +73,7 @@ namespace SecretSanta.UserGiftImport
             }
         }
 
+        // Any line after the first of a given file may be blank or contain a valid name of a gift.
         public List<string> ReadGifts()
         {
             List<string> giftNames = new List<string>();
@@ -96,7 +90,7 @@ namespace SecretSanta.UserGiftImport
             return giftNames;
         }
 
-        public User PopulateUser(string fileName)
+        public User Import(string fileName)
         {
             Open(fileName);
 
@@ -115,13 +109,15 @@ namespace SecretSanta.UserGiftImport
             return new User { FirstName = firstName, LastName = lastName, Gifts = gifts };
         }
 
-        public void Import(string fileName)
+        public void Dispose()
         {
-            User user = PopulateUser(fileName);
+            Close();
 
-            // FIXME: Add the user to the database
-            // UserService userService = new UserService(new ApplicationDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<ApplicationDbContext>()));
-            // userService.AddUser(user);
+            if (StreamReader != null)
+            {
+                StreamReader.Dispose();
+                StreamReader = null;
+            }
         }
     }
 }
