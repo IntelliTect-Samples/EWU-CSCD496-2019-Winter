@@ -18,7 +18,7 @@ namespace SecretSanta.Import
 
             var headerLine = GetHeader(fileName);
 
-            headerLine = headerLine.Replace("Name: ", "").Trim();
+            headerLine = headerLine.Replace("Name:", "").Trim();
 
             var regex = new Regex("[ ]{2,}", RegexOptions.None);
             headerLine = regex.Replace(headerLine, " ");
