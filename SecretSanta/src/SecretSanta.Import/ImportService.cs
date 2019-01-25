@@ -1,19 +1,27 @@
-﻿using System;
+﻿using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SecretSanta.Import
 {
     public class ImportService : IDisposable
     {
-        public static int InstanceCount { get; set; }
-        public FileStream Istream { get; private set; }
 
-        public ImportService(string path)
+        public GiftService GiftService { get; set; }
+        public UserService UserService { get; set; }
+        public static int InstanceCount { get; set; }
+        public StreamReader Istream { get; private set; }
+
+        public ImportService(string path, SecretSantaDbContext context)
         {
             if (File.Exists(path))
             {
-                Istream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                Istream = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
                 InstanceCount++;
+                GiftService = new GiftService(context);
+                UserService = new UserService(context);
             }
             else
             {
@@ -28,8 +36,22 @@ namespace SecretSanta.Import
 
         public string ReadLine()
         {
-            StreamReader streamReader = new StreamReader(Istream);
-            return streamReader.ReadLine();
+            return Istream.ReadLine();
+        }
+
+        public List<Gift> BuildGiftList()
+        {
+            List<Gift> list = new List<Gift>();
+
+            while(!Istream.EndOfStream)
+            {
+                string temp = Istream.ReadLine();
+
+                if(temp.Length != 0)
+                    list.Add(new Gift() { Title = temp });
+            }
+
+            return list;
         }
 
         public string[] ParseName(string word)
@@ -89,6 +111,47 @@ namespace SecretSanta.Import
             }
 
             return name;
+        }
+
+        public void PlaceUser(User user)
+        {
+            UserService.UpsertUser(user);
+        }
+
+        public User BuildUser(string[] name, string[] giftList)
+        {
+            User user = new User();
+
+            if (name.Length == 2)
+            {
+                user.First = name[0];
+                user.Last = name[1];
+
+                foreach(string s in giftList)
+                {
+                    user.Gifts.Add(new Gift() { Title = s });
+                }
+            }
+
+            return user;
+        }
+
+        public User BuildUser(string[] name, List<Gift> list)
+        {
+            User user = new User();
+
+            if(name.Length == 2)
+            {
+                user.First = name[0];
+                user.Last = name[1];
+
+                foreach(Gift g in list)
+                {
+                    user.Gifts.Add(g);
+                }
+            }
+
+            return user;
         }
 
         public void Dispose()
