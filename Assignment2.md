@@ -1,10 +1,12 @@
 # Assignment 1
 
-The purpose of this assignment is to practice the discipline of test driven development and, more generally, unit testing  To achieve this we will write create a library project that imports a file that contains a wish list of gifts for a specific person.
+The purpose of this assignment is to practice the discipline of test driven development and, more generally, unit testing 
+ To achieve this we will write create a library project that imports a file that contains a wish list of gifts for a specific person.
 
 ## Details
 
-Create a unit testing project and a system under test library project that will import a file with a wish list of gifts (add both projects to the existing solution).  Given a valid import file, the "header" (the first line) will contains the name of the person in one of two formats:
+Create a unit testing project and a system under test library project that will import a file with a wish list of gifts (
+add both projects to the existing solution).  Given a valid import file, the "header" (the first line) will contains the name of the person in one of two formats:
     `Name: <FirstName> <LastName>
     Name: <LastName>, <FirstName>`
 You can assume all remaining lines will be items for the wish list except that all blank lines should be ignored.
@@ -28,3 +30,34 @@ The following are ideas of items to consider for going above and beyond (in addi
 In the future, the above items will be expected for all homework.
 
 Make sure you follow the [coding standards](https://github.com/IntelliTect-Samples/EWU-CSCD496-2019-Winter/wiki/Coding-Guidelines)
+
+
+library
+-parse file
+
+
+Name: Wyatt Williams
+<gift1>
+<gift2>
+...
+Name: Williams, Wyatt
+<gift1>
+<gift2>
+...
+
+                if (!File.Exists(@"./" + fname))
+                {
+                    Console.WriteLine("File not found please place file in same directory as the compiled code (.exe file).");
+                    fname = Console.ReadLine();
+                    ParseFile(fname);
+                }
+
+                string input = File.ReadAllText(@"./" + fname);
+				
+				
+				
+Regarding the directory:
+System.Reflection.Assembly.GetExecutingAssembly().Location will give you the location of the executing assembly.
+System.IO.Path.GetTempPath() will provide a temp directory.
+`System.IO.Path.GetTempFileName() will provide a temporary file name.
+What ever files you create you should clean up when a test starts if there are any left over from a previous run and, ideally, clean them up after tests finish executing.
