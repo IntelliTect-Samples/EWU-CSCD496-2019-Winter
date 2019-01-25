@@ -381,5 +381,67 @@ namespace LibraryTests
             Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Train" }));
             Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Redrum" }));
         }
+
+        [TestMethod]
+        public void Valid_ReadEntireFile_FirstLast()
+        {
+            SetUpByWriteToTemp("Name: Daniel Torrance");
+            SetUpByWriteToTemp("Train");
+            SetUpByWriteToTemp("Books");
+            SetUpByWriteToTemp("Redrum");
+            User user = LibraryClass.CreateUserAndPopulateList(TempFilePath);
+            Assert.IsTrue(user.GiftList.Count == 3);
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Train" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Books" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Redrum" }));
+            Assert.AreEqual(user.FirstName, "Daniel");
+            Assert.AreEqual(user.LastName, "Torrance");
+        }
+
+        [TestMethod]
+        public void Valid_ReadEntireFile_LastFirst()
+        {
+            SetUpByWriteToTemp("Name: Montgomery, Monty");
+            SetUpByWriteToTemp("Train");
+            SetUpByWriteToTemp("Books");
+            SetUpByWriteToTemp("Redrum");
+            User user = LibraryClass.CreateUserAndPopulateList(TempFilePath);
+            Assert.IsTrue(user.GiftList.Count == 3);
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Train" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Books" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Redrum" }));
+            Assert.AreEqual(user.FirstName, "Monty");
+            Assert.AreEqual(user.LastName, "Montgomery");
+        }
+
+        [DataRow(null)]
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod]
+        public void Invalid_ReadEntireFile_NullPath(string path)
+        {
+            User user = LibraryClass.CreateUserAndPopulateList(path);
+            Assert.IsTrue(user.GiftList.Count == 3);
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Train" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Books" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Redrum" }));
+        }
+
+        [DataRow(null)]
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod]
+        public void Invalid_ReadEntireFile_InvalidHeader(string path)
+        {
+            SetUpByWriteToTemp("Namea: Montgomery, Monty");
+            SetUpByWriteToTemp("Train");
+            SetUpByWriteToTemp("Books");
+            SetUpByWriteToTemp("Redrum");
+            User user = LibraryClass.CreateUserAndPopulateList(TempFilePath);
+            Assert.IsTrue(user.GiftList.Count == 3);
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Train" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Books" }));
+            Assert.IsTrue(user.GiftList.Contains(new Gift { Title = "Redrum" }));
+            Assert.AreEqual(user.FirstName, "Monty");
+            Assert.AreEqual(user.LastName, "Montgomery");
+        }
     }
 }

@@ -103,7 +103,7 @@ namespace Library
             string[] lastFirstLineArray = TrimStringToArray(lastFirstLine);
             User newUser = new User
             {
-                LastName = lastFirstLineArray[1].Substring(0, lastFirstLineArray.Length - 1),
+                LastName = lastFirstLineArray[1].Substring(0, lastFirstLineArray[1].Length -1),
                 FirstName = lastFirstLineArray[2],
                 GiftList = new List<Gift>()
             };//probably better to have constructor
@@ -198,7 +198,7 @@ namespace Library
                 else
                 {
                     reader.Close();
-                    return user;
+                    IfCustomNullException(user, "File does not contain a valid header to create user");
                     //should throw exception
                 }
                 AddWishList(user, reader);
