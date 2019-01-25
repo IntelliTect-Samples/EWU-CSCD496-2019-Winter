@@ -9,45 +9,106 @@ namespace Assignment2FileLibrary.Tests
     [TestClass]
     public class FileImportAndUseTests
     {
-        private string Path = "test.txt";
+        public string TempFile;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            if (File.Exists(Path))
-            {
-                File.Delete(Path);
-            }
+            TempFile = Path.Combine(Path.GetTempPath(), "MyFile.txt");
+
+            File.Delete(TempFile);
+
+            using (var sw = new StreamWriter(TempFile))
+            {}
             
         }
 
         [TestMethod]
         public void BasicFileExistTest()
         {
-            using (FileStream fs = File.Create(Path))
-            {}
-            Assert.IsTrue(File.Exists("test.txt"));
+            Assert.IsTrue(File.Exists(TempFile));            
         }
 
         [TestMethod]
-        public void TestToSeeIfThereIsTextInTheFile()
+        public void TestToSeeIfThereIsBasicTextInTheFile()
         {
-            using (FileStream fs = File.Create(Path))
+            using (var sw = new StreamWriter(TempFile))
             {
-                Byte[] info = new UTF8Encoding(true).GetBytes("text in a file");
-                // Add some information to the file.
-                fs.Write(info, 0, info.Length);
+                sw.WriteLine("Test line");
             }
-            using (StreamReader sr = File.OpenText(Path))
+
+            using (var sr = new StreamReader(TempFile))
             {
-                string s = sr.ReadLine();
-                Assert.AreEqual("text in a file", s);
+                string line = sr.ReadLine();
+
+                Assert.AreEqual("Test line", line);
+            }
+
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void FileImportAndUse_Open_Null()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(null);
             }
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FileImportAndUse_Open_NoFileFound()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open("wer.txt");
+            }
+        }
 
+        [TestMethod]
+        public void FileImportAndUse_Open_Success()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+            }
+        }
 
-        
+        [TestMethod]
+        public void FileImportAndUse_OpenSameFileWhileAlreadyOpen()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                f.Open(TempFile);
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_OpenDifferentFileWhileAlreadyOpen()
+        {
+            //create a second temp file
+            string TempFile2 = Path.Combine(Path.GetTempPath(), "MyFile2.txt");
+            using (var sw = new StreamWriter(TempFile2))
+            { }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                f.Open(TempFile2);
+            }
+
+            File.Delete(TempFile2);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            File.Delete(TempFile);
+        }
+
+       
     }
 
 }
