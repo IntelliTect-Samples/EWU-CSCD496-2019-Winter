@@ -68,6 +68,11 @@ namespace Library
             }
         }
 
+        public static bool IsStringNull(in string str)
+        {
+            return str is null;
+        }
+
         public static string[] TrimStringToArray(in string str)
         {
             IfCustomNullException(str, "String cannot be null when attempting to convert to trimmed array.");
