@@ -55,6 +55,16 @@ namespace Assignment2FileLibrary
             }
 
             string firstLine = StreamReader.ReadLine();
+            
+            //resets reading position
+            Stream s = StreamReader.BaseStream;
+            s.Position = 0;
+
+            if (firstLine == null)
+            {
+                return false;
+            }
+
             String[] split = firstLine.Split();
 
             if (split.Length != 3)
@@ -69,5 +79,6 @@ namespace Assignment2FileLibrary
             
             return false;
         }
+        
     }
 }

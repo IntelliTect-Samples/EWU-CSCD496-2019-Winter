@@ -23,6 +23,7 @@ namespace Assignment2FileLibrary.Tests
             
         }
 
+        //basic tests for my sake that helped me learn FileIO
         [TestMethod]
         public void BasicFileExistTest()
         {
@@ -45,6 +46,8 @@ namespace Assignment2FileLibrary.Tests
             }
 
         }
+
+        //Open method tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -105,6 +108,8 @@ namespace Assignment2FileLibrary.Tests
             File.Delete(TempFile2);
         }
 
+        //close method tests
+
         [TestMethod]
         public void MyFileImportAndUse_CloseWhileClosed()
         {
@@ -125,6 +130,8 @@ namespace Assignment2FileLibrary.Tests
             }
         }
 
+        //dispose method test 
+
         [TestMethod]
         public void FileImportAndUse_Dispose()
         {
@@ -137,9 +144,11 @@ namespace Assignment2FileLibrary.Tests
 
         }
 
+        //validateheader method tests
+
         [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
-        public void FileImportAndUse_ValidateHeader_TryValidateWithClosedStreamWriter()
+        public void FileImportAndUse_ValidateHeader_ClosedStreamWriter()
         {
             using (var sw = new StreamWriter(TempFile))
             {
@@ -151,6 +160,16 @@ namespace Assignment2FileLibrary.Tests
                 f.ValidateHeader();
             }
         }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_NullFileContents()
+        {
+             using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                f.ValidateHeader();
+            }
+}
 
         [TestMethod]
         public void FileImportAndUse_ValidateHeader_TryValidateWithIncorrectNumberOfWords()
@@ -183,6 +202,21 @@ namespace Assignment2FileLibrary.Tests
         }
 
         [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryVadidateWithCorrectFormat_TooManyAddedSpaces()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac          Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsFalse(f.ValidateHeader());
+            }
+        }
+
+        [TestMethod]
         public void FileImportAndUse_ValidateHeader_TryValidateWithCorrectNumberOfWords_CorrectFormat_v1()
         {
             using (var sw = new StreamWriter(TempFile))
@@ -193,6 +227,22 @@ namespace Assignment2FileLibrary.Tests
             using (var f = new FileImportAndUse())
             {
                 f.Open(TempFile);
+                Assert.IsTrue(f.ValidateHeader());
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithCorrectNumberOfWords_CorrectFormat_v1_MultipleTimes()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsTrue(f.ValidateHeader());
                 Assert.IsTrue(f.ValidateHeader());
             }
         }
