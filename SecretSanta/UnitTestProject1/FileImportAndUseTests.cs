@@ -72,6 +72,7 @@ namespace Assignment2FileLibrary.Tests
             using (var f = new FileImportAndUse())
             {
                 f.Open(TempFile);
+                Assert.IsNotNull(f.StreamReader);
             }
         }
 
@@ -82,6 +83,7 @@ namespace Assignment2FileLibrary.Tests
             {
                 f.Open(TempFile);
                 f.Open(TempFile);
+                Assert.IsNotNull(f.StreamReader);
             }
         }
 
@@ -97,9 +99,117 @@ namespace Assignment2FileLibrary.Tests
             {
                 f.Open(TempFile);
                 f.Open(TempFile2);
+                Assert.IsNotNull(f.StreamReader);
             }
 
             File.Delete(TempFile2);
+        }
+
+        [TestMethod]
+        public void MyFileImportAndUse_CloseWhileClosed()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                Assert.IsFalse(f.Close());
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_CloseWhileOpen()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsTrue(f.Close());
+                Assert.IsNull(f.StreamReader);
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_Dispose()
+        {
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                f.Dispose();
+                Assert.IsNull(f.StreamReader);
+            }
+
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithClosedStreamWriter()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.ValidateHeader();
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithIncorrectNumberOfWords()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac Edwin Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsFalse(f.ValidateHeader());
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithCorrectNumberOfWords_WrongFormat()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac, Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsFalse(f.ValidateHeader());
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithCorrectNumberOfWords_CorrectFormat_v1()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("`Name: Isaac Bliss");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsTrue(f.ValidateHeader());
+            }
+        }
+
+        [TestMethod]
+        public void FileImportAndUse_ValidateHeader_TryValidateWithCorrectNumberOfWords_CorrectFormat_v2()
+        {
+            using (var sw = new StreamWriter(TempFile))
+            {
+                sw.WriteLine("Name: Bliss, Isaac");
+            }
+
+            using (var f = new FileImportAndUse())
+            {
+                f.Open(TempFile);
+                Assert.IsTrue(f.ValidateHeader());
+            }
         }
 
         [TestCleanup]

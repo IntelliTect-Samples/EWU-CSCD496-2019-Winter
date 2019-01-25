@@ -26,13 +26,15 @@ namespace Assignment2FileLibrary
             }
         }
 
-        public void Close()
+        public Boolean Close()
         {
             if (StreamReader != null)
             {
                 StreamReader.Close();
                 StreamReader = null;
-            }            
+                return true;
+            }
+            return false;
         }
 
         public void Dispose()
@@ -40,16 +42,32 @@ namespace Assignment2FileLibrary
             if (StreamReader != null)
             {
                 StreamReader.Dispose();
+                Close();
             }
         }
 
-        /*public Boolean ValidateHeader()
+        public Boolean ValidateHeader()
         {
             if (StreamReader == null)
             {
-                throw new
+                throw new NullReferenceException("The StreamReader must be opened before " +
+                    "using it to read the file and validate the header");
             }
+
+            string firstLine = StreamReader.ReadLine();
+            String[] split = firstLine.Split();
+
+            if (split.Length != 3)
+            {
+                return false;
+            }
+            else if (split[0].Equals("`Name:") && !split[1].EndsWith(",")
+                || split[0].Equals("Name:") && split[1].EndsWith(","))
+            {
+                return true;
+            }
+            
             return false;
-        }*/
+        }
     }
 }
