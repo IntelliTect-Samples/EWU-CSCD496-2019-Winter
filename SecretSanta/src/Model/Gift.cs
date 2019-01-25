@@ -4,7 +4,7 @@ using System.Text;
 
 namespace src.Model
 {
-    public class Gift : Entity
+    public class Gift : Entity, IEquatable<Gift>
     {
         public string Title { get; set; }
         public int OrderOfImportance { get; set; }
@@ -12,5 +12,17 @@ namespace src.Model
         public string Description { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
+
+        public bool Equals(Gift gift)
+        {
+            if (gift == null)
+            {
+                return false;
+            }
+            else
+            {
+                return gift.Title.Equals(Title);
+            }
+        }
     }
 }

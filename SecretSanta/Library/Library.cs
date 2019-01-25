@@ -24,14 +24,22 @@ namespace Library
             return IsValidAbsolutePathFile(path);
         }
 
-        public static bool IsValidFileFromActualProgram(in string path)
+        public static bool IsValidFileFromActualProgramProcess(in string path)
         {
-            IfCustomNullException(path, "Cannot check if File Exists with Local path with Null reference");
+            IfCustomNullException(path, "Cannot check if File Exists with Local path process with Null reference");
 
             string directoryPath = System.Environment.CurrentDirectory;
             string resultPath = Path.Combine(directoryPath, @"..\..\..\", path);
             string actualResultPath = Path.GetFullPath(resultPath);
             return File.Exists(actualResultPath);
+        }
+
+        public static bool IsValidFileFromActualProgram(in string localFilePath)
+        {
+            IfCustomNullException(localFilePath, "Cannot check if File Exists with Local path with Null reference");
+            string pathToCurrDirectory = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string pathToFile = Path.Combine(pathToCurrDirectory, localFilePath);
+            return File.Exists(pathToFile);
         }
 
         public static StreamReader MakeStreamReader(in string path)
@@ -45,14 +53,14 @@ namespace Library
             }
             catch (ArgumentException e)
             {
-                throw new ArgumentException($"{e}: ");
+                throw new ArgumentException($"{e}: Cannot make StreamReader of Invalid File");
             }
 
             return reader;
             
         }
 
-        public static void IfCustomNullException(in string path, in string customMessage)
+        public static void IfCustomNullException(in object path, in string customMessage)
         {
             if (path is null)
             {
@@ -60,15 +68,10 @@ namespace Library
             }
         }
 
-        public static bool IsStringNull(in string str)
-        {
-            return str is null;
-        }
-
-        public static string[] TrimStringArray(in string str)
+        public static string[] TrimStringToArray(in string str)
         {
             IfCustomNullException(str, "String cannot be null when attempting to convert to trimmed array.");
-            string[] stringArray = str.Split(" ");
+            string[] stringArray = str.Trim().Split(" ");
             for(int index = 0; index < stringArray.Length; index++)
             {
                 stringArray[index] = stringArray[index].Trim();
@@ -79,7 +82,7 @@ namespace Library
         public static User CreateUserFirstLast(in string firstLastLine)
         {
             IfCustomNullException(firstLastLine, "String cannot be null when attempting to create user with format Name:First Last.");
-            string[] firstLastLineArray = TrimStringArray(firstLastLine);
+            string[] firstLastLineArray = TrimStringToArray(firstLastLine);
             User newUser = new User
             {
                 FirstName = firstLastLineArray[1],
@@ -92,7 +95,7 @@ namespace Library
         public static User CreateUserLastFirst(in string lastFirstLine)
         {
             IfCustomNullException(lastFirstLine, "String cannot be null when attempting to create user with format Name:Last, First.");
-            string[] lastFirstLineArray = TrimStringArray(lastFirstLine);
+            string[] lastFirstLineArray = TrimStringToArray(lastFirstLine);
             User newUser = new User
             {
                 LastName = lastFirstLineArray[1].Substring(0, lastFirstLineArray.Length - 1),
@@ -142,20 +145,23 @@ namespace Library
 
         public static bool IsNotEndWithComma(string str)
         {
-            //IfCustomNullException(str, "String cannot be null when checking if ends with comma.");
+            IfCustomNullException(str, "String cannot be null when checking if does not end with comma.");
             return !(IsEndWithComma(str));
         }
 
         public static bool StreamHasNextLine(StreamReader reader)
         {
+            IfCustomNullException(reader, "StringReader cannot be null when checking for next line.");
             return reader.Peek() >= 0;
         }
 
         public static void AddWishList(User user, StreamReader reader)
         {
+            IfCustomNullException(user, "User cannot be null when attempting to add gifts.");
+            IfCustomNullException(reader, "StringReader cannot be null when attempting to read gifts.");
             string tempLine;
             Gift gift;
-            while (reader.Peek() >= 0)
+            while (StreamHasNextLine(reader))
             {
                 tempLine = reader.ReadLine().Trim();
                 if (tempLine.Length > 0)
