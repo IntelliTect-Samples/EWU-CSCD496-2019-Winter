@@ -62,7 +62,7 @@ namespace LibraryTests
             Assert.IsTrue(result);
         }
 
-        [DataRow(@"FileAb.txt")]
+        /*[DataRow(@"FileAb.txt")]
         [TestMethod]
         public void IsValidTestFile_NagivateToActualProgramPath_LocalPath(string path)
         {
@@ -80,6 +80,7 @@ namespace LibraryTests
             bool result = LibraryClass.IsValidAbsolutePathFile(path);
             Assert.IsTrue(result);
         }
+        */
 
         [ExpectedException(typeof(ArgumentNullException))]
         [TestMethod]
