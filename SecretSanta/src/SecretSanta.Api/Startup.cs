@@ -29,7 +29,7 @@ namespace SecretSanta.Api
 
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
-            services.AddDbContext<ApplicationDbContext>(builder =>
+            services.AddDbContext<SecretSantaDbContext>(builder =>
             {
                 builder.UseSqlite(connection);
             });

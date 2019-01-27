@@ -22,8 +22,8 @@ namespace SecretSanta.Api.DTO
             Id = gift.Id;
             Title = gift.Title;
             Description = gift.Description;
-            OrderOfImportance = gift.OrderOfImportance;
-            Url = gift.Url;
+            OrderOfImportance = gift.WantTier;
+            Url = gift.URL;
         }
     }
 }

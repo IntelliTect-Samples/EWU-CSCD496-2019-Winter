@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GiftService
+    public class GiftService : IGiftService
     {
         private SecretSantaDbContext DbContext { get; }
 
@@ -63,6 +63,11 @@ namespace SecretSanta.Domain.Services
         public Gift FindGift(User user, int id)
         {
             return null;
+        }
+
+        public List<Gift> GetGiftsForUser(int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
