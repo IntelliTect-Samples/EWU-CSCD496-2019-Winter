@@ -1,36 +1,82 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SecretSanta.Domain.Models;
+using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
     public class GroupService
     {
-        private ApplicationDbContext DbContext { get; }
-
-        public GroupService(ApplicationDbContext dbContext)
+        private ApplicationDbContext DbContext { get; set; }
+        public GroupService(ApplicationDbContext context)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            DbContext = context;
         }
 
-        public Group AddGroup(Group @group)
+        public Group UpsertGroup(Group group)
         {
-            DbContext.Groups.Add(@group);
+            if (group.Id == 0)
+            {
+                DbContext.Groups.Add(group);
+            }
+            else
+            {
+                DbContext.Groups.Update(group);
+            }
             DbContext.SaveChanges();
-            return @group;
+            return group;
         }
 
-        public Group UpdateGroup(Group @group)
+        public Group Find(int id) // what does this return if nothing is found?
         {
-            DbContext.Groups.Update(@group);
-            DbContext.SaveChanges();
-            return @group;
+            return DbContext.Groups
+                .Include(g => g.UserGroups)
+                    .ThenInclude(ug => ug.User)
+                .SingleOrDefault(g => g.Id == id);
         }
 
-        public List<Group> FetchAll()
+        public void AddUserToGroup(User user, int groupId)
         {
-            return DbContext.Groups.ToList();
+            if(user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            Group group = Find(groupId);
+            
+            if(group != null)
+            {
+                UserGroups userGroups = new UserGroups
+                {
+                    User = user,
+                    UserId = user.Id,
+                    Group = group,
+                    GroupId = group.Id
+                };
+
+                if(!group.UserGroups.Contains(userGroups))
+                {
+                    DbContext.UserGroups.Add(userGroups);
+                    DbContext.SaveChanges();
+                }
+            }
+        }
+
+        public void RemoveUserFromGroup(int groupId, int userId)
+        {
+            Group group = Find(groupId);
+
+            if(group != null)
+            {
+                UserGroups userGroups = DbContext.UserGroups.Find(userId, groupId);
+                if (userGroups != null)
+                {
+                    DbContext.UserGroups.Remove(userGroups);
+                    DbContext.SaveChanges();
+                }
+            }
         }
     }
 }

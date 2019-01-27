@@ -1,33 +1,34 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SecretSanta.Domain.Models
 {
     public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<Group> Groups { get; set; }
         public DbSet<Gift> Gifts { get; set; }
-        public DbSet<Message> Messages { get; set; }
         public DbSet<Pairing> Pairings { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<UserGroups> UserGroups { get; set; }
 
-        public ApplicationDbContext(DbContextOptions options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupUser>().HasKey(gu => new { gu.UserId, gu.GroupId });
+            modelBuilder.Entity<UserGroups>().HasKey(ug => new { ug.UserId, ug.GroupId });
 
-            modelBuilder.Entity<GroupUser>()
-                .HasOne(gu => gu.User)
-                .WithMany(u => u.GroupUsers)
-                .HasForeignKey(gu => gu.UserId);
+            modelBuilder.Entity<UserGroups>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserGroups)
+                .HasForeignKey(ug => ug.UserId);
 
-            modelBuilder.Entity<GroupUser>()
-                .HasOne(gu => gu.Group)
-                .WithMany(g => g.GroupUsers)
-                .HasForeignKey(gu => gu.GroupId);
+            modelBuilder.Entity<UserGroups>()
+                .HasOne(ug => ug.Group)
+                .WithMany(g => g.UserGroups)
+                .HasForeignKey(ug => ug.GroupId);
         }
     }
 }
