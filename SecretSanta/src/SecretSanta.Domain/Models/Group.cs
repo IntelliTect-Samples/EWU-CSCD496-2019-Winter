@@ -8,5 +8,10 @@ namespace SecretSanta.Domain.Models
     {
         public string Title { get; set; }
         public List<UserGroups> UserGroups { get; set; }
+
+        public Group()
+        {
+            UserGroups = new List<UserGroups>();
+        }
     }
 }

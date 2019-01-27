@@ -10,7 +10,11 @@ namespace SecretSanta.Domain.Models
         public string LastName { get; set; }
         public List<Gift> Gifts { get; set; }
         public List<UserGroups> UserGroups { get; set; }
+
+        public User()
+        {
+            Gifts = new List<Gift>();
+            UserGroups = new List<UserGroups>();
+        }
     }
-
-
 }

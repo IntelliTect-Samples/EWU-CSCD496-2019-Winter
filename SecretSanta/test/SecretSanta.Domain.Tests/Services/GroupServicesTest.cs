@@ -30,6 +30,18 @@ namespace SecretSanta.Domain.Tests.Services
             return new User { FirstName = f, LastName = l };
         }
 
+        private UserGroups CreateUserGroup(User user, Group group)
+        {
+            UserGroups userGroups = new UserGroups
+            {
+                User = user,
+                UserId = user.Id,
+                Group = group,
+                GroupId = group.Id
+            };
+            return userGroups;
+        }
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -53,33 +65,65 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
-        public void CreateGroup_Add3Users_ToGroup()
+        public void AddUserToGroup()
         {
             GroupService groupService;
+            UserService userService;
+
             Group group = CreateGroup("Family");
-
-            User user1 = CreateUser("Conner", "Verret");
-            User user2 = CreateUser("Carter", "Verret");
-            User user3 = CreateUser("Paul", "Verret");
-
-            group.UserGroups.Add(CreateUserGroup(user1, group));
-            group.UserGroups.Add(CreateUserGroup(user2, group));
-            group.UserGroups.Add(CreateUserGroup(user3, group));
+            User user = CreateUser("Conner", "Verret");
 
             using (var context = new ApplicationDbContext(Options))
             {
                 groupService = new GroupService(context);
+                userService = new UserService(context);
+
                 groupService.UpsertGroup(group);
+                userService.UpsertUser(user);
+
+                groupService.AddUserToGroup(user, 1);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 groupService = new GroupService(context);
-                group = groupService.Find(1);
+                userService = new UserService(context);
 
-                Assert.AreEqual("Family", group.Title);
+                group = groupService.Find(1);
+                user = userService.Find(1);
+
+                Assert.AreSame(user, group.UserGroups[0].User);
+            }
+        }
+
+        [TestMethod]
+        public void CreateGroup_User_ToGroup()
+        {
+            GroupService groupService;
+            UserService userService;
+            Group group = CreateGroup("Family");
+            User user = CreateUser("Conner", "Verret");
+
+            group.UserGroups.Add(CreateUserGroup(user, group));
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                userService = new UserService(context);
+
+                groupService.UpsertGroup(group);
+                userService.UpsertUser(user);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                userService = new UserService(context);
+                group = groupService.Find(1);
+                user = userService.Find(1);
+
                 Assert.AreEqual("Conner", group.UserGroups[0].User.FirstName);
-                Assert.AreEqual("Paul", group.UserGroups[2].User.FirstName);
+                Assert.AreEqual("Family", user.UserGroups[0].Group.Title);
             }
         }
 
@@ -107,6 +151,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 groupService = new GroupService(context);
                 groupService.RemoveUserFromGroup(group.Id, group.UserGroups[0].UserId);
+                
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -118,18 +163,6 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual("Carter", user.FirstName);
                 Assert.AreEqual(2, group.UserGroups.Count);
             }
-        }
-
-        private UserGroups CreateUserGroup(User user, Group group)
-        {
-            UserGroups userGroups = new UserGroups
-            {
-                User = user,
-                UserId = user.Id,
-                Group = group,
-                GroupId = group.Id
-            };
-            return userGroups;
         }
     }
 }

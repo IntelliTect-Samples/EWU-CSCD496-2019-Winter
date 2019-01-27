@@ -37,25 +37,46 @@ namespace SecretSanta.Domain.Services
                 .SingleOrDefault(g => g.Id == id);
         }
 
-        public UserGroups RemoveUserFromGroup(int groupId, int userId)
+        public void AddUserToGroup(User user, int groupId)
+        {
+            if(user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            Group group = Find(groupId);
+            
+            if(group != null)
+            {
+                UserGroups userGroups = new UserGroups
+                {
+                    User = user,
+                    UserId = user.Id,
+                    Group = group,
+                    GroupId = group.Id
+                };
+
+                if(!group.UserGroups.Contains(userGroups))
+                {
+                    DbContext.UserGroups.Add(userGroups);
+                    DbContext.SaveChanges();
+                }
+            }
+        }
+
+        public void RemoveUserFromGroup(int groupId, int userId)
         {
             Group group = Find(groupId);
-            UserGroups userGroups = null;
 
             if(group != null)
             {
-                foreach(var ug in group.UserGroups
-                    .Where(ug => ug.UserId == userId))
+                UserGroups userGroups = DbContext.UserGroups.Find(userId, groupId);
+                if (userGroups != null)
                 {
-                    if(group.UserGroups.Remove(ug))
-                    {
-                        DbContext.SaveChanges();
-                        return ug;
-                    }
+                    DbContext.UserGroups.Remove(userGroups);
+                    DbContext.SaveChanges();
                 }
-                    
             }
-            return userGroups;
         }
     }
 }

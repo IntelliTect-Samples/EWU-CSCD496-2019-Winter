@@ -11,5 +11,10 @@ namespace SecretSanta.Domain.Models
         public User Recipient { get; set; }
         public int RecipientId { get; set; }
         public List<Message> Messages { get; set; }
+
+        public Pairing()
+        {
+            Messages = new List<Message>();
+        }
     }
 }
