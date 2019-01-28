@@ -26,8 +26,8 @@ namespace SecretSanta.Api.Tests
                 Id = 3,
                 Title = "Gift Tile",
                 Description = "Gift Description",
-                Url = "http://www.gift.url",
-                OrderOfImportance = 1
+                URL = "http://www.gift.url",
+                WantTier = 1
             };
             var testService = new TestableGiftService
             {
@@ -45,8 +45,8 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
             Assert.AreEqual(gift.Description, resultGift.Description);
-            Assert.AreEqual(gift.Url, resultGift.Url);
-            Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
+            Assert.AreEqual(gift.URL, resultGift.Url);
+            Assert.AreEqual(gift.WantTier, resultGift.OrderOfImportance);
         }
 
         [TestMethod]
