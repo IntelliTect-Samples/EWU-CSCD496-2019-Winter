@@ -1,8 +1,9 @@
-﻿using SecretSanta.Domain.Models;
+﻿using SecretSanta.Domain.Interfaces;
+using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GroupService
+    public class GroupService : IGroupService
     {
         private SecretSantaDbContext DbContext { get; }
 

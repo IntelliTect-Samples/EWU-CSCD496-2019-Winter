@@ -1,8 +1,9 @@
-﻿using SecretSanta.Domain.Models;
+﻿using SecretSanta.Domain.Interfaces;
+using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class PairingService
+    public class PairingService : IPairingService
     {
         private SecretSantaDbContext DbContext { get; }
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SecretSanta.Domain.Interfaces;
 using SecretSanta.Domain.Models;
 using System.Collections.Generic;
 
 namespace SecretSanta.Domain.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private SecretSantaDbContext DbContext { get; }
 

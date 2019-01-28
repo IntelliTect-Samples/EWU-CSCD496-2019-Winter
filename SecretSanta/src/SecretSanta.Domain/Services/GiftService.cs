@@ -62,12 +62,24 @@ namespace SecretSanta.Domain.Services
 
         public Gift FindGift(User user, int id)
         {
-            return null;
+            List<Gift> giftList = (List<Gift>)user.Gifts;
+            Gift gift = null;
+
+            if(id > 0)
+            {
+                foreach(Gift g in giftList)
+                {
+                    if (g.Id == id)
+                        gift = g;
+                }
+            }
+
+            return gift;
         }
 
         public List<Gift> GetGiftsForUser(int userId)
         {
-            throw new System.NotImplementedException();
+            return (List<Gift>)DbContext.Users.Find(userId).Gifts;
         }
     }
 }
