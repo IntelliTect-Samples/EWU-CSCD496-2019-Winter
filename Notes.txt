@@ -6,18 +6,18 @@ Stuff for groups
 *   Fetch all users from a groups
 *   Fetch all groups
 *   Make new group
-    Update a group
+*   Update a group
 *   Delete a group
 *   place a user into a group
-    remove a user from a group
+*   remove a user from a group
     
 Stuff for Gifts
 *   Fetch all gifts from a user
 *   Make a gift for a user
-+   Update a gift for a user
-&   delete a gift from a users list
+*   Update a gift for a user
+*   delete a gift from a users list
 
 Stuff for Users
 *   Make a new User
-    Update a User
+*   Update a User
 *   Delete a User 

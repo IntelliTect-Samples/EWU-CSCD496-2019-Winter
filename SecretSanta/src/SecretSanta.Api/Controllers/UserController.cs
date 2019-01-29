@@ -21,13 +21,34 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        // PUT api/User/info
-        [HttpPut("{info}")]
+        // POST api/User/
+        [HttpPost]
         public ActionResult<bool> MakeUser(string info)
         {
             if (info == null) return false;
 
-            return _UserService.MakeUser(System.Web.HttpUtility.UrlDecode(info));
+            return _UserService.MakeUser(info);
+        }
+
+        // PUT api/User/5
+        [HttpPut("{id}")]
+        public ActionResult<bool> UpdateUser(int id, DTO.User upDatedUser)
+        {
+            if(id <= 0)
+            {
+                return NotFound();
+            }
+
+            User user = new User()
+            {
+                Id = id,
+                First = upDatedUser.First,
+                Last = upDatedUser.Last,
+                Gifts = upDatedUser.Gifts,
+                UserGroups = upDatedUser.UserGroups
+            };
+
+            return _UserService.UpsertUser(user);
         }
 
         // DELETE api/User/5

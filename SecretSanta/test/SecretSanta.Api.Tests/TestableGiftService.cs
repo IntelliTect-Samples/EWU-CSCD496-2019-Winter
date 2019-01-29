@@ -15,12 +15,27 @@ namespace SecretSanta.Api.Tests
             throw new System.NotImplementedException();
         }
 
+        public bool CreateGift(int uid, string giftTitle)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool DeleteGift(User user, Gift gift)
         {
             throw new System.NotImplementedException();
         }
 
+        public bool DeleteGift(int uid, int gid)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool EditGift(User user, Gift gift)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool EditGift(int uid, Gift gift)
         {
             throw new System.NotImplementedException();
         }

@@ -28,6 +28,13 @@ namespace SecretSanta.Domain.Services
             return test;
         }
 
+        public bool EditGift(int uid, Gift gift)
+        {
+            User user = DbContext.Users.Find(uid);
+
+            return EditGift(user, gift);
+        }
+
         public bool EditGift(User user, Gift gift)
         {
             if (gift.Id != default(int))
@@ -50,6 +57,14 @@ namespace SecretSanta.Domain.Services
             DbContext.SaveChanges();
 
             return true;
+        }
+
+        public bool DeleteGift(int uid, int gid)
+        {
+            User user = DbContext.Users.Find(uid);
+            Gift gift = DbContext.Gifts.Find(gid);
+
+            return DeleteGift(user, gift);
         }
 
         public bool DeleteGift(User user, Gift gift)
