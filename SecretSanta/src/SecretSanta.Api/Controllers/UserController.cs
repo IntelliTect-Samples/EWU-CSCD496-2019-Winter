@@ -21,6 +21,15 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
+        // PUT api/User/info
+        [HttpPut("{info}")]
+        public ActionResult<bool> MakeUser(string info)
+        {
+            if (info == null) return false;
+
+            return _UserService.MakeUser(System.Web.HttpUtility.UrlDecode(info));
+        }
+
         // DELETE api/User/5
         [HttpDelete("{id}")]
         public ActionResult<bool> DeleteUser(int id)

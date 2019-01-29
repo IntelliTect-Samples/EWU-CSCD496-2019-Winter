@@ -9,6 +9,7 @@ namespace SecretSanta.Domain.Interfaces
     {
         bool UpsertUser(User user);
         bool DeleteUser(int id);
+        bool MakeUser(string info);
         User Find(int id);
         List<User> FetchAll();
     }

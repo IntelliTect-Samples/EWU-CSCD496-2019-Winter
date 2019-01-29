@@ -99,5 +99,17 @@ namespace SecretSanta.Domain.Services
         {
             return DbContext.Users.Find(id);
         }
+
+        public bool CreateGift(int uid, string giftTitle)
+        {
+            bool test = false;
+
+            User user = DbContext.Users.Find(uid);
+            Gift gift = new Gift() { Title = giftTitle };
+
+            test = CreateGift(user, gift);
+
+            return test;
+        }
     }
 }

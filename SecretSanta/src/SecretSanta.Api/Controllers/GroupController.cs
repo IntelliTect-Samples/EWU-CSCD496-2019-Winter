@@ -23,7 +23,7 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Group/5
         [HttpGet("{groupId}")]
-        public ActionResult<List<DTO.User>> GetUserFromGroup(int groupId)
+        public ActionResult<List<DTO.User>> GetUsersFromGroup(int groupId)
         {
             if(groupId <= 0)
             {
@@ -54,6 +54,15 @@ namespace SecretSanta.Api.Controllers
             }
 
             return _GroupService.DeleteGroup(id);
+        }
+
+        // POST api/group/title
+        [HttpPost("{title}")]
+        public ActionResult<bool> MakeGroup(string title)
+        {
+            if (title == null) return false;
+
+            return _GroupService.CreateGroup(title);
         }
 
         // PUT api/Group/gid/uid

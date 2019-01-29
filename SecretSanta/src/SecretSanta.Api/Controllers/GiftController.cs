@@ -31,6 +31,15 @@ namespace SecretSanta.Api.Controllers
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
+        // POST api/Gift/5/title
+        [HttpPost("{id/title}")]
+        public ActionResult<bool> MakeGift(int id, string title)
+        {
+            if (title == null) return false;
+
+            return _GiftService.CreateGift(id, title);
+        }
+
         // PUT api/Gift/ID%20%3D%205%3BURL%20%3D%20www.mytoasters.com
         [HttpPut("{updatedGiftInfo}")]
         public ActionResult<bool> UpdateGiftForUser(int userID, string data)
