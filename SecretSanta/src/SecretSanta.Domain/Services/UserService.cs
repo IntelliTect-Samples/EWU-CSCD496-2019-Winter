@@ -14,7 +14,7 @@ namespace SecretSanta.Domain.Services
             DbContext = context;
         }
 
-        public void UpsertUser(User user)
+        public bool UpsertUser(User user)
         {
             if (user.Id == default(int))
             {
@@ -25,6 +25,7 @@ namespace SecretSanta.Domain.Services
                 DbContext.Users.Update(user);
             }
             DbContext.SaveChanges();
+            return true;
         }
 
         public User Find(int id)
@@ -38,6 +39,22 @@ namespace SecretSanta.Domain.Services
             userTask.Wait();
 
             return userTask.Result;
+        }
+
+        public bool DeleteUser(int id)
+        {
+            bool test = false;
+
+            User user = Find(id);
+
+            if (user != null)
+            {
+                DbContext.Remove(user);
+                DbContext.SaveChanges();
+                test = true;
+            }
+
+            return test;
         }
     }
 }

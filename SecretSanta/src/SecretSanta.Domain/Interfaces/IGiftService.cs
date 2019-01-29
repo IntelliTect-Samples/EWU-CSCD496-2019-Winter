@@ -5,9 +5,10 @@ namespace SecretSanta.Domain.Services
 {
     public interface IGiftService
     {
-        void CreateGift(User user, Gift gift);
-        void EditGift(User user, Gift gift);
-        void DeleteGift(User user, Gift gift);
+        User FindUser(int id);
+        bool CreateGift(User user, Gift gift);
+        bool EditGift(User user, Gift gift);
+        bool DeleteGift(User user, Gift gift);
         List<Gift> GetGiftsForUser(int userId);
     }
 }

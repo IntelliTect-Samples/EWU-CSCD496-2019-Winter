@@ -7,7 +7,8 @@ namespace SecretSanta.Domain.Interfaces
 {
     public interface IUserService
     {
-        void UpsertUser(User user);
+        bool UpsertUser(User user);
+        bool DeleteUser(int id);
         User Find(int id);
         List<User> FetchAll();
     }

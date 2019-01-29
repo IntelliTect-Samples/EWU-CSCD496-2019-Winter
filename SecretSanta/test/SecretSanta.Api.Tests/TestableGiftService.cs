@@ -10,17 +10,22 @@ namespace SecretSanta.Api.Tests
         public List<Gift> ToReturn { get; set; }
         public int GetGiftsForUser_UserId { get; set; }
 
-        public void CreateGift(User user, Gift gift)
+        public bool CreateGift(User user, Gift gift)
         {
             throw new System.NotImplementedException();
         }
 
-        public void DeleteGift(User user, Gift gift)
+        public bool DeleteGift(User user, Gift gift)
         {
             throw new System.NotImplementedException();
         }
 
-        public void EditGift(User user, Gift gift)
+        public bool EditGift(User user, Gift gift)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public User FindUser(int id)
         {
             throw new System.NotImplementedException();
         }

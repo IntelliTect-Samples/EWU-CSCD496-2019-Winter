@@ -7,11 +7,16 @@ namespace SecretSanta.Domain.Interfaces
 {
     public interface IGroupService
     {
-        void CreateGroup(string title);
-        void CreateGroup(Group group);
-        void UpdateGroup(Group group);
-        void AddUser(User user, int id);
-        void RemoveUser(User user, int id);
+        bool CreateGroup(string title);
+        bool CreateGroup(Group group);
+        bool UpdateGroup(Group group);
+        bool AddUser(User user, int id);
+        bool AddUser(int uid, int gid);
+        bool RemoveUser(User user, int id);
+        bool RemoveUser(int uid, int gid);
+        bool DeleteGroup(int id);
         Group FindGroup(int id);
+        List<User> GetUsersFromGroup(int id);
+        List<Group> GetAllGroups();
     }
 }
