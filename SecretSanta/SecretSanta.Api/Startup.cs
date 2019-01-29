@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSanta.Domain.Interfaces;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using Swashbuckle.AspNetCore.Swagger;
@@ -25,11 +26,18 @@ namespace SecretSanta.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddScoped<IGiftService, GiftService>();
+
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
             services.AddDbContext<SecretSantaDbContext>(builder =>
             {
                 builder.UseSqlite(connection);
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
         }
 
@@ -45,6 +53,16 @@ namespace SecretSanta.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

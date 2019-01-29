@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Interfaces;
+using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GiftService
+    public class GiftService : IGiftService
     {
         private SecretSantaDbContext DbContext { get; set; }
 
         public GiftService(SecretSantaDbContext context)
         {
-            DbContext = context;
+            DbContext = context ?? throw new ArgumentNullException(nameof(DbContext));
         }
 
         public Gift AddGift(Gift gift)
@@ -42,6 +45,11 @@ namespace SecretSanta.Domain.Services
             return DbContext.Gifts
                 .Include(g => g.User)
                 .SingleOrDefault(g => g.Id == id);
+        }
+
+        public List<Gift> GetGiftsForUser(int userId)
+        {
+            return DbContext.Gifts.Where(g => g.Id == userId).ToList();
         }
     }
 }
