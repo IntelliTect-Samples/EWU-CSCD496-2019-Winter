@@ -5,7 +5,7 @@
 Stuff for groups
 *   Fetch all users from a groups
 *   Fetch all groups
-    Make new group
+*   Make new group
     Update a group
 *   Delete a group
 *   place a user into a group
@@ -13,7 +13,7 @@ Stuff for groups
     
 Stuff for Gifts
 *   Fetch all gifts from a user
-    Make a gift for a user
+*   Make a gift for a user
 +   Update a gift for a user
 &   delete a gift from a users list
 
