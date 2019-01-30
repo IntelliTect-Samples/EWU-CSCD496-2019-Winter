@@ -15,7 +15,7 @@ namespace SecretSanta.Api.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void GiftController_RequiresGiftService()
         {
-            new GiftController(null);
+            var giftController = new GiftController(null);
         }
 
         [TestMethod]
@@ -29,12 +29,10 @@ namespace SecretSanta.Api.Tests
                 Url = "http://www.gift.url",
                 OrderOfImportance = 1
             };
-            var returnList = new List<Gift>();
-            returnList.Add(gift);
+            var returnList = new List<Gift> {gift};
 
-            var testService = new TestableGiftService();
-            testService.GetGiftsForUser_Return = returnList;
-            
+            var testService = new TestableGiftService {GetGiftsForUser_Return = returnList};
+
             var controller = new GiftController(testService);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
@@ -67,9 +65,9 @@ namespace SecretSanta.Api.Tests
             var testService = new TestableGiftService();
             var controller = new GiftController(testService);
 
-            ActionResult result = controller.AddGiftToUser(null, 4);
+            ActionResult<DTO.Gift> result = controller.AddGiftToUser(null, 4);
 
-            Assert.IsTrue(result is BadRequestResult);
+            Assert.IsTrue(result.Result is BadRequestResult);
             //This check ensures that the controller does not AddGitToUser on the service
             Assert.AreEqual(0, testService.AddGiftToUser_UserId);
         }
@@ -78,12 +76,18 @@ namespace SecretSanta.Api.Tests
         public void AddGiftToUser_InvokesService()
         {
             var testService = new TestableGiftService();
+            var giftDto = new DTO.Gift
+            {
+                Id = 42,
+                Title = "Title",
+                Description = "Description",
+                OrderOfImportance = 1,
+                Url = "Url"
+            };
+            testService.AddGiftToUser_Return = DTO.Gift.ToEntity(giftDto);
             var controller = new GiftController(testService);
-            var giftDto = new DTO.Gift { Id = 42 };
 
-            ActionResult result = controller.AddGiftToUser(giftDto, 4);
-
-            OkResult okResult = result as OkResult;
+            ActionResult<DTO.Gift> result = controller.AddGiftToUser(giftDto, 4);
 
             Assert.IsNotNull(result, "Result was not a 200");
             Assert.AreEqual(4, testService.AddGiftToUser_UserId);
