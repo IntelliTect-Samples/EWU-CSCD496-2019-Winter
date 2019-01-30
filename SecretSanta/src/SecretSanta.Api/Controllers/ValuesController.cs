@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -7,12 +8,27 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly ApplicationDbContext _Context;
+
+        public ValuesController(ApplicationDbContext context)
         {
-            return new string[] { "value1", "value2" };
+            _Context = context;
         }
+
+        [HttpGet]
+        public ActionResult InitDatabase()
+        {
+            //TODO: Add stuff
+            _Context.SaveChanges();
+            return Ok();
+        }
+
+        // GET api/values
+        //[HttpGet]
+        //public ActionResult<IEnumerable<string>> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/values/5
         [HttpGet("{id}")]

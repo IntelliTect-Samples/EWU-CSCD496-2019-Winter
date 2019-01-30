@@ -29,13 +29,12 @@ namespace SecretSanta.Api.Tests
                 Url = "http://www.gift.url",
                 OrderOfImportance = 1
             };
-            var testService = new TestableGiftService
-            {
-                ToReturn =  new List<Gift>
-                {
-                    gift
-                }
-            };
+            var returnList = new List<Gift>();
+            returnList.Add(gift);
+
+            var testService = new TestableGiftService();
+            testService.GetGiftsForUser_Return = returnList;
+            
             var controller = new GiftController(testService);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
@@ -60,6 +59,35 @@ namespace SecretSanta.Api.Tests
             Assert.IsTrue(result.Result is NotFoundResult);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
+        public void AddGiftToUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.AddGiftToUser(null, 4);
+
+            Assert.IsTrue(result is BadRequestResult);
+            //This check ensures that the controller does not AddGitToUser on the service
+            Assert.AreEqual(0, testService.AddGiftToUser_UserId);
+        }
+
+        [TestMethod]
+        public void AddGiftToUser_InvokesService()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+            var giftDto = new DTO.Gift { Id = 42 };
+
+            ActionResult result = controller.AddGiftToUser(giftDto, 4);
+
+            OkResult okResult = result as OkResult;
+
+            Assert.IsNotNull(result, "Result was not a 200");
+            Assert.AreEqual(4, testService.AddGiftToUser_UserId);
+            Assert.AreEqual(giftDto.Id, testService.AddGiftToUser_Gift.Id);
         }
     }
 }

@@ -25,5 +25,11 @@ namespace SecretSanta.Api.DTO
             OrderOfImportance = gift.OrderOfImportance;
             Url = gift.Url;
         }
+
+        public static SecretSanta.Domain.Models.Gift ToEntity(DTO.Gift gift)
+        {
+            //Pretend this is implemented
+            return null;
+        }
     }
 }
