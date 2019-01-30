@@ -28,5 +28,15 @@ namespace SecretSanta.Api.Tests
 
             return AddGiftToUser_Return;
         }
+
+        public Gift UpdateGiftForUser(int userId, Gift gift)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RemoveGift(Gift gift)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

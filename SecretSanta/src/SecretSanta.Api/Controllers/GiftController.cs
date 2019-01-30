@@ -33,11 +33,11 @@ namespace SecretSanta.Api.Controllers
 
         //POST api/Gift/4
         [HttpPost("{userId}")]
-        public ActionResult AddGiftToUser(DTO.Gift gift, int userId)
+        public ActionResult<DTO.Gift> AddGiftToUser(DTO.Gift gift, int userId)
         {
             if (userId <= 0)
             {
-                return NotFound();
+                return NotFound(gift);
             }
 
             if (gift == null)
@@ -45,10 +45,8 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
-            return Ok();
-
-            //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            Gift addedGift = _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
+            return Ok(new DTO.Gift(addedGift));
         }
     }
 }
