@@ -58,6 +58,20 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
+        // DELETE api/Group/remove/gid
+        [HttpDelete("remove/{groupId}")]
+        public ActionResult RemoveUserFromGroup(int gid, int uid)
+        {
+            if (gid <= 0 || uid <= 0)
+            {
+                return NotFound();
+            }
+
+            _GroupService.RemoveUser(uid, gid);
+
+            return Ok();
+        }
+
         // POST api/group
         [HttpPost()]
         public ActionResult MakeGroup(string title)
@@ -95,8 +109,8 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        // PUT api/Group/gid
-        [HttpPut("{groupId}")]
+        // PUT api/Group/add/5
+        [HttpPut("add/{groupId}")]
         public ActionResult AddUserToGroup(int gid, int uid)
         {
             if(gid <= 0 || uid <= 0)
@@ -105,20 +119,6 @@ namespace SecretSanta.Api.Controllers
             }
 
             _GroupService.AddUser(uid, gid);
-
-            return Ok();
-        }
-
-        // DELETE api/Group/gid
-        [HttpDelete("{groupId}")]
-        public ActionResult RemoveUserFromGroup(int gid, int uid)
-        {
-            if (gid <= 0 || uid <= 0)
-            {
-                return NotFound();
-            }
-
-            _GroupService.RemoveUser(uid, gid);
 
             return Ok();
         }

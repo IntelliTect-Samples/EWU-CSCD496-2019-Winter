@@ -56,17 +56,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Gift gift = new Gift()
-            {
-                Id = upDatedGift.Id,
-                Title = upDatedGift.Title,
-                Description = upDatedGift.Description,
-                URL = upDatedGift.Url,
-                WantTier = upDatedGift.OrderOfImportance,
-                WhoWantIt = _GiftService.FindUser(userID)
-            };
-
-            _GiftService.EditGift(userID, gift);
+            _GiftService.EditGift(userID, DTO.Gift.GetDomainGift(upDatedGift));
 
             return Ok();
         }

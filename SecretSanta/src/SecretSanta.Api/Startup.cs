@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSanta.Domain.Interfaces;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using Swashbuckle.AspNetCore.Swagger;
@@ -26,6 +27,8 @@ namespace SecretSanta.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IGiftService, GiftService>();
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IUserService, UserService>();
 
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
@@ -38,6 +41,7 @@ namespace SecretSanta.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.CustomSchemaIds(i => i.FullName);
             });
         }
 

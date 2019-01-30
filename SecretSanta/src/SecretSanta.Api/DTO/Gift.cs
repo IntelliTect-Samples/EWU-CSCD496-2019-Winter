@@ -25,5 +25,19 @@ namespace SecretSanta.Api.DTO
             OrderOfImportance = gift.WantTier;
             Url = gift.URL;
         }
+
+        public static Domain.Models.Gift GetDomainGift(Gift gift)
+        {
+            Domain.Models.Gift mGift = new Domain.Models.Gift()
+            {
+                Id = gift.Id,
+                Title = gift.Title,
+                Description = gift.Description,
+                URL = gift.Url,
+                WantTier = gift.OrderOfImportance
+            };
+
+            return mGift;
+        }
     }
 }
