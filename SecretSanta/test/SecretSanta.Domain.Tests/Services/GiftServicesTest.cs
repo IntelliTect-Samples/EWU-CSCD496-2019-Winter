@@ -65,7 +65,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 GiftService giftService = new GiftService(context);
                 Gift gift = CreateGift();
-                Gift userGift = giftService.UpsertGift(gift);
+                Gift userGift = giftService.CreateGift(gift);
                 Assert.AreNotEqual(0, userGift.Id);
             }
         }
@@ -79,8 +79,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-
-                giftService.UpsertGift(gift);
+                giftService.CreateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -103,7 +102,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 giftService = new GiftService(context);
 
-                giftService.UpsertGift(gift);
+                giftService.UpdateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -113,7 +112,7 @@ namespace SecretSanta.Domain.Tests.Services
                 gift = giftService.Find(1);
 
                 gift.Title = "Xbox One";
-                giftService.UpsertGift(gift);
+                giftService.UpdateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -134,7 +133,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 giftService = new GiftService(context);
 
-                giftService.UpsertGift(gift);
+                giftService.CreateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))

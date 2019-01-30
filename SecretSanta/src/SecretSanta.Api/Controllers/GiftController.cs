@@ -18,17 +18,86 @@ namespace SecretSanta.Api.Controllers
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
+        // POST api/Gift/
+        [HttpPost]
+        public ActionResult CreateGift(DTO.Gift gift)
+        {
+            if (gift is null) return BadRequest();
+            if (gift.Id != 0) gift.Id = 0;
+
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+            _GiftService.CreateGift(databaseGift);
+            return Ok();
+        }
+
+        // PUT api/Gift/
+        [HttpPut]
+        public ActionResult UpdateGift(DTO.Gift gift)
+        {
+            if (gift.Id <= 0) return NotFound();
+            if (gift is null) return BadRequest();
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+            _GiftService.UpdateGift(databaseGift);
+            return Ok();
+        }
+
+        // DELETE api/Gift/
+        [HttpDelete]
+        public ActionResult DeleteGift(DTO.Gift gift)
+        {
+            if (gift.Id <= 0) return NotFound();
+            if (gift is null) return BadRequest();
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+            _GiftService.DeleteGift(databaseGift);
+            return Ok();
+        }
+
+
         // GET api/Gift/5
         [HttpGet("{userId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
         {
-            if (userId <= 0)
-            {
-                return NotFound();
-            }
-            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            if (userId <= 0) return NotFound();
 
+            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
+
+        [HttpPost("{userId}")]
+        public ActionResult AddGiftToUser(DTO.Gift gift, int userId)
+        {
+            if (userId <= 0) return NotFound();
+            if (gift is null) return BadRequest();
+
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+
+            _GiftService.AddGiftToUser(databaseGift, userId);
+            return Ok();
+        }
+
+        [HttpPut("{userId}")]
+        public ActionResult UpdateGiftForUser(DTO.Gift gift, int userId)
+        {
+            if (userId <= 0) return NotFound();
+            if (gift is null) return BadRequest();
+
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+            _GiftService.UpdateGiftForUser(databaseGift, userId);
+
+            return Ok();
+        }
+
+        [HttpDelete("{userId}")]
+        public ActionResult DeleteGiftFromUser(DTO.Gift gift, int userId)
+        {
+            if (userId <= 0) return NotFound();
+            if (gift is null) return BadRequest();
+
+            Gift databaseGift = DTO.Gift.ToEntity(gift);
+            _GiftService.DeleteGiftFromUser(databaseGift, userId);
+
+            return Ok();
+        }
+
     }
 }

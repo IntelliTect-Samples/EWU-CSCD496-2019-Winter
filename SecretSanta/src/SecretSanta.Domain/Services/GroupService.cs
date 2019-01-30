@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GroupService
+    public class GroupService : IGroupService
     {
         private ApplicationDbContext DbContext { get; set; }
         public GroupService(ApplicationDbContext context)
@@ -77,6 +77,11 @@ namespace SecretSanta.Domain.Services
                     DbContext.SaveChanges();
                 }
             }
+        }
+
+        public List<Group> GetAllGroups()
+        {
+            return DbContext.Groups.ToList();
         }
     }
 }

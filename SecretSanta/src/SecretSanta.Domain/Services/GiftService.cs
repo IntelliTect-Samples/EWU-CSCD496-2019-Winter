@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GiftService
+    public class GiftService : IGiftService
     {
         private ApplicationDbContext DbContext { get; set; }
         public GiftService(ApplicationDbContext dbContext)
@@ -15,22 +15,27 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext;
         }
 
-        public Gift UpsertGift(Gift gift)
+        public Gift CreateGift(Gift gift)
         {
-            if (gift.Id == 0)
-            {
-                DbContext.Gifts.Add(gift);
-            }
-            else
-            {
-                DbContext.Gifts.Update(gift);
-            }
+            if (gift is null) throw new ArgumentNullException(nameof(gift));
+            if (gift.Id == 0) DbContext.Gifts.Add(gift);
+            DbContext.SaveChanges();
+            return gift;
+        }
+
+        public Gift UpdateGift(Gift gift)
+        {
+            if (gift is null) throw new ArgumentNullException(nameof(gift));
+
+            DbContext.Gifts.Update(gift);
             DbContext.SaveChanges();
             return gift;
         }
 
         public Gift DeleteGift(Gift gift)
         {
+            if (gift == null) throw new ArgumentNullException(nameof(gift));
+
             DbContext.Gifts.Remove(gift);
             DbContext.SaveChanges();
             return gift;
@@ -43,9 +48,9 @@ namespace SecretSanta.Domain.Services
                 .SingleOrDefault(g => g.Id == id);
         }
 
-        public Gift AddGiftToUser(int userId, Gift gift)
+        public Gift AddGiftToUser(Gift gift, int userId)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift is null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
             DbContext.Gifts.Add(gift);
@@ -54,9 +59,9 @@ namespace SecretSanta.Domain.Services
             return gift;
         }
 
-        public Gift UpdateGiftForUser(int userId, Gift gift)
+        public Gift UpdateGiftForUser(Gift gift, int userId)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift is null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
             DbContext.Gifts.Update(gift);
@@ -65,16 +70,20 @@ namespace SecretSanta.Domain.Services
             return gift;
         }
 
+        public Gift DeleteGiftFromUser(Gift gift, int userId)
+        {
+            if (gift is null) throw new ArgumentNullException(nameof(gift));
+            if (userId > 0)
+            {
+                DbContext.Gifts.Remove(gift);
+                DbContext.SaveChanges();
+            }
+            return gift;
+        }
+
         public List<Gift> GetGiftsForUser(int userId)
         {
             return DbContext.Gifts.Where(g => g.UserId == userId).ToList();
-        }
-        public void RemoveGift(Gift gift)
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
-        {
-
-            DbContext.Gifts.Remove(gift);
-            DbContext.SaveChanges();
         }
     }
 }
