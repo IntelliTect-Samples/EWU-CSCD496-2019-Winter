@@ -21,7 +21,7 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
-            var gift = new Gift
+            Gift gift = new Gift
             {
                 Id = 3,
                 Title = "Gift Tile",
@@ -29,18 +29,18 @@ namespace SecretSanta.Api.Tests
                 URL = "http://www.gift.url",
                 WantTier = 1
             };
-            var testService = new TestableGiftService
+            TestableGiftService service = new TestableGiftService
             {
                 ToReturn =  new List<Gift>
                 {
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+            GiftController controller = new GiftController(service);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
 
-            Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
+            Assert.AreEqual(4, service.GetGiftsForUser_UserId);
             DTO.Gift resultGift = result.Value.Single();
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
@@ -50,20 +50,20 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetGiftForUser_RequiresPositiveUserId()
+        public void GetGiftForUser_ReturnsNotFound()
         {
-            var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(-1);
             
             Assert.IsTrue(result.Result is NotFoundResult);
             //This check ensures that the service was not called
-            Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
+            Assert.AreEqual(0, service.GetGiftsForUser_UserId);
         }
 
         [TestMethod]
-        public void AddGiftToUser_RequiresGift()
+        public void MakeGiftForUser_ReturnBadRequest()
         {
             TestableGiftService testableService = new TestableGiftService();
             GiftController giftController = new GiftController(testableService);
@@ -76,16 +76,73 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_ReturnUserFromService()
+        public void MakeGiftForUser_ReturnOk()
         {
             TestableGiftService testableService = new TestableGiftService();
             GiftController giftController = new GiftController(testableService);
 
-            ActionResult result = giftController.UpdateGiftForUser(4, new DTO.Gift());
+            ActionResult result = giftController.MakeGift(4, "New Gift");
 
-            OkResult okResult = result as OkResult;
+            Assert.IsTrue(result is OkResult);
+        }
 
-            Assert.IsNotNull(result, "Non-200 return");
+        [TestMethod]
+        public void UpdateGiftForUser_ReturnNotFound()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+
+            ActionResult result = controller.UpdateGiftForUser(-1, new DTO.Gift());
+
+            Assert.IsTrue(result is NotFoundResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, service.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_ReturnBadRequest()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+
+            ActionResult result = controller.UpdateGiftForUser(1, null);
+
+            Assert.IsTrue(result is BadRequestResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, service.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_ReturnOk()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+
+            ActionResult result = controller.UpdateGiftForUser(1, new DTO.Gift());
+
+            Assert.IsTrue(result is OkResult);
+        }
+
+        [TestMethod]
+        public void DeleteGiftFromUser_ReturnNotFound()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+
+            ActionResult result = controller.DeleteGift(-1, 1);
+
+            Assert.IsTrue(result is NotFoundResult);
+        }
+
+        [TestMethod]
+        public void DeleteGiftFromUser_ReturnOk()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+
+            ActionResult result = controller.DeleteGift(1, 1);
+
+            Assert.IsTrue(result is OkResult);
         }
     }
 }

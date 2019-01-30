@@ -7,6 +7,7 @@ namespace SecretSanta.Api.DTO
 {
     public class Pairing
     {
+        public int Id { get; set; }
         public Domain.Models.User UserFor { get; set; }
         public int UserForId { get; set; }
         public Domain.Models.User Santa { get; set; }
@@ -21,6 +22,7 @@ namespace SecretSanta.Api.DTO
         {
             if (pairing == null) throw new ArgumentNullException(nameof(pairing));
 
+            Id = pairing.Id;
             UserFor = pairing.UserFor;
             UserForId = pairing.UserForId;
             Santa = pairing.Santa;

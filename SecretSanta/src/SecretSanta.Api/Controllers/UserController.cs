@@ -21,6 +21,20 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
+        // GET api/User/5
+        [HttpGet("{id}")]
+        public ActionResult<DTO.User> FindUser(int id)
+        {
+            if(id <= 0)
+            {
+                return NotFound();
+            }
+
+            DTO.User user = new DTO.User(_UserService.Find(id));
+
+            return user;
+        }
+
         // POST api/User/
         [HttpPost]
         public ActionResult MakeUser(string info)

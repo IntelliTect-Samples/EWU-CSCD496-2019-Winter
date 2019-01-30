@@ -6,6 +6,7 @@ namespace SecretSanta.Api.DTO
 {
     public class Group
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public ICollection<Domain.Models.UserGroup> UserGroups { get; set; }
 
@@ -18,6 +19,7 @@ namespace SecretSanta.Api.DTO
         {
             if (group == null) throw new ArgumentNullException(nameof(group));
 
+            Id = group.Id;
             Title = group.Title;
             UserGroups = group.UserGroups;
         }

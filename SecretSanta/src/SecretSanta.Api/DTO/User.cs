@@ -8,6 +8,7 @@ namespace SecretSanta.Api.DTO
 {
     public class User
     {
+        public int Id { get; set; }
         public string First { get; set; }
         public string Last { get; set; }
         public ICollection<Domain.Models.UserGroup> UserGroups { get; set; }
@@ -22,6 +23,7 @@ namespace SecretSanta.Api.DTO
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
 
+            Id = user.Id;
             First = user.First;
             Last = user.Last;
             UserGroups = user.UserGroups;

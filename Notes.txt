@@ -1,23 +1,24 @@
 * done
 + working
 & re-factor
+T tested
 
 Stuff for groups
-*   Fetch all users from a groups
-*   Fetch all groups
-*   Make new group
-*   Update a group
-*   Delete a group
-*   place a user into a group
-*   remove a user from a group
+T   Fetch all users from a groups
+T   Fetch all groups
+T   Make new group
+T   Update a group
+T   Delete a group
+T   place a user into a group
+T   remove a user from a group
     
 Stuff for Gifts
-*   Fetch all gifts from a user
-*   Make a gift for a user
-*   Update a gift for a user
-*   delete a gift from a users list
+T   Fetch all gifts from a user
+T   Make a gift for a user
+T   Update a gift for a user
+T   delete a gift from a users list
 
 Stuff for Users
-*   Make a new User
-*   Update a User
-*   Delete a User 
+T   Make a new User
+T   Update a User
+T   Delete a User 

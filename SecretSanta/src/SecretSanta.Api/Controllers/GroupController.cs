@@ -97,14 +97,16 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/Group/gid
         [HttpPut("{groupId}")]
-        public ActionResult<bool> AddUserToGroup(int gid, int uid)
+        public ActionResult AddUserToGroup(int gid, int uid)
         {
             if(gid <= 0 || uid <= 0)
             {
                 return NotFound();
             }
 
-            return _GroupService.AddUser(uid, gid);
+            _GroupService.AddUser(uid, gid);
+
+            return Ok();
         }
 
         // DELETE api/Group/gid

@@ -7,6 +7,7 @@ namespace SecretSanta.Api.DTO
 {
     public class Message
     {
+        public int Id { get; set; }
         public Domain.Models.User UserTo { get; set; }
         public int UserToId { get; set; }
         public Domain.Models.User UserFrom { get; set; }
@@ -22,6 +23,7 @@ namespace SecretSanta.Api.DTO
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
+            Id = message.Id;
             UserTo = message.UserTo;
             UserToId = message.UserToId;
             UserFrom = message.UserFrom;
