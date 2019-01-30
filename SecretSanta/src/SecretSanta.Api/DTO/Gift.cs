@@ -1,4 +1,5 @@
 ﻿using System;
+using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Api.DTO
 {
