@@ -9,13 +9,14 @@ namespace SecretSanta.Api.DTO
         public string Description { get; set; }
         public int OrderOfImportance { get; set; }
         public string Url { get; set; }
+        public int UserId { get; set; }
 
         public Gift()
         {
                 
         }
 
-        public Gift(SecretSanta.Domain.Models.Gift gift)
+        public Gift(Domain.Models.Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
@@ -24,6 +25,21 @@ namespace SecretSanta.Api.DTO
             Description = gift.Description;
             OrderOfImportance = gift.OrderOfImportance;
             Url = gift.Url;
+            UserId = gift.UserId;
+        }
+
+        public static Domain.Models.Gift ToDomain(DTO.Gift gift)
+        {
+            Domain.Models.Gift domainGift = new Domain.Models.Gift
+            {
+                Id = gift.Id,
+                Title = gift.Title,
+                Description = gift.Description,
+                OrderOfImportance = gift.OrderOfImportance,
+                Url = gift.Url,
+                UserId = gift.UserId
+            };
+            return domainGift;
         }
     }
 }
