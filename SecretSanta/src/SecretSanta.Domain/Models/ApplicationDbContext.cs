@@ -4,20 +4,20 @@ namespace SecretSanta.Domain.Models
 {
     public class ApplicationDbContext : DbContext
     {
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Pairing> Pairings { get; set; }
 
-        public ApplicationDbContext(DbContextOptions options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupUser>().HasKey(gu => new { gu.UserId, gu.GroupId });
+            modelBuilder.Entity<GroupUser>().HasKey(gu => new {gu.UserId, gu.GroupId});
 
             modelBuilder.Entity<GroupUser>()
                 .HasOne(gu => gu.User)

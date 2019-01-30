@@ -7,12 +7,12 @@ namespace SecretSanta.Domain.Services
 {
     public class GroupService
     {
-        private ApplicationDbContext DbContext { get; }
-
         public GroupService(ApplicationDbContext dbContext)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
+        private ApplicationDbContext DbContext { get; }
 
         public Group AddGroup(Group @group)
         {

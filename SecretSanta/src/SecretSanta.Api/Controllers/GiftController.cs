@@ -26,8 +26,9 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
+
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
-            
+
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
@@ -48,7 +49,7 @@ namespace SecretSanta.Api.Controllers
             Gift addedGift = _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
             return Ok(new DTO.Gift(addedGift));
         }
-        
+
         // PUT api/Gift/4
         [HttpPut("{userId}")] // Update
         public ActionResult<DTO.Gift> UpdateGiftForUser(DTO.Gift gift, int userId)
