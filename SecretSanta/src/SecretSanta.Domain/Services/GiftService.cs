@@ -7,12 +7,12 @@ namespace SecretSanta.Domain.Services
 {
     public class GiftService : IGiftService
     {
-        private ApplicationDbContext DbContext { get; }
-
         public GiftService(ApplicationDbContext dbContext)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
+        private ApplicationDbContext DbContext { get; }
 
         public Gift AddGiftToUser(int userId, Gift gift)
         {

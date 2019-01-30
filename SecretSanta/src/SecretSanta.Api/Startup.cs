@@ -29,16 +29,10 @@ namespace SecretSanta.Api
 
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
-            services.AddDbContext<ApplicationDbContext>(builder =>
-            {
-                builder.UseSqlite(connection);
-            });
+            services.AddDbContext<ApplicationDbContext>(builder => { builder.UseSqlite(connection); });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "My API", Version = "v1"}); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,10 +53,7 @@ namespace SecretSanta.Api
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             app.UseHttpsRedirection();
             app.UseMvc();
