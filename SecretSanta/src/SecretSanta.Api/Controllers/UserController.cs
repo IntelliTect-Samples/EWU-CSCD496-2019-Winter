@@ -23,20 +23,27 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/User/
         [HttpPost]
-        public ActionResult<bool> MakeUser(string info)
+        public ActionResult MakeUser(string info)
         {
-            if (info == null) return false;
+            if (info == null) return BadRequest();
 
-            return _UserService.MakeUser(info);
+            _UserService.MakeUser(info);
+
+            return Ok();
         }
 
         // PUT api/User/5
         [HttpPut("{id}")]
-        public ActionResult<bool> UpdateUser(int id, DTO.User upDatedUser)
+        public ActionResult UpdateUser(int id, DTO.User upDatedUser)
         {
             if(id <= 0)
             {
                 return NotFound();
+            }
+
+            if(upDatedUser == null)
+            {
+                return BadRequest();
             }
 
             User user = new User()
@@ -48,19 +55,23 @@ namespace SecretSanta.Api.Controllers
                 UserGroups = upDatedUser.UserGroups
             };
 
-            return _UserService.UpsertUser(user);
+            _UserService.UpsertUser(user);
+
+            return Ok();
         }
 
         // DELETE api/User/5
         [HttpDelete("{id}")]
-        public ActionResult<bool> DeleteUser(int id)
+        public ActionResult DeleteUser(int id)
         {
             if (id <= 0)
             {
                 return NotFound();
             }
 
-            return _UserService.DeleteUser(id);
+            _UserService.DeleteUser(id);
+
+            return Ok();
         }
     }
 }

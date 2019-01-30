@@ -33,20 +33,27 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/Gift/5
         [HttpPost("{id}")]
-        public ActionResult<bool> MakeGift(int id, string title)
+        public ActionResult MakeGift(int id, string title)
         {
-            if (title == null) return false;
+            if (title == null) return BadRequest();
 
-            return _GiftService.CreateGift(id, title);
+            _GiftService.CreateGift(id, title);
+
+            return Ok();
         }
 
         // PUT api/Gift/id
         [HttpPut("{id}")]
-        public ActionResult<bool> UpdateGiftForUser(int userID, DTO.Gift upDatedGift)
+        public ActionResult UpdateGiftForUser(int userID, DTO.Gift upDatedGift)
         {
             if (userID <= 0)
             {
                 return NotFound();
+            }
+
+            if(upDatedGift == null)
+            {
+                return BadRequest();
             }
 
             Gift gift = new Gift()
@@ -59,19 +66,23 @@ namespace SecretSanta.Api.Controllers
                 WhoWantIt = _GiftService.FindUser(userID)
             };
 
-            return _GiftService.EditGift(userID, gift);
+            _GiftService.EditGift(userID, gift);
+
+            return Ok();
         }
 
         // DELETE api/Gift/5
         [HttpDelete("{uid}")]
-        public ActionResult<bool> DeleteGift(int userId, int giftId)
+        public ActionResult DeleteGift(int userId, int giftId)
         {
-            if(userId <= 0)
+            if(userId <= 0 || giftId <= 0)
             {
                 return NotFound();
             }
 
-            return _GiftService.DeleteGift(userId, giftId);
+            _GiftService.DeleteGift(userId, giftId);
+
+            return Ok();
         }
     }
 }

@@ -61,5 +61,31 @@ namespace SecretSanta.Api.Tests
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
+
+        [TestMethod]
+        public void AddGiftToUser_RequiresGift()
+        {
+            TestableGiftService testableService = new TestableGiftService();
+            GiftController giftController = new GiftController(testableService);
+
+            ActionResult result = giftController.MakeGift(4, null);
+
+            Assert.IsTrue(result is BadRequestResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testableService.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
+        public void AddGiftToUser_ReturnUserFromService()
+        {
+            TestableGiftService testableService = new TestableGiftService();
+            GiftController giftController = new GiftController(testableService);
+
+            ActionResult result = giftController.UpdateGiftForUser(4, new DTO.Gift());
+
+            OkResult okResult = result as OkResult;
+
+            Assert.IsNotNull(result, "Non-200 return");
+        }
     }
 }

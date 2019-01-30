@@ -46,32 +46,41 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/Group/uid
         [HttpDelete("{groupId}")]
-        public ActionResult<bool> DeleteGroup(int id)
+        public ActionResult DeleteGroup(int id)
         {
             if(id <= 0)
             {
                 return NotFound();
             }
 
-            return _GroupService.DeleteGroup(id);
+            _GroupService.DeleteGroup(id);
+
+            return Ok();
         }
 
         // POST api/group
         [HttpPost()]
-        public ActionResult<bool> MakeGroup(string title)
+        public ActionResult MakeGroup(string title)
         {
-            if (title == null) return false;
+            if (title == null) return BadRequest();
 
-            return _GroupService.CreateGroup(title);
+            _GroupService.CreateGroup(title);
+
+            return Ok();
         }
 
         // PUT api/Group/gid
         [HttpPut("{groupId}")]
-        public ActionResult<bool> UpdateGroup(int gid, DTO.Group upDataGroup)
+        public ActionResult UpdateGroup(int gid, DTO.Group upDataGroup)
         {
             if (gid <= 0)
             {
                 return NotFound();
+            }
+
+            if(upDataGroup == null)
+            {
+                return BadRequest();
             }
 
             Group group = new Group()
@@ -81,7 +90,9 @@ namespace SecretSanta.Api.Controllers
                 UserGroups = upDataGroup.UserGroups
             };
 
-            return _GroupService.UpdateGroup(group);
+            _GroupService.UpdateGroup(group);
+
+            return Ok();
         }
 
         // PUT api/Group/gid
@@ -98,14 +109,16 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/Group/gid
         [HttpDelete("{groupId}")]
-        public ActionResult<bool> RemoveUserFromGroup(int gid, int uid)
+        public ActionResult RemoveUserFromGroup(int gid, int uid)
         {
             if (gid <= 0 || uid <= 0)
             {
                 return NotFound();
             }
 
-            return _GroupService.RemoveUser(uid, gid);
+            _GroupService.RemoveUser(uid, gid);
+
+            return Ok();
         }
     }
 }
