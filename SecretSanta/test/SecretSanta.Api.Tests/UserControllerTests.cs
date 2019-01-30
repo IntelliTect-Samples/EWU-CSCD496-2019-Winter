@@ -83,5 +83,39 @@ namespace SecretSanta.Api.Tests
             // Ensure service was called
             Assert.AreEqual(userDto.Id, testService.UpdateUser_User.Id);
         }
+
+        [TestMethod]
+        public void DeleteUser_RequiresUser()
+        {
+            var testService = new TestableUserService();
+            var controller = new UserController(testService);
+
+            var result = controller.DeleteUser(null);
+
+            Assert.IsTrue(result is BadRequestResult);
+
+            // Ensure GiftService was not called
+            Assert.IsNull(testService.DeleteUser_User);
+        }
+
+        [TestMethod]
+        public void DeleteUser_InvokesService()
+        {
+            var userDto = new User
+            {
+                Id = 42,
+                FirstName = "Cameron",
+                LastName = "Osborn"
+            };
+            var testService = new TestableUserService();
+            var controller = new UserController(testService);
+
+            var result = controller.DeleteUser(userDto);
+
+            Assert.IsNotNull(result, "Result was not a 200");
+
+            // Ensure service was called
+            Assert.AreEqual(userDto.Id, testService.DeleteUser_User.Id);
+        }
     }
 }

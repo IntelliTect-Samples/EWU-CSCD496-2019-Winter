@@ -12,5 +12,19 @@ namespace SecretSanta.Api.Controllers
         {
             _groupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
         }
+
+        // Create group
+
+        // Update group
+
+        // Delete group
+
+        // Add user to Group
+
+        // Remove user from group
+
+        // Get all groups
+
+        // Get users from groups
     }
 }

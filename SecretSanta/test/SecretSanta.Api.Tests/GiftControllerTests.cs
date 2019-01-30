@@ -161,9 +161,9 @@ namespace SecretSanta.Api.Tests
             var testService = new TestableGiftService();
             var controller = new GiftController(testService);
 
-            var result = controller.UpdateGiftForUser(null, 4);
+            var result = controller.RemoveGiftFromUser(null);
 
-            Assert.IsTrue(result.Result is BadRequestResult);
+            Assert.IsTrue(result is BadRequestResult);
 
             // Ensure GiftService was not called
             Assert.AreEqual(0, testService.UpdateGiftForUser_userId);
@@ -183,7 +183,7 @@ namespace SecretSanta.Api.Tests
             var testService = new TestableGiftService();
             var controller = new GiftController(testService);
 
-            ActionResult<DTO.Gift> result = controller.RemoveGiftFromUser(giftDto);
+            var result = controller.RemoveGiftFromUser(giftDto);
 
             Assert.IsNotNull(result, "Result was not a 200");
 
