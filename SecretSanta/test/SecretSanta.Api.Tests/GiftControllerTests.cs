@@ -31,7 +31,7 @@ namespace SecretSanta.Api.Tests
             };
             var testService = new TestableGiftService
             {
-                ToReturn =  new List<Gift>
+                GetGiftsForUser_Return =  new List<Gift>
                 {
                     gift
                 }

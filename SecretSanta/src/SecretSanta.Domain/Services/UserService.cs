@@ -5,7 +5,7 @@ using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private ApplicationDbContext DbContext { get; }
 
