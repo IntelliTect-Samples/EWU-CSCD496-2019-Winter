@@ -5,7 +5,7 @@ using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GroupService
+    public class GroupService : IGroupService
     {
         public GroupService(ApplicationDbContext dbContext)
         {
