@@ -18,7 +18,7 @@ namespace SecretSanta.Api.Controllers
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
-        // GET api/Gift/5
+        // GET api/Gift/#
         [HttpGet("{userId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
         {
@@ -29,6 +29,19 @@ namespace SecretSanta.Api.Controllers
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            
+        }
+
+        // POST api/Gift/#
+        [HttpPost("{userId}")]
+        public ActionResult<DTO.Gift> CreateGift(int userId, DTO.Gift gift)
+        {
+            if (gift == null || userId <= 0)
+            {
+                return BadRequest();
+            }
+
+            return new DTO.Gift(_GiftService.AddGiftToUser(userId, DTO.Gift.ToDomain(gift)));
         }
     }
 }
