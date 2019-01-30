@@ -9,11 +9,11 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _UserService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
-            _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         // GET api/Gift/5
@@ -22,7 +22,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (user == null) return BadRequest();
 
-            var addedUser = _UserService.AddUser(DTO.User.ToEntity(user));
+            var addedUser = _userService.AddUser(DTO.User.ToEntity(user));
             return Ok(new User(addedUser));
         }
 
@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (user == null) return BadRequest();
 
-            var updatedUser = _UserService.UpdateUser(DTO.User.ToEntity(user));
+            var updatedUser = _userService.UpdateUser(DTO.User.ToEntity(user));
             return Ok(new User(updatedUser));
         }
 
@@ -42,7 +42,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (user == null) return BadRequest();
 
-            _UserService.DeleteUser(DTO.User.ToEntity(user));
+            _userService.DeleteUser(DTO.User.ToEntity(user));
 
             return Ok();
         }

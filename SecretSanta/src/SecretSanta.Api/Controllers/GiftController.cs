@@ -11,11 +11,11 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class GiftController : ControllerBase
     {
-        private readonly IGiftService _GiftService;
+        private readonly IGiftService _giftService;
 
         public GiftController(IGiftService giftService)
         {
-            _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
+            _giftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
         // GET api/Gift/5
@@ -27,7 +27,7 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = _giftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
@@ -46,7 +46,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Gift addedGift = _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
+            Gift addedGift = _giftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
             return Ok(new DTO.Gift(addedGift));
         }
 
@@ -64,7 +64,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Gift updatedGift = _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToEntity(gift));
+            Gift updatedGift = _giftService.UpdateGiftForUser(userId, DTO.Gift.ToEntity(gift));
             return Ok(new DTO.Gift(updatedGift));
         }
 
@@ -77,7 +77,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.RemoveGift(DTO.Gift.ToEntity(gift));
+            _giftService.RemoveGift(DTO.Gift.ToEntity(gift));
 
             return Ok();
         }
