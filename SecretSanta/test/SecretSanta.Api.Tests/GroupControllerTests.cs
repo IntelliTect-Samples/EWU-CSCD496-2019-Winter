@@ -61,6 +61,25 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
+        public void FetchAllGroups_ReturnGroupsFromGroup()
+        {
+            TestableGroupService service = new TestableGroupService()
+            {
+                ToReturnGetAllGroup = new List<Group>()
+            };
+            GroupController controller = new GroupController(service);
+
+            Group group = new Group() { Title = "Battleship Battle Group 1" };
+
+            service.ToReturnGetAllGroup.Add(group);
+
+            ActionResult<List<DTO.Group>> result = controller.GetAllGroups();
+
+            DTO.Group resultGroup = result.Value.Single();
+            Assert.AreEqual(group.Title, resultGroup.Title);
+        }
+
+        [TestMethod]
         public void DeleteGroup_ReturnNotFound()
         {
             TestableGroupService service = new TestableGroupService();
