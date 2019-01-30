@@ -75,7 +75,6 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_InvokesService()
         {
-            var testService = new TestableGiftService();
             var giftDto = new DTO.Gift
             {
                 Id = 42,
@@ -84,7 +83,7 @@ namespace SecretSanta.Api.Tests
                 OrderOfImportance = 1,
                 Url = "Url"
             };
-            testService.AddGiftToUser_Return = DTO.Gift.ToEntity(giftDto);
+            var testService = new TestableGiftService{AddGiftToUser_Return = DTO.Gift.ToEntity(giftDto)};
             var controller = new GiftController(testService);
 
             ActionResult<DTO.Gift> result = controller.AddGiftToUser(giftDto, 4);
@@ -92,6 +91,98 @@ namespace SecretSanta.Api.Tests
             Assert.IsNotNull(result, "Result was not a 200");
             Assert.AreEqual(4, testService.AddGiftToUser_UserId);
             Assert.AreEqual(giftDto.Id, testService.AddGiftToUser_Gift.Id);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(null, 4);
+            
+            Assert.IsTrue(result.Result is BadRequestResult);
+            
+            // Ensure GiftService was not called
+            Assert.AreEqual(0, testService.UpdateGiftForUser_userId);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_RequiresPositiveUserId()
+        {
+            var giftDto = new DTO.Gift
+            {
+                Id = 42,
+                Title = "Title",
+                Description = "Description",
+                OrderOfImportance = 1,
+                Url = "Url"
+            };
+            
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(giftDto, -1);
+            
+            Assert.IsTrue(result.Result is NotFoundObjectResult, $"{result.Result} is not instance of NotFoundResult");
+            
+            // Ensure GiftService was not called
+            Assert.AreEqual(0, testService.UpdateGiftForUser_userId);
+        }
+        
+        [TestMethod]
+        public void UpdateGiftForUser_InvokesService()
+        {
+            var giftDto = new DTO.Gift
+            {
+                Id = 42,
+                Title = "Title",
+                Description = "Description",
+                OrderOfImportance = 1,
+                Url = "Url"
+            };
+            var testService = new TestableGiftService{UpdateGiftForUser_Return = DTO.Gift.ToEntity(giftDto)};
+            var controller = new GiftController(testService);
+
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(giftDto, 4);
+
+            Assert.IsNotNull(result, "Result was not a 200");
+            Assert.AreEqual(4, testService.UpdateGiftForUser_userId);
+            Assert.AreEqual(giftDto.Id, testService.UpdateGiftForUser_Gift.Id);
+        }
+        
+        [TestMethod]
+        public void RemoveGiftFromUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(null, 4);
+            
+            Assert.IsTrue(result.Result is BadRequestResult);
+            
+            // Ensure GiftService was not called
+            Assert.AreEqual(0, testService.UpdateGiftForUser_userId);
+        }
+        
+        [TestMethod]
+        public void RemoveGiftFromUser_InvokesService()
+        {
+            var giftDto = new DTO.Gift
+            {
+                Id = 42,
+                Title = "Title",
+                Description = "Description",
+                OrderOfImportance = 1,
+                Url = "Url"
+            };
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult<DTO.Gift> result = controller.RemoveGiftFromUser(giftDto);
+
+            Assert.IsNotNull(result, "Result was not a 200");
+            Assert.AreEqual(giftDto.Id, testService.RemoveGift_Gift.Id);
         }
     }
 }
