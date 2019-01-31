@@ -14,17 +14,24 @@ namespace SecretSanta.Api.Controllers
         }
 
         // Create group
+        // AddGroup
 
         // Update group
+        // UpdateGroup
 
         // Delete group
+        // TODO:
 
         // Add user to Group
+        // TODO: 
 
         // Remove user from group
+        // TODO: 
 
         // Get all groups
+        // FetchAll
 
         // Get users from groups
+        // TODO:
     }
 }
