@@ -26,7 +26,7 @@ namespace SecretSanta.Api.Tests
             {
                 Id = 3,
                 FirstName = "Alan",
-                LastName = "Watts",
+                LastName = "Watts"//,
                 //Gifts = new List<Gift>(),
                 //UserGroups = new List<UserGroups>(),
             };

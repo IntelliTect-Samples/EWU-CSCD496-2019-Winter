@@ -24,7 +24,8 @@ namespace SecretSanta.Api.DTO
             return new Domain.Models.Group
             {
                 Id = group.Id,
-                Title = group.Title
+                Title = group.Title//,
+                //UserGroups = group.UserGroups
             };
         }
     }

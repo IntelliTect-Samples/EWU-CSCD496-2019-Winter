@@ -25,11 +25,11 @@ namespace SecretSanta.Api.Tests
             return CreateGroup_Group;
         }
 
-        public Group DeleteGroup_Group { get; set; }
-        public Group DeleteGroup(Group group)
+        public int DeleteGroup_GroupId { get; set; }
+        public int DeleteGroup(int groupId)
         {
-            DeleteGroup_Group = group;
-            return DeleteGroup_Group;
+            DeleteGroup_GroupId = groupId;
+            return DeleteGroup_GroupId;
         }
 
         public List<Group> ToReturn { get; set; }
@@ -39,9 +39,11 @@ namespace SecretSanta.Api.Tests
         }
 
         public int RemoveUserFromGroup_UserId { get; set; }
+        public int RemoveUserFromGroup_GroupId { get; set; }
         public int RemoveUserFromGroup(int groupId, int userId)
         {
             RemoveUserFromGroup_UserId = userId;
+            RemoveUserFromGroup_GroupId = groupId;
             return RemoveUserFromGroup_UserId;
         }
 

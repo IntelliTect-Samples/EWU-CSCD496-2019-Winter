@@ -12,6 +12,6 @@ namespace SecretSanta.Domain.Services
         int RemoveUserFromGroup(int groupId, int userId);
         Group CreateGroup(Group group);
         Group UpdateGroup(Group group);
-        Group DeleteGroup(Group group);
+        int DeleteGroup(int groupId);
     }
 }

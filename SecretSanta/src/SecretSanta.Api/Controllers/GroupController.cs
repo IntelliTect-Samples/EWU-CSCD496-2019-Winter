@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _GroupService;
@@ -36,7 +37,6 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        // PUT api/Group/
         [HttpPut]
         public ActionResult UpdateGroup(DTO.Group group)
         {
@@ -47,14 +47,32 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        // DELETE api/Group/
-        [HttpDelete]
-        public ActionResult DeleteGroup(DTO.Group group)
+        [HttpDelete("{groupId}")]
+        public ActionResult DeleteGroup(int groupId)
         {
-            if (group.Id <= 0) return NotFound();
-            if (group is null) return BadRequest();
-            Group databaseGroup = DTO.Group.ToEntity(group);
-            _GroupService.DeleteGroup(databaseGroup);
+            if (groupId <= 0) return NotFound("GroupId's must be greater than 0");
+            _GroupService.DeleteGroup(groupId);
+            return Ok();
+        }
+
+        [HttpPost("{groupId}")]
+        public ActionResult AddUserToGroup(DTO.User user, int groupId)
+        {
+            if (groupId <= 0) return NotFound();
+            if (user is null) return BadRequest();
+
+            User databaseUser = DTO.User.ToEntity(user);
+            _GroupService.AddUserToGroup(databaseUser, groupId);
+            return Ok();
+
+        }
+
+        [HttpDelete("{userId}")]
+        public ActionResult RemoveUserFromGroup(int userId, int groupId)
+        {
+            if (groupId <= 0 || userId <= 0) return NotFound("GroupId's and UserId's must be greater than 0");
+
+            _GroupService.RemoveUserFromGroup(groupId, userId);
             return Ok();
         }
     }

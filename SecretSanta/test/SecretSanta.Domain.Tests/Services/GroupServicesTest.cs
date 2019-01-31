@@ -170,6 +170,28 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
+        public void UpdateGroup()
+        {
+            GroupService groupService;
+            Group group = CreateGroup("Philosophers");
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                groupService.CreateGroup(group);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                group.Title = "Programmers";
+                groupService.UpdateGroup(group);
+            }
+
+            Assert.AreEqual("Programmers", group.Title);
+        }
+
+        [TestMethod]
         public void DeleteGroup()
         {
             GroupService groupService;
@@ -184,9 +206,36 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 groupService = new GroupService(context);
-                groupService.DeleteGroup(group);
+                groupService.DeleteGroup(group.Id);
                 Assert.IsNull(groupService.Find(group.Id));
             }
+        }
+
+        [TestMethod]
+        public void GetAllGroups()
+        {
+            GroupService groupService;
+            var group = CreateGroup("Philosophers");
+            var group2 = CreateGroup("Programmers");
+            var group3 = CreateGroup("Pilgrims");
+            List<Group> groups;
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                groupService.CreateGroup(group);
+                groupService.CreateGroup(group2);
+                groupService.CreateGroup(group3);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                groups = groupService.GetAllGroups();
+            }
+
+            Assert.IsTrue(groups.Count == 3);
+            Assert.AreEqual(group3.Title, groups[2].Title);
         }
     }
 }

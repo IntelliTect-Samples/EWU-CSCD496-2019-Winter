@@ -38,14 +38,13 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public Group DeleteGroup(Group group)
+        public int DeleteGroup(int groupId)
         {
-            if (group is null) throw new ArgumentNullException(nameof(group));
-            if (group.Id == 0) throw new ArgumentException("Cannot update, group.Id was 0.");
-
+            if (groupId <= 0) throw new ArgumentException("groupId must be greater than 0 for DeleteGroup");
+            Group group = Find(groupId);
             DbContext.Groups.Remove(group);
             DbContext.SaveChanges();
-            return group;
+            return groupId;
         }
 
         public Group Find(int id)
