@@ -19,29 +19,6 @@ namespace SecretSanta.Api.Controllers
             _GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
         }
 
-        private Group GroupDtoToEntity(DTO.Group dtoGroup)
-        {
-            List<GroupUser> copyUserGroup = new List<GroupUser>();
-            copyUserGroup.AddRange(dtoGroup.GroupUsers.Select(groupUser =>
-                        new GroupUser
-                        {
-                            Group = groupUser.Group,
-                            GroupId = groupUser.GroupId,
-                            User = groupUser.User,
-                            UserId = groupUser.UserId
-                        }));
-
-
-            Group entity = new Group//same arguements as constructor
-            {
-                Id = dtoGroup.Id,
-                Name = dtoGroup.Name,
-                GroupUsers = copyUserGroup
-            };
-
-            return entity;
-        }
-
         // GET api/Gift/5
         [HttpGet()]
         public ActionResult<List<DTO.Group>> GetUsersInGroup()
@@ -54,7 +31,7 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{dtoGroup}")]
         public ActionResult AddGroup(DTO.Group dtoGroup)
         {
-            if (dtoGroup == null)
+            if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
@@ -68,7 +45,7 @@ namespace SecretSanta.Api.Controllers
         [HttpDelete("{dtoGroup}")]
         public ActionResult DeleteGroup(DTO.Group dtoGroup)
         {
-            if (dtoGroup == null)
+            if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
@@ -80,7 +57,7 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{dtoGroup}")]
         public ActionResult UpdateGroup(DTO.Group dtoGroup)//Update
         {
-            if (dtoGroup == null)
+            if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
