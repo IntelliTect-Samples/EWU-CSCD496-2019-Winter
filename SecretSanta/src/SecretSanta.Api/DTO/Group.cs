@@ -22,37 +22,20 @@ namespace SecretSanta.Api.DTO
 
             Id = modelsGroup.Id;
             Name = modelsGroup.Name;
-
-            List<Domain.Models.GroupUser> newGroup = new List<Domain.Models.GroupUser>();
-            newGroup.AddRange(modelsGroup.GroupUsers.Select(groupUser =>
-            new Domain.Models.GroupUser
-            {
-                Group = groupUser.Group,
-                GroupId = groupUser.GroupId,
-                User = groupUser.User,
-                UserId = groupUser.UserId
-            }));
-            GroupUsers = newGroup;
+            GroupUsers = modelsGroup.GroupUsers;
         }
 
         public static SecretSanta.Domain.Models.Group ToEntity(DTO.Group dtoGroup)
         {
-            List<Domain.Models.GroupUser> copyUserGroup = new List<Domain.Models.GroupUser>();
-            copyUserGroup.AddRange(dtoGroup.GroupUsers.Select(groupUser =>
-                        new Domain.Models.GroupUser
-                        {
-                            Group = groupUser.Group,
-                            GroupId = groupUser.GroupId,
-                            User = groupUser.User,
-                            UserId = groupUser.UserId
-                        }));
-
-
+            if (dtoGroup == null)
+            {
+                throw new ArgumentNullException(nameof(dtoGroup));
+            }
             Domain.Models.Group entity = new Domain.Models.Group//same arguements as constructor
             {
                 Id = dtoGroup.Id,
                 Name = dtoGroup.Name,
-                GroupUsers = copyUserGroup
+                GroupUsers = dtoGroup.GroupUsers,
             };
 
             return entity;

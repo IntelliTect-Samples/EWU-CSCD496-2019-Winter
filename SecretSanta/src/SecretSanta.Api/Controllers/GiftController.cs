@@ -49,7 +49,6 @@ namespace SecretSanta.Api.Controllers
             _GiftService.AddGiftToUser(dtoUserId, DTO.Gift.ToEntity(dtoGift));
             return Ok("Gift added!");
 
-            //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         [HttpDelete("{gift}")]

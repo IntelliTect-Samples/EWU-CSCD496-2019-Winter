@@ -25,29 +25,8 @@ namespace SecretSanta.Api.DTO
             Id = domainUser.Id;
             FirstName = domainUser.FirstName;
             LastName = domainUser.LastName;
-            List<Domain.Models.Gift> copyGifts = new List<Domain.Models.Gift>();
-            copyGifts.AddRange(domainUser.Gifts.Select(gift =>
-            new Domain.Models.Gift
-            {
-                Id = gift.Id,
-                Description = gift.Description,
-                Title = gift.Title,
-                OrderOfImportance = gift.OrderOfImportance,
-                Url = gift.Url,
-                User = gift.User,
-                UserId = gift.UserId
-            }));
-            Gifts = copyGifts;
-            List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
-            copyGroup.AddRange(domainUser.GroupUsers.Select(groupUser =>
-            new Domain.Models.GroupUser
-            {
-                Group = groupUser.Group,
-                GroupId = groupUser.GroupId,
-                User = groupUser.User,
-                UserId = groupUser.UserId
-            }));
-            GroupUsers = copyGroup;
+            Gifts = domainUser.Gifts;
+            GroupUsers = domainUser.GroupUsers;
         }
 
         public static SecretSanta.Domain.Models.User ToEntity(DTO.User dtoUser)
@@ -57,36 +36,13 @@ namespace SecretSanta.Api.DTO
                 throw new ArgumentNullException(nameof(dtoUser));
             }
 
-            List<Domain.Models.Gift> copyGifts = new List<Domain.Models.Gift>();
-            copyGifts.AddRange(dtoUser.Gifts.Select(gift =>
-            new Domain.Models.Gift
-            {
-                Id = gift.Id,
-                Description = gift.Description,
-                Title = gift.Title,
-                OrderOfImportance = gift.OrderOfImportance,
-                Url = gift.Url,
-                User = gift.User,
-                UserId = gift.UserId
-            }));
-
-            List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
-            copyGroup.AddRange(dtoUser.GroupUsers.Select(groupUser =>
-            new Domain.Models.GroupUser
-            {
-                Group = groupUser.Group,
-                GroupId = groupUser.GroupId,
-                User = groupUser.User,
-                UserId = groupUser.UserId
-            }));
-
             Domain.Models.User entity = new Domain.Models.User
             {
                 Id = dtoUser.Id,
                 FirstName = dtoUser.FirstName,
                 LastName = dtoUser.LastName,
-                Gifts = copyGifts,
-                GroupUsers = copyGroup
+                Gifts = dtoUser.Gifts,
+                GroupUsers = dtoUser.GroupUsers
             };
 
             return entity;
