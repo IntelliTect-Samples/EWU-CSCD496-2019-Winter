@@ -7,7 +7,6 @@ namespace SecretSanta.Api.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
         public int OrderOfImportance { get; set; }
         public string Url { get; set; }
 
@@ -22,7 +21,6 @@ namespace SecretSanta.Api.DTO
 
             Id = modelsGift.Id;
             Title = modelsGift.Title;
-            Description = modelsGift.Description;
             OrderOfImportance = modelsGift.OrderOfImportance;
             Url = modelsGift.Url;
         }
@@ -37,7 +35,6 @@ namespace SecretSanta.Api.DTO
             {
                 Id = dtoGift.Id,
                 Title = dtoGift.Title,
-                Description = dtoGift.Description,
                 OrderOfImportance = dtoGift.OrderOfImportance,
                 Url = dtoGift.Url
             };

@@ -50,7 +50,6 @@ namespace SecretSanta.Api.Tests
             DTO.Gift resultGift = result.Value.Single();
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
-            Assert.AreEqual(gift.Description, resultGift.Description);
             Assert.AreEqual(gift.Url, resultGift.Url);
             Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
         }
@@ -130,7 +129,6 @@ namespace SecretSanta.Api.Tests
             controller.DeleteGiftFromUser(new DTO.Gift(gift), 8);
             var removedGift = service.RemoveGiftToUser_Gift;
 
-            Assert.AreEqual(removedGift.Description, gift.Description);
             Assert.AreEqual(removedGift.Id, gift.Id);
             Assert.AreEqual(removedGift.OrderOfImportance, gift.OrderOfImportance);
             Assert.AreEqual(removedGift.Title, gift.Title);

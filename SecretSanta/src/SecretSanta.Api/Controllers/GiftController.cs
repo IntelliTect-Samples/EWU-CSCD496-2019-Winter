@@ -12,7 +12,6 @@ namespace SecretSanta.Api.Controllers
     public class GiftController : ControllerBase
     {
         private readonly IGiftService _GiftService;
-        private readonly HelperControllerMethods _HelperMethod = new HelperControllerMethods();
 
         public GiftController(IGiftService giftService)
         {
@@ -23,7 +22,7 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{dtoUserId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int dtoUserId)
         {
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
@@ -34,15 +33,15 @@ namespace SecretSanta.Api.Controllers
         }
 
         //POST api/Gift/4
-        [HttpPost("{dtoUserId}")]
+        [HttpPut]
         public ActionResult AddGiftToUser(DTO.Gift dtoGift, int dtoUserId)
         {
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
 
-            if (_HelperMethod.IsNull(dtoGift))
+            if (dtoGift == null)
             {
                 return BadRequest();
             }
@@ -52,14 +51,14 @@ namespace SecretSanta.Api.Controllers
 
         }
 
-        [HttpPut]
+        [HttpDelete]
         public ActionResult DeleteGiftFromUser(DTO.Gift dtoGift, int dtoUserId)
         {
-            if (_HelperMethod.IsNull(dtoGift))
+            if (dtoGift == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
@@ -68,15 +67,15 @@ namespace SecretSanta.Api.Controllers
             return Ok("Gift removed!");
         }
 
-        [HttpPost("{dtoUserId}")]
+        [HttpPut("{dtoUserId}")]
         public ActionResult UpdateGiftFromUser(int dtoUserId, DTO.Gift dtoGift)//Update
         {
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
 
-            if (_HelperMethod.IsNull(dtoGift))
+            if (dtoGift == null)
             {
                 return BadRequest();
             }

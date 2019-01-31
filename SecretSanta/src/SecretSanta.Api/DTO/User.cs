@@ -10,8 +10,6 @@ namespace SecretSanta.Api.DTO
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public List<Domain.Models.Gift> Gifts { get; set; }
-        public List<Domain.Models.GroupUser> GroupUsers { get; set; }
 
         public User()
         {
@@ -25,8 +23,6 @@ namespace SecretSanta.Api.DTO
             Id = domainUser.Id;
             FirstName = domainUser.FirstName;
             LastName = domainUser.LastName;
-            Gifts = domainUser.Gifts;
-            GroupUsers = domainUser.GroupUsers;
         }
 
         public static SecretSanta.Domain.Models.User ToEntity(DTO.User dtoUser)
@@ -40,9 +36,7 @@ namespace SecretSanta.Api.DTO
             {
                 Id = dtoUser.Id,
                 FirstName = dtoUser.FirstName,
-                LastName = dtoUser.LastName,
-                Gifts = dtoUser.Gifts,
-                GroupUsers = dtoUser.GroupUsers
+                LastName = dtoUser.LastName
             };
 
             return entity;

@@ -12,14 +12,13 @@ namespace SecretSanta.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _UserService;
-        private readonly HelperControllerMethods _HelperMethod = new HelperControllerMethods();
 
         public UserController(IUserService userService)
         {
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        [HttpGet()]
+        [HttpGet]
         public ActionResult<List<DTO.User>> GetUsersInGroup()
         {
             List<User> databaseUsers = _UserService.FetchAll();
@@ -30,11 +29,11 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{dtoUserId}")]
         public ActionResult AddUser(int dtoUserId, DTO.User dtoUser)
         {
-            if (_HelperMethod.IsNull(dtoUser))
+            if (dtoUser == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
@@ -43,14 +42,14 @@ namespace SecretSanta.Api.Controllers
             return Ok("User added!");
         }
 
-        [HttpDelete("{dtoUserId}")]
+        [HttpDelete]
         public ActionResult RemoveUser(int dtoUserId, DTO.User dtoUser)
         {
-            if (_HelperMethod.IsNull(dtoUser))
+            if (dtoUser == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoUserId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
@@ -60,19 +59,19 @@ namespace SecretSanta.Api.Controllers
             return Ok("User removed!");
         }
 
-        [HttpPost("{userId}")]
-        public ActionResult UpdateUser(int userId, DTO.User dtoUser)//Update
+        [HttpPost]
+        public ActionResult UpdateUser(int dtoUserId, DTO.User dtoUser)//Update
         {
-            if (_HelperMethod.IsNull(dtoUser))
+            if (dtoUser == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(userId))
+            if (dtoUserId <= 0)
             {
                 return NotFound();
             }
 
-            _UserService.UpdateUser(userId, DTO.User.ToEntity(dtoUser));
+            _UserService.UpdateUser(dtoUserId, DTO.User.ToEntity(dtoUser));
 
             return Ok("Gift updated!");
         }

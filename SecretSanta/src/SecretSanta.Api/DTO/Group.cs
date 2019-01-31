@@ -9,7 +9,6 @@ namespace SecretSanta.Api.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Domain.Models.GroupUser> GroupUsers { get; set; }
 
         public Group()
         {
@@ -22,7 +21,6 @@ namespace SecretSanta.Api.DTO
 
             Id = modelsGroup.Id;
             Name = modelsGroup.Name;
-            GroupUsers = modelsGroup.GroupUsers;
         }
 
         public static SecretSanta.Domain.Models.Group ToEntity(DTO.Group dtoGroup)
@@ -34,8 +32,7 @@ namespace SecretSanta.Api.DTO
             Domain.Models.Group entity = new Domain.Models.Group//same arguements as constructor
             {
                 Id = dtoGroup.Id,
-                Name = dtoGroup.Name,
-                GroupUsers = dtoGroup.GroupUsers,
+                Name = dtoGroup.Name
             };
 
             return entity;

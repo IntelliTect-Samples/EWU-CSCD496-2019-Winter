@@ -12,7 +12,6 @@ namespace SecretSanta.Api.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _GroupService;
-        private readonly HelperControllerMethods _HelperMethod = new HelperControllerMethods();
 
         public GroupController(IGroupService groupService)
         {
@@ -20,7 +19,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         // GET api/Gift/5
-        [HttpGet()]
+        [HttpGet]
         public ActionResult<List<DTO.Group>> GetListOfGroups()
         {
             List<Group> databaseGroups = _GroupService.GetAllGroups();
@@ -28,14 +27,14 @@ namespace SecretSanta.Api.Controllers
         }
 
         //POST api/Gift/4
-        [HttpPost("{dtoGroup}")]
+        [HttpPut("{dtoGroupId}")]
         public ActionResult CreateGroup(int dtoGroupId, DTO.Group dtoGroup)
         {
-            if (_HelperMethod.IsNull(dtoGroup))
+            if (dtoGroupId <= 0)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoGroupId))
+            if (dtoGroup == null)
             {
                 return NotFound();
             }
@@ -44,14 +43,14 @@ namespace SecretSanta.Api.Controllers
             return Ok("Group added!");
         }
 
-        [HttpDelete("{dtoGroup}")]
+        [HttpDelete("{dtoGroupId}")]
         public ActionResult DeleteGroup(int dtoGroupId, DTO.Group dtoGroup)
         {
-            if (_HelperMethod.IsNull(dtoGroup))
+            if (dtoGroup == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoGroupId))
+            if (dtoGroupId <= 0)
             {
                 return NotFound();
             }
@@ -61,14 +60,14 @@ namespace SecretSanta.Api.Controllers
             return Ok("Gift removed!");
         }
 
-        [HttpPost("{dtoGroup}")]
+        [HttpPost("{dtoGroupId}")]
         public ActionResult UpdateGroup(int dtoGroupId, DTO.Group dtoGroup)//Update
         {
-            if (_HelperMethod.IsNull(dtoGroup))
+            if (dtoGroup == null)
             {
                 return BadRequest();
             }
-            if (_HelperMethod.IsValidId(dtoGroupId))
+            if (dtoGroupId <= 0)
             {
                 return NotFound();
             }
@@ -78,14 +77,14 @@ namespace SecretSanta.Api.Controllers
             return Ok("Gift updated!");
         }
 
-        [HttpPost("{dtoGroupId}")]
+        [HttpPut]
         public ActionResult<DTO.User> AddUserToGroup(int dtoGroupId, DTO.User dtoUser)
         {
-            if (_HelperMethod.IsValidId(dtoGroupId))
+            if (dtoGroupId <= 0)
             {
                 return NotFound();
             }
-            if (_HelperMethod.IsNull(dtoUser))
+            if (dtoUser == null)
             {
                 return BadRequest();
             }
@@ -93,7 +92,7 @@ namespace SecretSanta.Api.Controllers
             return new DTO.User(_GroupService.AddUserToGroup(dtoGroupId, DTO.User.ToEntity(dtoUser)));
         }
 
-        [HttpDelete("{dtoGroupId}")]
+        [HttpDelete]
         public ActionResult<DTO.User> RemoveUserFromGroup(int dtoGroupId, DTO.User dtoUser)
         {
             if (dtoGroupId <= 0)
