@@ -32,6 +32,6 @@ namespace SecretSanta.Api.Controllers
         // FetchAll
 
         // Get users from groups
-        // TODO:
+        // GetUsers
     }
 }

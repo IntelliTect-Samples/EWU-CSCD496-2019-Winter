@@ -4,6 +4,7 @@ using SecretSanta.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SecretSanta.Domain.Tests.Services
 {
@@ -100,6 +101,156 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new GroupService(context);
                 List<User> users = service.GetUsers(4);
                 Assert.AreEqual(0, users.Count);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void DeleteGroup_RequireGroup()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                service.DeleteGroup(null);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteGroup_Success()
+        {
+            var user = new User { Id = 42 };
+            var group = new Group { Id = 43 };
+            var groupUser = new GroupUser { GroupId = group.Id, UserId = user.Id };
+            group.GroupUsers = new List<GroupUser> { groupUser };
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                
+                service.DeleteGroup(group);
+                
+                Assert.AreEqual(0, context.Groups.Count());
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddUserToGroup_RequirePositiveGroupId()
+        {
+            var user = new User() { Id = 42 };
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                service.AddUserToGroup(-1, user);
+            }
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AddUserToGroup_RequiresUser()
+        {   
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                service.AddUserToGroup(4, null);
+            }
+        }
+
+        [TestMethod]
+        public void AddUserToGroup_Success()
+        {
+            var user = new User { Id = 42 };
+            var group = new Group { Id = 43 };
+            var groupUser = new GroupUser { GroupId = group.Id, UserId = user.Id };
+            group.GroupUsers = new List<GroupUser> { groupUser };
+               
+            var user2 = new User { Id = 45 };
+              
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                context.SaveChanges();
+            }
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                User addedUser = service.AddUserToGroup(group.Id, user2);
+                
+                Assert.AreEqual(user2.Id, addedUser.Id);
+
+                List<User> usersFromGroup = service.GetUsers(group.Id);
+                
+                Assert.IsTrue(usersFromGroup.Contains(user2));
+            }
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RemoveUserFromGroup_RequirePositiveGroupId()
+        {
+            var user = new User() { Id = 42 };
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                service.RemoveUserFromGroup(-1, user);
+            }
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RemoveUserFromGroup_RequiresUser()
+        {   
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                service.RemoveUserFromGroup(4, null);
+            }
+        }
+        
+        [TestMethod]
+        public void RemoveUserFromGroup_Success()
+        {
+            var user = new User { Id = 42 };
+            var group = new Group { Id = 43 };
+            var groupUser = new GroupUser { GroupId = group.Id, UserId = user.Id };
+            group.GroupUsers = new List<GroupUser> { groupUser };
+               
+            var user2 = new User { Id = 45 };
+              
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                context.SaveChanges();
+            }
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+
+                User addedUser = service.RemoveUserFromGroup(group.Id, user2);
+                
+                Assert.AreEqual(user2.Id, addedUser.Id);
+
+                List<User> usersFromGroup = service.GetUsers(group.Id);
+                
+                Assert.IsFalse(usersFromGroup.Contains(user2));
             }
         }
     }
