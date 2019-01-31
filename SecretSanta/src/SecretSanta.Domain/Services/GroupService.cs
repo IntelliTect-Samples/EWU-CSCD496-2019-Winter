@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
