@@ -32,5 +32,13 @@ namespace SecretSanta.Domain.Services
         {
             return DbContext.Users.ToList();
         }
+
+        public User RemoveUser(User user)
+        {
+            DbContext.Users.Remove(user);
+            DbContext.SaveChanges();
+            return user;
+        }
+
     }
 }

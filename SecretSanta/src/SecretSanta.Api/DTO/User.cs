@@ -10,8 +10,8 @@ namespace SecretSanta.Api.DTO
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public List<Gift> Gifts { get; set; }
-        public List<GroupUser> GroupUsers { get; set; }
+        public List<Domain.Models.Gift> Gifts { get; set; }
+        public List<Domain.Models.GroupUser> GroupUsers { get; set; }
 
         public User()
         {
@@ -37,8 +37,9 @@ namespace SecretSanta.Api.DTO
                 User = gift.User,
                 UserId = gift.UserId
             }));
-            List<Domain.Models.GroupUser> newGroup = new List<Domain.Models.GroupUser>();
-            newGroup.AddRange(user.GroupUsers.Select(groupUser =>
+            Gifts = copyGifts;
+            List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
+            copyGroup.AddRange(user.GroupUsers.Select(groupUser =>
             new Domain.Models.GroupUser
             {
                 Group = groupUser.Group,
@@ -46,6 +47,7 @@ namespace SecretSanta.Api.DTO
                 User = groupUser.User,
                 UserId = groupUser.UserId
             }));
+            GroupUsers = copyGroup;
         }
 
         public static SecretSanta.Domain.Models.User ToEntity(DTO.User user)

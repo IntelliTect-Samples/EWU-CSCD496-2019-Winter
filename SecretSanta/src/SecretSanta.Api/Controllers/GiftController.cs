@@ -18,66 +18,80 @@ namespace SecretSanta.Api.Controllers
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
+        private Gift GiftDtoToEntity(DTO.Gift dtoGift)
+        {
+            Gift entity = new Gift//same arguements as constructor
+            {
+                Id = dtoGift.Id,
+                Title = dtoGift.Title,
+                Description = dtoGift.Description,
+                OrderOfImportance = dtoGift.OrderOfImportance,
+                Url = dtoGift.Url
+            };
+
+            return entity;
+        }
+
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
+        public ActionResult<List<DTO.Gift>> GetGiftForUser(int dtoUserId)
         {
-            if (userId <= 0)
+            if (IsValidId(dtoUserId))
             {
                 return NotFound();
             }
-            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(dtoUserId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         //POST api/Gift/4
         [HttpPost("{userId}")]
-        public ActionResult AddGiftToUser(DTO.Gift gift, int userId)
+        public ActionResult AddGiftToUser(DTO.Gift dtoGift, int dtoUserId)
         {
-            if (userId <= 0)
+            if (IsValidId(dtoUserId))
             {
                 return NotFound();
             }
 
-            if (gift == null)
+            if (IsNull(dtoGift))
             {
                 return BadRequest();
             }
 
-            _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
-            return Ok();
+            _GiftService.AddGiftToUser(dtoUserId, GiftDtoToEntity(dtoGift));
+            return Ok("Gift added!");
 
             //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         [HttpDelete("{gift}")]
-        public ActionResult DeleteGiftFromUser(DTO.Gift gift)
+        public ActionResult DeleteGiftFromUser(DTO.Gift dtoGift)
         {
-            if (gift == null)
+            if (IsNull(dtoGift))
             {
                 return BadRequest();
             }
-            _GiftService.RemoveGift(DTO.Gift.ToEntity(gift));
+            _GiftService.RemoveGift(GiftDtoToEntity(dtoGift));
 
             return Ok("Gift removed!");
         }
 
         [HttpPost("{userId, gift}")]
-        public ActionResult UpdateGiftFromUser(int userId, DTO.Gift gift)//Update
+        public ActionResult UpdateGiftFromUser(int dtoUserId, DTO.Gift dtoGift)//Update
         {
-            if (userId <= 0)
+            if (IsValidId(dtoUserId))
             {
                 return NotFound();
             }
 
-            if (gift == null)
+            if (IsNull(dtoGift))
             {
                 return BadRequest();
             }
 
-            Domain.Models.Gift originalGift = DTO.Gift.ToEntity(gift);
-            Domain.Models.Gift updateGift = _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToEntity(gift));
+            Domain.Models.Gift originalGift = GiftDtoToEntity(dtoGift);
+            Domain.Models.Gift updateGift = _GiftService.UpdateGiftForUser(dtoUserId, GiftDtoToEntity(dtoGift));
 
             //?Check if gift is updated here or in test?
 

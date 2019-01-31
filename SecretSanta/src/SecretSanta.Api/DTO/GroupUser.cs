@@ -17,17 +17,17 @@ namespace SecretSanta.Api.DTO
 
         }
 
-        public GroupUser(SecretSanta.Domain.Models.GroupUser groupUser)
+        public GroupUser(SecretSanta.Domain.Models.GroupUser modelsGroupUser)
         {
-            if (groupUser == null) throw new ArgumentNullException(nameof(groupUser));
+            if (modelsGroupUser == null) throw new ArgumentNullException(nameof(modelsGroupUser));
 
-            GroupId = groupUser.GroupId;
-            Group = groupUser.Group;
-            UserId = UserId;
-            User = groupUser.User;
+            GroupId = modelsGroupUser.GroupId;
+            Group = modelsGroupUser.Group;
+            UserId = modelsGroupUser.UserId;
+            User = modelsGroupUser.User;
         }
 
-        public static SecretSanta.Domain.Models.GroupUser ToEntity(DTO.GroupUser user)
+        public static SecretSanta.Domain.Models.GroupUser ToEntity(DTO.GroupUser dtoGroupUser)
         {
             //Pretend this is implemented
             return null;

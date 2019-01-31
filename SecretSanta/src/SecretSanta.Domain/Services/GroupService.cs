@@ -21,6 +21,13 @@ namespace SecretSanta.Domain.Services
             return @group;
         }
 
+        public Group RemoveGroup(Group @group)
+        {
+            DbContext.Groups.Remove(@group);
+            DbContext.SaveChanges();
+            return @group;
+        }
+
         public Group UpdateGroup(Group @group)
         {
             DbContext.Groups.Update(@group);

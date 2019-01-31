@@ -9,22 +9,22 @@ namespace SecretSanta.Api.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GroupUser> GroupUsers { get; set; }
+        public List<Domain.Models.GroupUser> GroupUsers { get; set; }
 
         public Group()
         {
 
         }
 
-        public Group(SecretSanta.Domain.Models.Group group)
+        public Group(SecretSanta.Domain.Models.Group modelsGroup)
         {
-            if (group == null) throw new ArgumentNullException(nameof(group));
+            if (modelsGroup == null) throw new ArgumentNullException(nameof(modelsGroup));
 
-            Id = group.Id;
-            Name = group.Name;
+            Id = modelsGroup.Id;
+            Name = modelsGroup.Name;
 
             List<Domain.Models.GroupUser> newGroup = new List<Domain.Models.GroupUser>();
-            newGroup.AddRange(group.GroupUsers.Select(groupUser =>
+            newGroup.AddRange(modelsGroup.GroupUsers.Select(groupUser =>
             new Domain.Models.GroupUser
             {
                 Group = groupUser.Group,
@@ -32,9 +32,10 @@ namespace SecretSanta.Api.DTO
                 User = groupUser.User,
                 UserId = groupUser.UserId
             }));
+            GroupUsers = newGroup;
         }
 
-        public static SecretSanta.Domain.Models.Group ToEntity(DTO.Group group)
+        public static SecretSanta.Domain.Models.Group ToEntity(DTO.Group dtoGroup)
         {
             //Pretend this is implemented
             return null;
