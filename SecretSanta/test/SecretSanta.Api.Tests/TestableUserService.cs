@@ -6,6 +6,8 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableUserService : IUserService
     {
+        public List<User> returnedUsers { get; set; }
+
         public User AddUser_User { get; set; }
         public User AddUser_Return { get; set; }
 
@@ -16,7 +18,6 @@ namespace SecretSanta.Api.Tests
 
         public User UpdateUser_User { get; set; }
         public User UpdateUser_Return { get; set; }
-
 
         public User AddUser(User user)
         {

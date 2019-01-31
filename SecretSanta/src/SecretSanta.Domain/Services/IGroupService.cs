@@ -8,6 +8,9 @@ namespace SecretSanta.Domain.Services
         Group AddGroup(Group @group);
         Group RemoveGroup(Group @group);
         Group UpdateGroup(Group @group);
-        List<Group> FetchAll();
+        User AddUserToGroup(int @groupId, User @user);
+        User RemoveUserFromGroup(int @groupId, User @user);
+        List<Group> GetAllGroups();
+        List<User> GetAllUsersFromGroup(int @groupId);
     }
 }

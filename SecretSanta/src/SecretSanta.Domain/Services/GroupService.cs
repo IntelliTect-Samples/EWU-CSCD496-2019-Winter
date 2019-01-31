@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
@@ -35,9 +36,63 @@ namespace SecretSanta.Domain.Services
             return @group;
         }
 
-        public List<Group> FetchAll()
+        public User AddUserToGroup(int @groupId, User @user)
+        {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (groupId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(groupId));
+            }
+
+            Group foundGroup = DbContext.Groups.Include(g => g.GroupUsers)
+                                        .SingleOrDefault(g => g.Id == groupId);
+
+            GroupUser groupUser = new GroupUser {
+                                                    GroupId = groupId,
+                                                    UserId = user.Id,
+                                                    User = user
+                                                };
+
+            foundGroup.GroupUsers.Add(groupUser);
+            DbContext.SaveChanges();
+            return user;
+        }
+
+        public User RemoveUserFromGroup(int @groupId, User @user)
+        {
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (groupId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(groupId));
+            }
+
+            Group group = DbContext.Groups.Include(g => g.GroupUsers)
+                                            .SingleOrDefault(g => g.Id == groupId);
+            GroupUser groupUserToRemove = group.GroupUsers.Single(gu => gu.GroupId == groupId 
+                                                                    && gu.UserId == user.Id);
+            group.GroupUsers.Remove(groupUserToRemove);
+            DbContext.SaveChanges();
+            return user;
+        }
+
+        public List<Group> GetAllGroups()
         {
             return DbContext.Groups.ToList();
+        }
+
+        public List<User> GetAllUsersFromGroup(int @groupId)
+        {
+            return DbContext.Groups
+                .Where(x => x.Id == groupId)
+                .SelectMany(x => x.GroupUsers)
+                .Select(x => x.User)
+                .ToList();
         }
     }
 }

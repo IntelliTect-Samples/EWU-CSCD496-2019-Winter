@@ -16,7 +16,14 @@ namespace SecretSanta.Domain.Services
 
         public Gift AddGiftToUser(int userId, Gift gift)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift == null)
+            {
+                throw new ArgumentNullException(nameof(gift));
+            }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
 
             gift.UserId = userId;
             DbContext.Gifts.Add(gift);
@@ -27,7 +34,14 @@ namespace SecretSanta.Domain.Services
 
         public Gift UpdateGiftForUser(int userId, Gift gift)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift == null)
+            {
+                throw new ArgumentNullException(nameof(gift));
+            }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
 
             gift.UserId = userId;
             DbContext.Gifts.Update(gift);
@@ -38,12 +52,20 @@ namespace SecretSanta.Domain.Services
 
         public List<Gift> GetGiftsForUser(int userId)
         {
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
+
             return DbContext.Gifts.Where(g => g.UserId == userId).ToList();
         }
 
         public void RemoveGift(Gift gift)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift == null)
+            {
+                throw new ArgumentNullException(nameof(gift));
+            }
 
             DbContext.Gifts.Remove(gift);
             DbContext.SaveChanges();

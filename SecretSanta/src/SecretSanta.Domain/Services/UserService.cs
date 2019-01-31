@@ -16,6 +16,11 @@ namespace SecretSanta.Domain.Services
 
         public User AddUser(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             DbContext.Users.Add(user);
             DbContext.SaveChanges();
             return user;
@@ -23,6 +28,11 @@ namespace SecretSanta.Domain.Services
 
         public User UpdateUser(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             DbContext.Users.Update(user);
             DbContext.SaveChanges();
             return user;
@@ -35,6 +45,11 @@ namespace SecretSanta.Domain.Services
 
         public User RemoveUser(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             DbContext.Users.Remove(user);
             DbContext.SaveChanges();
             return user;

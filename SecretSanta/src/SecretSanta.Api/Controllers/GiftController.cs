@@ -20,7 +20,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         // GET api/Gift/5
-        [HttpGet("{userId}")]
+        [HttpGet("{dtoUserId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int dtoUserId)
         {
             if (_HelperMethod.IsValidId(dtoUserId))
@@ -33,7 +33,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         //POST api/Gift/4
-        [HttpPost("{userId}")]
+        [HttpPost("{dtoGift, dtoUserId}")]
         public ActionResult AddGiftToUser(DTO.Gift dtoGift, int dtoUserId)
         {
             if (_HelperMethod.IsValidId(dtoUserId))
@@ -51,7 +51,7 @@ namespace SecretSanta.Api.Controllers
 
         }
 
-        [HttpDelete("{gift}")]
+        [HttpDelete("{dtoGift}")]
         public ActionResult DeleteGiftFromUser(DTO.Gift dtoGift)
         {
             if (_HelperMethod.IsNull(dtoGift))
@@ -63,7 +63,7 @@ namespace SecretSanta.Api.Controllers
             return Ok("Gift removed!");
         }
 
-        [HttpPost("{userId, gift}")]
+        [HttpPost("{dtoUserId, dtoGift}")]
         public ActionResult UpdateGiftFromUser(int dtoUserId, DTO.Gift dtoGift)//Update
         {
             if (_HelperMethod.IsValidId(dtoUserId))
@@ -76,10 +76,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift originalGift = DTO.Gift.ToEntity(dtoGift);
-            Domain.Models.Gift updateGift = _GiftService.UpdateGiftForUser(dtoUserId, DTO.Gift.ToEntity(dtoGift));
-
-            //?Check if gift is updated here or in test?
+            _GiftService.UpdateGiftForUser(dtoUserId, DTO.Gift.ToEntity(dtoGift));
 
             return Ok("Gift updated!");
         }

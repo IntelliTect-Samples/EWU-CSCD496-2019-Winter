@@ -38,8 +38,6 @@ namespace SecretSanta.Api.Controllers
 
             _UserService.AddUser(DTO.User.ToEntity(dtoUser));
             return Ok("User added!");
-
-            //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         [HttpDelete("{dtoUser}")]
@@ -66,5 +64,7 @@ namespace SecretSanta.Api.Controllers
 
             return Ok("Gift updated!");
         }
+
+
     }
 }
