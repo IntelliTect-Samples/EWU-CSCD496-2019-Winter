@@ -133,5 +133,6 @@ namespace SecretSanta.Api.Tests
 
             Assert.IsTrue(result.Result is BadRequestResult);
         }
+        //Delete this comment
     }
 }
