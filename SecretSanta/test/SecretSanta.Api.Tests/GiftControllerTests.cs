@@ -81,7 +81,7 @@ namespace SecretSanta.Api.Tests
             TestableGiftService testableService = new TestableGiftService();
             GiftController giftController = new GiftController(testableService);
 
-            ActionResult result = giftController.MakeGift(4, "New Gift");
+            ActionResult result = giftController.MakeGift(4, new DTO.Gift());
 
             Assert.IsTrue(result is OkResult);
         }

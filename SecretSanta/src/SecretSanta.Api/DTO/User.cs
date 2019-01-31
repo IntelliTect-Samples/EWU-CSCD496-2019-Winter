@@ -29,5 +29,19 @@ namespace SecretSanta.Api.DTO
             UserGroups = user.UserGroups;
             Gifts = user.Gifts;
         }
+
+        public static Domain.Models.User GetDomainUser(User user)
+        {
+            Domain.Models.User mUser = new Domain.Models.User()
+            {
+                Id = user.Id,
+                First = user.First,
+                Last = user.Last,
+                Gifts = user.Gifts,
+                UserGroups = user.UserGroups
+            };
+
+            return mUser;
+        }
     }
 }

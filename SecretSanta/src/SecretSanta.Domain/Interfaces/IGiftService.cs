@@ -7,7 +7,7 @@ namespace SecretSanta.Domain.Services
     {
         User FindUser(int id);
         bool CreateGift(User user, Gift gift);
-        bool CreateGift(int uid, string giftTitle);
+        bool CreateGift(int uid, Gift gift);
         bool EditGift(User user, Gift gift);
         bool EditGift(int uid, Gift gift);
         bool DeleteGift(User user, Gift gift);

@@ -30,9 +30,16 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            DTO.User user = new DTO.User(_UserService.Find(id));
+            User user = _UserService.Find(id);
 
-            return user;
+            if (user != null)
+            {
+                return new DTO.User(user);
+            }
+            else
+            {
+                return BadRequest("Find error");
+            }
         }
 
         // POST api/User/
@@ -41,9 +48,14 @@ namespace SecretSanta.Api.Controllers
         {
             if (info == null) return BadRequest();
 
-            _UserService.MakeUser(info);
-
-            return Ok();
+            if (_UserService.MakeUser(info))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Make error");
+            }
         }
 
         // PUT api/User/5
@@ -57,21 +69,20 @@ namespace SecretSanta.Api.Controllers
 
             if(upDatedUser == null)
             {
-                return BadRequest();
+                return BadRequest("Bad data packet");
             }
 
-            User user = new User()
+            if (_UserService.Find(id) == null)
+                return BadRequest("User not found");
+
+            if (_UserService.UpsertUser(DTO.User.GetDomainUser(upDatedUser)))
             {
-                Id = id,
-                First = upDatedUser.First,
-                Last = upDatedUser.Last,
-                Gifts = upDatedUser.Gifts,
-                UserGroups = upDatedUser.UserGroups
-            };
-
-            _UserService.UpsertUser(user);
-
-            return Ok();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Update Error");
+            }
         }
 
         // DELETE api/User/5
@@ -83,9 +94,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _UserService.DeleteUser(id);
-
-            return Ok();
+            if (_UserService.DeleteUser(id))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Delete error");
+            }
         }
     }
 }

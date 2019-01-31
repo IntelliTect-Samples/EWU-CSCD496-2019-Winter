@@ -32,7 +32,10 @@ namespace SecretSanta.Domain.Services
         {
             User user = DbContext.Users.Find(uid);
 
-            return EditGift(user, gift);
+            if (user != null)
+                return EditGift(user, gift);
+            else
+                return false;
         }
 
         public bool EditGift(User user, Gift gift)
@@ -64,7 +67,10 @@ namespace SecretSanta.Domain.Services
             User user = DbContext.Users.Find(uid);
             Gift gift = DbContext.Gifts.Find(gid);
 
-            return DeleteGift(user, gift);
+            if (user != null && gift != null)
+                return DeleteGift(user, gift);
+            else
+                return false;
         }
 
         public bool DeleteGift(User user, Gift gift)
@@ -107,7 +113,14 @@ namespace SecretSanta.Domain.Services
 
         public List<Gift> GetGiftsForUser(int userId)
         {
-            return (List<Gift>)DbContext.Users.Find(userId).Gifts;
+            if(DbContext.Users.Find(userId) != null)
+            {
+                return (List<Gift>)DbContext.Users.Find(userId).Gifts;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public User FindUser(int id)
@@ -115,16 +128,14 @@ namespace SecretSanta.Domain.Services
             return DbContext.Users.Find(id);
         }
 
-        public bool CreateGift(int uid, string giftTitle)
+        public bool CreateGift(int uid, Gift newGift)
         {
-            bool test = false;
-
             User user = DbContext.Users.Find(uid);
-            Gift gift = new Gift() { Title = giftTitle };
 
-            test = CreateGift(user, gift);
-
-            return test;
+            if (user != null)
+                return CreateGift(user, newGift);
+            else
+                return false;
         }
     }
 }

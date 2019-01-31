@@ -15,7 +15,7 @@ namespace SecretSanta.Api.Tests
             return true;
         }
 
-        public bool CreateGift(int uid, string giftTitle)
+        public bool CreateGift(int uid, Gift gift)
         {
             return true;
         }

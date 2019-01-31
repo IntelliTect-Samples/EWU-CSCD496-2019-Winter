@@ -153,10 +153,15 @@ namespace SecretSanta.Domain.Services
         {
             Group group = DbContext.Groups.Find(id);
 
-            DbContext.Groups.Remove(group);
-            DbContext.SaveChanges();
+            if (group != null)
+            {
+                DbContext.Groups.Remove(group);
+                DbContext.SaveChanges();
 
-            return FindGroup(id) == null ? true : false;
+                return FindGroup(id) == null ? true : false;
+            }
+            else
+                return false;
         }
 
         public bool AddUser(int uid, int gid)

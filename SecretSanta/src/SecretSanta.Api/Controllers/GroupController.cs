@@ -53,9 +53,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _GroupService.DeleteGroup(id);
-
-            return Ok();
+            if(_GroupService.DeleteGroup(id))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Delete error");
+            }
         }
 
         // DELETE api/Group/remove/gid
@@ -67,9 +72,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _GroupService.RemoveUser(uid, gid);
-
-            return Ok();
+            if(_GroupService.RemoveUser(uid, gid))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("User or Group not found");
+            }
         }
 
         // POST api/group
@@ -78,9 +88,14 @@ namespace SecretSanta.Api.Controllers
         {
             if (title == null) return BadRequest();
 
-            _GroupService.CreateGroup(title);
-
-            return Ok();
+            if (_GroupService.CreateGroup(title))
+            { 
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Create error");
+            }
         }
 
         // PUT api/Group/gid
@@ -94,19 +109,20 @@ namespace SecretSanta.Api.Controllers
 
             if(upDataGroup == null)
             {
-                return BadRequest();
+                return BadRequest("Bad data packet");
             }
 
-            Group group = new Group()
+            if (_GroupService.FindGroup(gid) == null)
+                return NotFound("Group not found");
+
+            if (_GroupService.UpdateGroup(DTO.Group.GetDomainGroup(upDataGroup)))
             {
-                Title = upDataGroup.Title,
-                Id = gid,
-                UserGroups = upDataGroup.UserGroups
-            };
-
-            _GroupService.UpdateGroup(group);
-
-            return Ok();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Update Error");
+            }
         }
 
         // PUT api/Group/add/5
@@ -118,9 +134,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _GroupService.AddUser(uid, gid);
-
-            return Ok();
+            if (_GroupService.AddUser(uid, gid))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Add error");
+            }
         }
     }
 }

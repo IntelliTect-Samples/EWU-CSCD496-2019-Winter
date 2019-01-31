@@ -23,5 +23,17 @@ namespace SecretSanta.Api.DTO
             Title = group.Title;
             UserGroups = group.UserGroups;
         }
+
+        public static Domain.Models.Group GetDomainGroup(DTO.Group group)
+        {
+            Domain.Models.Group mGroup = new Domain.Models.Group()
+            {
+                Title = group.Title,
+                Id = group.Id,
+                UserGroups = group.UserGroups
+            };
+
+            return mGroup;
+        }
     }
 }

@@ -28,18 +28,30 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            if (databaseUsers != null)
+            {
+                return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            }
+            else
+            {
+                return BadRequest("Get error");
+            }
         }
 
         // POST api/Gift/5
         [HttpPost("{id}")]
-        public ActionResult MakeGift(int id, string title)
+        public ActionResult MakeGift(int id, DTO.Gift newGift)
         {
-            if (title == null) return BadRequest();
+            if (newGift == null) return BadRequest();
 
-            _GiftService.CreateGift(id, title);
-
-            return Ok();
+            if (_GiftService.CreateGift(id, DTO.Gift.GetDomainGift(newGift)))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Make Gift error");
+            }
         }
 
         // PUT api/Gift/id
@@ -53,12 +65,17 @@ namespace SecretSanta.Api.Controllers
 
             if(upDatedGift == null)
             {
-                return BadRequest();
+                return BadRequest("Bad data packet");
             }
 
-            _GiftService.EditGift(userID, DTO.Gift.GetDomainGift(upDatedGift));
-
-            return Ok();
+            if (_GiftService.EditGift(userID, DTO.Gift.GetDomainGift(upDatedGift)))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Edit gift error");
+            }
         }
 
         // DELETE api/Gift/5
@@ -70,9 +87,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _GiftService.DeleteGift(userId, giftId);
-
-            return Ok();
+            if (_GiftService.DeleteGift(userId, giftId))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Delete gift error");
+            }
         }
     }
 }

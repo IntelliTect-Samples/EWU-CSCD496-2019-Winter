@@ -17,16 +17,22 @@ namespace SecretSanta.Domain.Services
 
         public bool UpsertUser(User user)
         {
-            if (user.Id == default(int))
+            if (user != null)
             {
-                DbContext.Users.Add(user);
+
+                if (user.Id == default(int))
+                {
+                    DbContext.Users.Add(user);
+                }
+                else
+                {
+                    DbContext.Users.Update(user);
+                }
+                DbContext.SaveChanges();
+                return true;
             }
             else
-            {
-                DbContext.Users.Update(user);
-            }
-            DbContext.SaveChanges();
-            return true;
+                return false;
         }
 
         public bool MakeUser(string info)
