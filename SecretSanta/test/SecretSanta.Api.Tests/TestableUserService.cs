@@ -25,6 +25,14 @@ namespace SecretSanta.Api.Tests
         {
             UserId = id;
 
+            if (ToReturn == null)
+            {
+                ToReturn = new List<User>
+                {
+                    new User() { Id = id }
+                };
+            }
+
             return ToReturn[0];
         }
 

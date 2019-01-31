@@ -116,7 +116,7 @@ namespace SecretSanta.Api.Tests
 
             ActionResult result = controller.UpdateUser(1, null);
 
-            Assert.IsTrue(result is BadRequestResult);
+            Assert.IsTrue(result is BadRequestObjectResult);
         }
 
         [TestMethod]

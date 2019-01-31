@@ -148,7 +148,7 @@ namespace SecretSanta.Api.Tests
 
             ActionResult result = controller.UpdateGroup(1, null);
 
-            Assert.IsTrue(result is BadRequestResult);
+            Assert.IsTrue(result is BadRequestObjectResult);
             //This check ensures that the service was not called
             Assert.AreEqual(0, service.GroupId);
         }

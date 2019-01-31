@@ -48,6 +48,8 @@ namespace SecretSanta.Api.Tests
         public Group FindGroup(int id)
         {
             GroupId = id;
+            ToReturnFindGroup = new Group() { Id = id };
+
             return ToReturnFindGroup;
         }
 
