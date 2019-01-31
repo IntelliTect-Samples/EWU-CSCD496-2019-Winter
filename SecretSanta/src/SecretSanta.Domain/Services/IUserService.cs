@@ -5,9 +5,9 @@ namespace SecretSanta.Domain.Services
 {
     public interface IUserService
     {
-        User AddUser(User user);
-        User UpdateUser(User user);
+        User AddUser(int userId, User user);
+        User UpdateUser(int userId, User user);
         List<User> FetchAll();
-        User RemoveUser(User @user);
+        User RemoveUser(int userId, User user);
     }
 }

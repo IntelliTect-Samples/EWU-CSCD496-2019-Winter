@@ -14,25 +14,35 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public User AddUser(User user)
+        public User AddUser(int userId, User user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
 
+            user.Id = userId;
             DbContext.Users.Add(user);
             DbContext.SaveChanges();
             return user;
         }
 
-        public User UpdateUser(User user)
+        public User UpdateUser(int userId, User user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
 
+            user.Id = userId;
             DbContext.Users.Update(user);
             DbContext.SaveChanges();
             return user;
@@ -43,13 +53,18 @@ namespace SecretSanta.Domain.Services
             return DbContext.Users.ToList();
         }
 
-        public User RemoveUser(User user)
+        public User RemoveUser(int userId, User user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
 
+            user.Id = userId;
             DbContext.Users.Remove(user);
             DbContext.SaveChanges();
             return user;

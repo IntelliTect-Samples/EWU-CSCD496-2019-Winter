@@ -14,7 +14,7 @@ namespace SecretSanta.Api.Tests
         public Gift AddGiftToUser_Gift { get; set; }
 
         public Gift RemoveGiftToUser_Gift { get; set; }
-
+        public int RemoveGiftToUser_UserId { get; private set; }
         public Gift UpdateGiftToUser_Return { get; set; }
         public int UpdateGiftToUser_UserId { get; set; }
         public Gift UpdateGiftToUser_Gift { get; set; }
@@ -33,9 +33,10 @@ namespace SecretSanta.Api.Tests
             return GetGiftsForUser_Return;
         }
 
-        void IGiftService.RemoveGift(Gift gift)
+        void IGiftService.RemoveGift(int userId, Gift gift)
         {
             RemoveGiftToUser_Gift = gift;
+            RemoveGiftToUser_UserId = userId;
         }
 
         Gift IGiftService.UpdateGiftForUser(int userId, Gift gift)

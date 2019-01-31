@@ -19,7 +19,6 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        // GET api/Gift/5
         [HttpGet()]
         public ActionResult<List<DTO.User>> GetUsersInGroup()
         {
@@ -28,39 +27,52 @@ namespace SecretSanta.Api.Controllers
         }
 
         //POST api/Gift/4
-        [HttpPost("{dtoUser}")]
-        public ActionResult AddUser(DTO.User dtoUser)
+        [HttpPost("{dtoUserId}")]
+        public ActionResult AddUser(int dtoUserId, DTO.User dtoUser)
         {
             if (_HelperMethod.IsNull(dtoUser))
             {
                 return BadRequest();
             }
+            if (_HelperMethod.IsValidId(dtoUserId))
+            {
+                return NotFound();
+            }
 
-            _UserService.AddUser(DTO.User.ToEntity(dtoUser));
+            _UserService.AddUser(dtoUserId, DTO.User.ToEntity(dtoUser));
             return Ok("User added!");
         }
 
-        [HttpDelete("{dtoUser}")]
-        public ActionResult RemoveUser(DTO.User dtoUser)
+        [HttpDelete("{dtoUserId}")]
+        public ActionResult RemoveUser(int dtoUserId, DTO.User dtoUser)
         {
             if (_HelperMethod.IsNull(dtoUser))
             {
                 return BadRequest();
             }
-            _UserService.RemoveUser(DTO.User.ToEntity(dtoUser));
+            if (_HelperMethod.IsValidId(dtoUserId))
+            {
+                return NotFound();
+            }
+
+            _UserService.RemoveUser(dtoUserId, DTO.User.ToEntity(dtoUser));
 
             return Ok("User removed!");
         }
 
-        [HttpPost("{dtoUser}")]
-        public ActionResult UpdateUser(DTO.User dtoUser)//Update
+        [HttpPost("{userId}")]
+        public ActionResult UpdateUser(int userId, DTO.User dtoUser)//Update
         {
             if (_HelperMethod.IsNull(dtoUser))
             {
                 return BadRequest();
             }
+            if (_HelperMethod.IsValidId(userId))
+            {
+                return NotFound();
+            }
 
-            _UserService.UpdateUser(DTO.User.ToEntity(dtoUser));
+            _UserService.UpdateUser(userId, DTO.User.ToEntity(dtoUser));
 
             return Ok("Gift updated!");
         }

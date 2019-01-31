@@ -10,11 +10,14 @@ namespace SecretSanta.Api.Tests
 
         public Group AddGroup_Return { get; set; }
         public Group AddGroup_Group { get; set; }
+        public int AddGroup_GroupId { get; set; }
 
         public Group RemoveGroup_Return { get; set; }
+        public int RemoveGroup_GroupId { get; private set; }
         public Group RemoveGroup_Group { get; set; }
 
         public Group UpdateGroup_Return { get; set; }
+        public int UpdateGroup_GroupId { get; private set; }
         public Group UpdateGroup_Group { get; set; }
 
         public User AddUserToGroup_Return { get; set; }
@@ -30,32 +33,35 @@ namespace SecretSanta.Api.Tests
         public int GetAllUsersFromGroup_GroupId { get; private set; }
         public List<User> GetAllUsersFromGroup_Return { get; private set; }
 
-        public Group AddGroup(Group group)
+        public Group AddGroup(int groupId, Group group)
         {
+            AddGroup_GroupId = groupId;
             AddGroup_Group = group;
             return AddGroup_Return;
         }
 
-        public Group RemoveGroup(Group group)
+        public Group RemoveGroup(int groupId, Group group)
         {
+            RemoveGroup_GroupId = groupId;
             RemoveGroup_Group = group;
             return RemoveGroup_Return;
         }
 
-        public Group UpdateGroup(Group group)
+        public Group UpdateGroup(int groupId, Group group)
         {
+            UpdateGroup_GroupId = groupId;
             UpdateGroup_Group = group;
             return UpdateGroup_Return;
         }
 
-        public User AddUserToGroup(int @groupId, User @user)
+        public User AddUserToGroup(int groupId, User user)
         {
             AddUserToGroup_GroupId = groupId;
             AddUserToGroup_User = user;
             return AddUserToGroup_Return;
         }
 
-        public User RemoveUserFromGroup(int @groupId, User @user)
+        public User RemoveUserFromGroup(int groupId, User user)
         {
             RemoveUserToGroup_GroupId = groupId;
             RemoveUserToGroup_User = user;
@@ -65,7 +71,7 @@ namespace SecretSanta.Api.Tests
         {
             return GetAllGroups_Return;
         }
-        public List<User> GetAllUsersFromGroup(int @groupId)
+        public List<User> GetAllUsersFromGroup(int groupId)
         {
             GetAllUsersFromGroup_GroupId = groupId;
             return GetAllUsersFromGroup_Return;

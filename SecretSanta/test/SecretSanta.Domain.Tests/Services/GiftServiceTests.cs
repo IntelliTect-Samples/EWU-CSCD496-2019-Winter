@@ -29,7 +29,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = userService.AddUser(user.Id, user);
 
                 var gift = new Gift
                 {
@@ -57,7 +57,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = userService.AddUser(user.Id, user);
 
                 var gift = new Gift
                 {

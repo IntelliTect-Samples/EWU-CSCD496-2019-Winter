@@ -36,10 +36,10 @@ namespace SecretSanta.Api.Tests
             User newUser = CreateUser();
 
             TestableUserService service = new TestableUserService();
-            service.AddUser(newUser);
+            service.AddUser(newUser.Id, newUser);
 
             UserController userController = new UserController(service);
-            ActionResult resultUser = userController.AddUser(new DTO.User (newUser) );
+            ActionResult resultUser = userController.AddUser(8, new DTO.User (newUser) );
 
             Assert.AreEqual(newUser.Id, service.AddUser_User.Id);
             Assert.IsTrue(resultUser is OkObjectResult);
@@ -52,7 +52,7 @@ namespace SecretSanta.Api.Tests
 
             TestableUserService service = new TestableUserService();
             UserController userController = new UserController(service);
-            ActionResult<List<DTO.User>> result = userController.AddUser(nullUser);
+            ActionResult<List<DTO.User>> result = userController.AddUser(9, nullUser);
 
             Assert.IsTrue(result.Result is BadRequestResult);
         }
@@ -63,13 +63,13 @@ namespace SecretSanta.Api.Tests
             User newUser = CreateUser();
 
             TestableUserService service = new TestableUserService();
-            service.AddUser(newUser);
+            service.AddUser(newUser.Id, newUser);
 
             UserController userController = new UserController(service);
-            userController.AddUser(new DTO.User(newUser));
+            userController.AddUser(8, new DTO.User(newUser));
 
-            service.RemoveUser(newUser);
-            ActionResult result = userController.RemoveUser(new DTO.User(newUser));
+            service.RemoveUser(8, newUser);
+            ActionResult result = userController.RemoveUser(8, new DTO.User(newUser));
 
             Assert.IsTrue(result is OkObjectResult);
             Assert.AreEqual(newUser.Id, service.RemoveUser_User.Id);
@@ -81,13 +81,13 @@ namespace SecretSanta.Api.Tests
             User newUser = CreateUser();
 
             TestableUserService service = new TestableUserService();
-            service.AddUser(newUser);
+            service.AddUser(newUser.Id, newUser);
 
             UserController userController = new UserController(service);
-            userController.AddUser(new DTO.User(newUser));
+            userController.AddUser(8, new DTO.User(newUser));
 
-            service.RemoveUser(null);
-            ActionResult <List<DTO.User>> result = userController.RemoveUser(null);
+            service.RemoveUser(9, null);
+            ActionResult <List<DTO.User>> result = userController.RemoveUser(9, null);
 
             Assert.IsTrue(result.Result is BadRequestResult);
         }
@@ -98,17 +98,17 @@ namespace SecretSanta.Api.Tests
             User newUser = CreateUser();
 
             TestableUserService service = new TestableUserService();
-            service.AddUser(newUser);
+            service.AddUser(newUser.Id, newUser);
 
             UserController userController = new UserController(service);
-            userController.AddUser(new DTO.User(newUser));
+            userController.AddUser(newUser.Id, new DTO.User(newUser));
 
             Assert.AreEqual(service.AddUser_User.FirstName, "Jack");
 
             newUser.FirstName = "France";
-            service.UpdateUser(newUser);
+            service.UpdateUser(8, newUser);
 
-            ActionResult<List<DTO.User>> result = userController.UpdateUser(new DTO.User(newUser));
+            ActionResult<List<DTO.User>> result = userController.UpdateUser(8, new DTO.User(newUser));
 
             Assert.AreEqual("France", service.UpdateUser_User.FirstName);
             Assert.IsTrue(result.Result is OkObjectResult);
@@ -120,16 +120,16 @@ namespace SecretSanta.Api.Tests
             User newUser = CreateUser();
 
             TestableUserService service = new TestableUserService();
-            service.AddUser(newUser);
+            service.AddUser(newUser.Id, newUser);
 
             UserController userController = new UserController(service);
-            userController.AddUser(new DTO.User(newUser));
+            userController.AddUser(newUser.Id, new DTO.User(newUser));
 
             Assert.AreEqual(service.AddUser_User.FirstName, "Jack");
 
-            service.UpdateUser(null);
+            service.UpdateUser(9, null);
 
-            ActionResult<List<DTO.User>> result = userController.UpdateUser(null);
+            ActionResult<List<DTO.User>> result = userController.UpdateUser(9, null);
 
             Assert.IsTrue(result.Result is BadRequestResult);
         }

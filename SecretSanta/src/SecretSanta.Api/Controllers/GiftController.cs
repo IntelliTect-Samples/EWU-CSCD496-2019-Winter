@@ -27,13 +27,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
+
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(dtoUserId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         //POST api/Gift/4
-        [HttpPost("{dtoGift, dtoUserId}")]
+        [HttpPost("{dtoUserId}")]
         public ActionResult AddGiftToUser(DTO.Gift dtoGift, int dtoUserId)
         {
             if (_HelperMethod.IsValidId(dtoUserId))
@@ -51,19 +52,23 @@ namespace SecretSanta.Api.Controllers
 
         }
 
-        [HttpDelete("{dtoGift}")]
-        public ActionResult DeleteGiftFromUser(DTO.Gift dtoGift)
+        [HttpPut]
+        public ActionResult DeleteGiftFromUser(DTO.Gift dtoGift, int dtoUserId)
         {
             if (_HelperMethod.IsNull(dtoGift))
             {
                 return BadRequest();
             }
-            _GiftService.RemoveGift(DTO.Gift.ToEntity(dtoGift));
+            if (_HelperMethod.IsValidId(dtoUserId))
+            {
+                return NotFound();
+            }
+            _GiftService.RemoveGift(dtoUserId, DTO.Gift.ToEntity(dtoGift));
 
             return Ok("Gift removed!");
         }
 
-        [HttpPost("{dtoUserId, dtoGift}")]
+        [HttpPost("{dtoUserId}")]
         public ActionResult UpdateGiftFromUser(int dtoUserId, DTO.Gift dtoGift)//Update
         {
             if (_HelperMethod.IsValidId(dtoUserId))

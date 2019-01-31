@@ -29,44 +29,56 @@ namespace SecretSanta.Api.Controllers
 
         //POST api/Gift/4
         [HttpPost("{dtoGroup}")]
-        public ActionResult CreateGroup(DTO.Group dtoGroup)
+        public ActionResult CreateGroup(int dtoGroupId, DTO.Group dtoGroup)
         {
             if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
+            if (_HelperMethod.IsValidId(dtoGroupId))
+            {
+                return NotFound();
+            }
 
-            _GroupService.AddGroup(DTO.Group.ToEntity(dtoGroup));
+            _GroupService.AddGroup(dtoGroupId, DTO.Group.ToEntity(dtoGroup));
             return Ok("Group added!");
         }
 
         [HttpDelete("{dtoGroup}")]
-        public ActionResult DeleteGroup(DTO.Group dtoGroup)
+        public ActionResult DeleteGroup(int dtoGroupId, DTO.Group dtoGroup)
         {
             if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
+            if (_HelperMethod.IsValidId(dtoGroupId))
+            {
+                return NotFound();
+            }
 
-            _GroupService.RemoveGroup(DTO.Group.ToEntity(dtoGroup));
+            _GroupService.RemoveGroup(dtoGroupId, DTO.Group.ToEntity(dtoGroup));
 
             return Ok("Gift removed!");
         }
 
         [HttpPost("{dtoGroup}")]
-        public ActionResult UpdateGroup(DTO.Group dtoGroup)//Update
+        public ActionResult UpdateGroup(int dtoGroupId, DTO.Group dtoGroup)//Update
         {
             if (_HelperMethod.IsNull(dtoGroup))
             {
                 return BadRequest();
             }
+            if (_HelperMethod.IsValidId(dtoGroupId))
+            {
+                return NotFound();
+            }
 
-            _GroupService.UpdateGroup(DTO.Group.ToEntity(dtoGroup));
+            _GroupService.UpdateGroup(dtoGroupId, DTO.Group.ToEntity(dtoGroup));
 
             return Ok("Gift updated!");
         }
 
-        [HttpPost("{dtoGroupId, dtoUser}")]
+        [HttpPost("{dtoGroupId}")]
         public ActionResult<DTO.User> AddUserToGroup(int dtoGroupId, DTO.User dtoUser)
         {
             if (_HelperMethod.IsValidId(dtoGroupId))
@@ -81,7 +93,7 @@ namespace SecretSanta.Api.Controllers
             return new DTO.User(_GroupService.AddUserToGroup(dtoGroupId, DTO.User.ToEntity(dtoUser)));
         }
 
-        [HttpDelete("{dtoGroupId, dtoUser}")]
+        [HttpDelete("{dtoGroupId}")]
         public ActionResult<DTO.User> RemoveUserFromGroup(int dtoGroupId, DTO.User dtoUser)
         {
             if (dtoGroupId <= 0)

@@ -99,7 +99,7 @@ namespace SecretSanta.Api.Tests
             TestableGiftService testService = new TestableGiftService();
             GiftController controller = new GiftController(testService);
 
-            ActionResult<DTO.Gift> result = controller.DeleteGiftFromUser(null);
+            ActionResult<DTO.Gift> result = controller.DeleteGiftFromUser(null, 9);
 
             Assert.IsTrue(result.Result is BadRequestResult);
             Assert.IsNull(testService.RemoveGiftToUser_Gift);
@@ -127,7 +127,7 @@ namespace SecretSanta.Api.Tests
             var service = new TestableGiftService();
             var controller = new GiftController(service);
             var gift = CreateGift();
-            controller.DeleteGiftFromUser(new DTO.Gift(gift));
+            controller.DeleteGiftFromUser(new DTO.Gift(gift), 8);
             var removedGift = service.RemoveGiftToUser_Gift;
 
             Assert.AreEqual(removedGift.Description, gift.Description);

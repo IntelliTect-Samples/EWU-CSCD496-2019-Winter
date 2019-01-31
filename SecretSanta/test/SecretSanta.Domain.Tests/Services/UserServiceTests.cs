@@ -28,7 +28,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(context);
 
-                User addedUser = service.AddUser(user);
+                User addedUser = service.AddUser(user.Id, user);
                 Assert.AreEqual(addedUser, user);
                 Assert.AreNotEqual(0, addedUser.Id);
             }
@@ -60,7 +60,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
-                User updatedUser = service.UpdateUser(user);
+                User updatedUser = service.UpdateUser(user.Id, user);
                 Assert.AreEqual(user, updatedUser);
             }
 
