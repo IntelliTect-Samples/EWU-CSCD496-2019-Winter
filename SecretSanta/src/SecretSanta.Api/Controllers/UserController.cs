@@ -19,48 +19,6 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        private User UserDtoToEntity(DTO.User dtoUser)
-        {
-            if (_HelperMethod.IsNull(dtoUser))
-            {
-                throw new ArgumentNullException(nameof(dtoUser));
-            }
-
-            List<Domain.Models.Gift> copyGifts = new List<Domain.Models.Gift>();
-            copyGifts.AddRange(dtoUser.Gifts.Select(gift =>
-            new Domain.Models.Gift
-            {
-                Id = gift.Id,
-                Description = gift.Description,
-                Title = gift.Title,
-                OrderOfImportance = gift.OrderOfImportance,
-                Url = gift.Url,
-                User = gift.User,
-                UserId = gift.UserId
-            }));
-
-            List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
-            copyGroup.AddRange(dtoUser.GroupUsers.Select(groupUser =>
-            new Domain.Models.GroupUser
-            {
-                Group = groupUser.Group,
-                GroupId = groupUser.GroupId,
-                User = groupUser.User,
-                UserId = groupUser.UserId
-            }));
-
-            User entity = new User
-            {
-                Id = dtoUser.Id,
-                FirstName = dtoUser.FirstName,
-                LastName = dtoUser.LastName,
-                Gifts = copyGifts,
-                GroupUsers = copyGroup
-            };
-
-            return entity;
-        }
-
         // GET api/Gift/5
         [HttpGet()]
         public ActionResult<List<DTO.User>> GetUsersInGroup()
@@ -78,7 +36,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _UserService.AddUser(UserDtoToEntity(dtoUser));
+            _UserService.AddUser(DTO.User.ToEntity(dtoUser));
             return Ok("User added!");
 
             //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
@@ -91,7 +49,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            _UserService.RemoveUser(UserDtoToEntity(dtoUser));
+            _UserService.RemoveUser(DTO.User.ToEntity(dtoUser));
 
             return Ok("User removed!");
         }
@@ -104,7 +62,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _UserService.UpdateUser(UserDtoToEntity(dtoUser));
+            _UserService.UpdateUser(DTO.User.ToEntity(dtoUser));
 
             return Ok("Gift updated!");
         }

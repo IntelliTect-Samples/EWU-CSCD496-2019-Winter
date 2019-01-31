@@ -18,15 +18,15 @@ namespace SecretSanta.Api.DTO
 
         }
 
-        public User(SecretSanta.Domain.Models.User user)
+        public User(SecretSanta.Domain.Models.User domainUser)
         {
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (domainUser == null) throw new ArgumentNullException(nameof(domainUser));
 
-            Id = user.Id;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
+            Id = domainUser.Id;
+            FirstName = domainUser.FirstName;
+            LastName = domainUser.LastName;
             List<Domain.Models.Gift> copyGifts = new List<Domain.Models.Gift>();
-            copyGifts.AddRange(user.Gifts.Select(gift =>
+            copyGifts.AddRange(domainUser.Gifts.Select(gift =>
             new Domain.Models.Gift
             {
                 Id = gift.Id,
@@ -39,7 +39,7 @@ namespace SecretSanta.Api.DTO
             }));
             Gifts = copyGifts;
             List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
-            copyGroup.AddRange(user.GroupUsers.Select(groupUser =>
+            copyGroup.AddRange(domainUser.GroupUsers.Select(groupUser =>
             new Domain.Models.GroupUser
             {
                 Group = groupUser.Group,
@@ -50,10 +50,46 @@ namespace SecretSanta.Api.DTO
             GroupUsers = copyGroup;
         }
 
-        public static SecretSanta.Domain.Models.User ToEntity(DTO.User user)
+        public static SecretSanta.Domain.Models.User ToEntity(DTO.User dtoUser)
         {
-            //Pretend this is implemented
-            return null;
+            if (dtoUser == null)
+            {
+                throw new ArgumentNullException(nameof(dtoUser));
+            }
+
+            List<Domain.Models.Gift> copyGifts = new List<Domain.Models.Gift>();
+            copyGifts.AddRange(dtoUser.Gifts.Select(gift =>
+            new Domain.Models.Gift
+            {
+                Id = gift.Id,
+                Description = gift.Description,
+                Title = gift.Title,
+                OrderOfImportance = gift.OrderOfImportance,
+                Url = gift.Url,
+                User = gift.User,
+                UserId = gift.UserId
+            }));
+
+            List<Domain.Models.GroupUser> copyGroup = new List<Domain.Models.GroupUser>();
+            copyGroup.AddRange(dtoUser.GroupUsers.Select(groupUser =>
+            new Domain.Models.GroupUser
+            {
+                Group = groupUser.Group,
+                GroupId = groupUser.GroupId,
+                User = groupUser.User,
+                UserId = groupUser.UserId
+            }));
+
+            Domain.Models.User entity = new Domain.Models.User
+            {
+                Id = dtoUser.Id,
+                FirstName = dtoUser.FirstName,
+                LastName = dtoUser.LastName,
+                Gifts = copyGifts,
+                GroupUsers = copyGroup
+            };
+
+            return entity;
         }
     }
 }

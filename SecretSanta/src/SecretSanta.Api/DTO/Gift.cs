@@ -29,8 +29,20 @@ namespace SecretSanta.Api.DTO
 
         public static SecretSanta.Domain.Models.Gift ToEntity(DTO.Gift dtoGift)
         {
-            //Pretend this is implemented
-            return null;
+            if (dtoGift == null)
+            {
+                throw new ArgumentNullException(nameof(dtoGift));
+            }
+            Domain.Models.Gift entity = new Domain.Models.Gift//same arguements as constructor
+            {
+                Id = dtoGift.Id,
+                Title = dtoGift.Title,
+                Description = dtoGift.Description,
+                OrderOfImportance = dtoGift.OrderOfImportance,
+                Url = dtoGift.Url
+            };
+
+            return entity;
         }
     }
 }
