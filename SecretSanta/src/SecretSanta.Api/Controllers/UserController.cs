@@ -17,7 +17,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         // GET api/Gift/5
-        [HttpGet] // Create
+        [HttpPost] // Create
         public ActionResult<User> AddUser(User user)
         {
             if (user == null) return BadRequest();
