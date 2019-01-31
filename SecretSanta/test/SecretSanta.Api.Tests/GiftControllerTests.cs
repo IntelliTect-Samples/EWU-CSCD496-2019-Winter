@@ -86,10 +86,19 @@ namespace SecretSanta.Api.Tests
             var testService = new TestableGiftService {AddGiftToUser_Return = DTO.Gift.ToEntity(giftDto)};
             var controller = new GiftController(testService);
 
-            var result = controller.AddGiftToUser(giftDto, 4);
+            var returnedAction = controller.AddGiftToUser(giftDto, 4).Result;
+            
+            Assert.IsTrue(returnedAction is OkObjectResult);
+
+            OkObjectResult result = returnedAction as OkObjectResult;
 
             Assert.IsNotNull(result, "Result was not a 200");
             Assert.AreEqual(4, testService.AddGiftToUser_UserId);
+
+            var valueOfResult = result.Value as DTO.Gift;
+
+            Assert.IsNotNull(valueOfResult);
+            Assert.AreEqual(giftDto.Id, valueOfResult.Id);
 
             // Ensure service was called
             Assert.AreEqual(giftDto.Id, testService.AddGiftToUser_Gift.Id);
