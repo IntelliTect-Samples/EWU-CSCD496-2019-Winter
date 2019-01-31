@@ -78,8 +78,8 @@ namespace SecretSanta.Domain.Tests.Services
                 groupService = new GroupService(context);
                 userService = new UserService(context);
 
-                groupService.UpsertGroup(group);
-                userService.UpsertUser(user);
+                groupService.CreateGroup(group);
+                userService.CreateUser(user);
 
                 groupService.AddUserToGroup(user, 1);
             }
@@ -97,7 +97,7 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
-        public void CreateGroup_User_ToGroup()
+        public void CreateGroup_AddUser_ToGroup()
         {
             GroupService groupService;
             UserService userService;
@@ -111,8 +111,8 @@ namespace SecretSanta.Domain.Tests.Services
                 groupService = new GroupService(context);
                 userService = new UserService(context);
 
-                groupService.UpsertGroup(group);
-                userService.UpsertUser(user);
+                groupService.CreateGroup(group);
+                userService.CreateUser(user);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -131,6 +131,7 @@ namespace SecretSanta.Domain.Tests.Services
         public void CreateGroup_AddAndRemoveUser_FromGroup()
         {
             GroupService groupService;
+            UserService userService;
             Group group = CreateGroup("Family");
 
             User user1 = CreateUser("Conner", "Verret");
@@ -144,7 +145,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 groupService = new GroupService(context);
-                groupService.UpsertGroup(group);
+                groupService.CreateGroup(group);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -157,11 +158,34 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 groupService = new GroupService(context);
+                userService = new UserService(context);
                 group = groupService.Find(1);
+                User user = userService.Find(1);
 
-                User user = group.UserGroups[0].User;
-                Assert.AreEqual("Carter", user.FirstName);
+                User userStillInGroup = group.UserGroups[0].User;
+                Assert.AreEqual(0, user.UserGroups.Count);
+                Assert.AreEqual("Carter", userStillInGroup.FirstName);
                 Assert.AreEqual(2, group.UserGroups.Count);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteGroup()
+        {
+            GroupService groupService;
+            Group group = CreateGroup("Philosophers");
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                groupService.CreateGroup(group);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                groupService.DeleteGroup(group);
+                Assert.IsNull(groupService.Find(group.Id));
             }
         }
     }

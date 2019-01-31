@@ -102,7 +102,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 giftService = new GiftService(context);
 
-                giftService.UpdateGift(gift);
+                giftService.CreateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -132,16 +132,13 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-
                 giftService.CreateGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-
                 giftService.DeleteGift(gift);
-
                 Assert.IsNull(giftService.Find(gift.Id));
             }
         }

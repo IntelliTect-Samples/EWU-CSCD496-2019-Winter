@@ -18,11 +18,14 @@ namespace SecretSanta.Api.DTO
             Id = group.Id;
             Title = group.Title;
             //UserGroups = group.UserGroups;
-        }   // Might need a method that converts a Domain.Models.UserGroup into a DTO.Usergroup...
-
-        public static Group ToDTO(SecretSanta.Domain.Models.Group group)
+        }
+        public static Domain.Models.Group ToEntity(Group group)
         {
-            return new Group(group);
+            return new Domain.Models.Group
+            {
+                Id = group.Id,
+                Title = group.Title
+            };
         }
     }
 }

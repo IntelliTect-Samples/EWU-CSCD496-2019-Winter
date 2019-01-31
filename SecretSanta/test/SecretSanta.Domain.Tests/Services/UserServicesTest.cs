@@ -9,7 +9,6 @@ using System.Text;
 
 namespace SecretSanta.Domain.Tests.Services
 {
-
         [TestClass]
         public class UserServiceTests
         {
@@ -18,13 +17,11 @@ namespace SecretSanta.Domain.Tests.Services
 
             private User CreateUser()
             {
-                User user = new User
+                return new User
                 {
                     FirstName = "Conner",
                     LastName = "Verret"
                 };
-
-                return user;
             }
 
             [TestInitialize]
@@ -42,6 +39,7 @@ namespace SecretSanta.Domain.Tests.Services
                     context.Database.EnsureCreated();
                 }
             }
+
             [TestCleanup]
             public void CloseConnection()
             {
@@ -56,16 +54,13 @@ namespace SecretSanta.Domain.Tests.Services
                 using (var context = new ApplicationDbContext(Options))
                 {
                     userService = new UserService(context);
-
-                    userService.UpsertUser(user);
+                    userService.CreateUser(user);
                 }
 
                 using (var context = new ApplicationDbContext(Options))
                 {
                     userService = new UserService(context);
-
                     user = userService.Find(1);
-
                     Assert.AreEqual("Conner", user.FirstName);
                 }
             }
@@ -79,8 +74,7 @@ namespace SecretSanta.Domain.Tests.Services
                 using (var context = new ApplicationDbContext(Options))
                 {
                     userService = new UserService(context);
-
-                    userService.UpsertUser(user);
+                    userService.CreateUser(user);
                 }
 
                 using (var context = new ApplicationDbContext(Options))
@@ -91,7 +85,7 @@ namespace SecretSanta.Domain.Tests.Services
                     user.FirstName = "Princess";
                     user.LastName = "Buttercup";
 
-                    userService.UpsertUser(user);
+                    userService.UpdateUser(user);
                 }
 
                 using (var context = new ApplicationDbContext(Options))
@@ -100,6 +94,26 @@ namespace SecretSanta.Domain.Tests.Services
                     user = userService.Find(1);
 
                     Assert.AreEqual("Princess", user.FirstName);
+                }
+            }
+
+            [TestMethod]
+            public void DeleteUser()
+            {
+                UserService userService;
+                User user = CreateUser();
+
+                using (var context = new ApplicationDbContext(Options))
+                {
+                    userService = new UserService(context);
+                    userService.CreateUser(user);
+                }
+
+                using (var context = new ApplicationDbContext(Options))
+                {
+                    userService = new UserService(context);
+                    userService.DeleteUser(user);
+                    Assert.IsNull(userService.Find(user.Id));
                 }
             }
 

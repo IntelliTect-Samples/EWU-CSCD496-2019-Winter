@@ -19,7 +19,7 @@ namespace SecretSanta.Api.Controllers
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        // GET api/User/
+        // GET api/User/4
         [HttpGet("{groupId}")]
         public ActionResult<List<DTO.User>> GetUserForGroup(int groupId)
         {
@@ -29,32 +29,33 @@ namespace SecretSanta.Api.Controllers
             return databaseUsers.Select(x => new DTO.User(x)).ToList();
         }
 
-        [HttpDelete()]
-        public ActionResult<DTO.User> DeleteUser(int userId)
-        {
-            if (userId <= 0) return NotFound();
-            return new DTO.User(_UserService.DeleteUser(userId));
-        }
-
-        // POST
-        [HttpPost()]
-        public ActionResult<DTO.User> CreateUser(DTO.User user)
+        [HttpDelete]
+        public ActionResult DeleteUser(DTO.User user)
         {
             if (user is null) return BadRequest();
+            if (user.Id <= 0) return NotFound();
 
-            User databaseUser = new User
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-            };
-
-            return new DTO.User(_UserService.CreateUser(databaseUser));
+            User databaseUser = DTO.User.ToEntity(user);
+            if (_UserService.DeleteUser(databaseUser) is null) return NotFound();
+            return Ok();
         }
 
-        // PUT
-        [HttpPut()]
-        public ActionResult<DTO.User> UpdateUser(DTO.User user, int userId)
+        // POST api/User/
+        [HttpPost]
+        public ActionResult CreateUser(DTO.User user)
+        {
+            if (user is null || user.Id > 0) return BadRequest();
+
+            User databaseUser = DTO.User.ToEntity(user);
+
+            if(_UserService.CreateUser(databaseUser) is null) return NotFound();
+
+            return Ok();
+        }
+
+        // PUT api/User/3
+        [HttpPut("{userId}")]
+        public ActionResult UpdateUser(DTO.User user, int userId)
         {
             if (user is null) return BadRequest();
 
@@ -65,7 +66,9 @@ namespace SecretSanta.Api.Controllers
                 LastName = user.LastName,
             };
 
-            return new DTO.User(_UserService.UpdateUser(databaseUser, userId));
+            if (_UserService.UpdateUser(databaseUser, userId) is null) return NotFound();
+
+            return Ok();
         }
     }
 }

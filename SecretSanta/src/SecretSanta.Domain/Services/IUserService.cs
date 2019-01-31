@@ -8,6 +8,6 @@ namespace SecretSanta.Domain.Services
         List<User> GetUsersForGroup(int groupId);
         User CreateUser(User user);
         User UpdateUser(User user, int userId);
-        User DeleteUser(int userId);
+        User DeleteUser(User user);
     }
 }

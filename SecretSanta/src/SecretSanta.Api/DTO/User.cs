@@ -13,7 +13,7 @@ namespace SecretSanta.Api.DTO
         //public List<Gift> Gifts { get; set; }
         //public List<UserGroups> UserGroups { get; set; }
 
-        public User(SecretSanta.Domain.Models.User user)
+        public User(Domain.Models.User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
 
@@ -24,7 +24,7 @@ namespace SecretSanta.Api.DTO
             //UserGroups = user.UserGroups;
         }
 
-        public static Domain.Models.User ToEntity(Api.DTO.User user)
+        public static Domain.Models.User ToEntity(User user)
         {
             return new Domain.Models.User
             {

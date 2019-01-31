@@ -55,21 +55,38 @@ namespace SecretSanta.Api.Tests
         {
             var user = new User
             {
+                Id = 0,
+                FirstName = "Alan",
+                LastName = "Watts"
+            };
+
+            var testService = new TestableUserService();
+            testService.CreateUser(user);
+
+            var controller = new UserController(testService);
+
+            ActionResult result = controller.CreateUser(new DTO.User(user));
+            Assert.AreEqual(user.Id, testService.CreateUser_User.Id);
+            Assert.IsNotNull(result, "Returned Status Code was not 200");
+        }
+
+        [TestMethod]
+        public void CreateUser_InvalidId()
+        {
+            var user = new User
+            {
                 Id = 3,
                 FirstName = "Alan",
                 LastName = "Watts"
             };
 
-            var testService = new TestableUserService
-            {
-                User = user
-            };
+            var testService = new TestableUserService();
+            testService.CreateUser(user);
 
             var controller = new UserController(testService);
 
-            DTO.User resultUser = controller.CreateUser(new DTO.User(user)).Value;
-            Assert.AreEqual(user.Id, resultUser.Id);
-            Assert.AreEqual(user.FirstName, resultUser.FirstName);
+            ActionResult result = controller.CreateUser(new DTO.User(user));
+            Assert.IsNotNull(result, "Returned Status Code was not 200");
         }
 
         [TestMethod]
@@ -82,20 +99,45 @@ namespace SecretSanta.Api.Tests
                 LastName = "Watts"
             };
 
-            var testService = new TestableUserService { User = user };
+            var testService = new TestableUserService();
+            testService.CreateUser(user);
             var controller = new UserController(testService);
 
-            DTO.User resultUser = controller.CreateUser(new DTO.User(user)).Value;
+            ActionResult result = controller.CreateUser(new DTO.User(user));
 
-            Assert.AreEqual("Alan", resultUser.FirstName);
+            Assert.AreEqual("Alan", testService.CreateUser_User.FirstName);
 
-            resultUser.FirstName = "Hello";
-            resultUser.LastName = "World";
+            user.FirstName = "Bill";
 
-            DTO.User updatedUser = controller.UpdateUser(resultUser, resultUser.Id).Value;
+            testService.UpdateUser(user, 3);
 
-            Assert.AreEqual(resultUser.FirstName, updatedUser.FirstName);
-            Assert.AreNotEqual(user.FirstName, updatedUser.FirstName);
+            result = controller.UpdateUser(new DTO.User(user), 3);
+
+            Assert.AreEqual(user.FirstName, testService.UpdateUser_User.FirstName);
+            Assert.AreEqual(3, testService.UpdateUser_UserId);
+            Assert.IsNotNull(result, "Returned Status Code was not 200");
+        }
+
+        [TestMethod]
+        public void DeleteUser()
+        {
+            var user = new User
+            {
+                Id = 3,
+                FirstName = "Alan",
+                LastName = "Watts"
+            };
+
+            var testService = new TestableUserService();
+            testService.CreateUser(user);
+            var controller = new UserController(testService);
+            ActionResult result = controller.CreateUser(new DTO.User(user));
+
+            testService.DeleteUser(user);
+            result = controller.DeleteUser(new DTO.User(user));
+
+            Assert.AreEqual(3, testService.DeleteUser_User.Id);
+            Assert.IsNotNull(result, "Returned Status Code was not 200");
         }
     }
 }

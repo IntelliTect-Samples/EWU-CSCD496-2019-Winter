@@ -28,11 +28,13 @@ namespace SecretSanta.Domain.Services
 
             DbContext.SaveChanges();
             return user;
+
         }
 
         public User CreateUser(User user)
         {
-            if(user.Id == 0)
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            if (user.Id == 0)
             {
                 DbContext.Users.Add(user);
                 DbContext.SaveChanges();
@@ -40,27 +42,29 @@ namespace SecretSanta.Domain.Services
             return user;
         }
 
-        public User UpdateUser(User updatedUser, int userId)
+        public User UpdateUser(User user)
         {
-            User user = Find(userId);
-            if(user != null && userId != 0)
-            {
-                user = updatedUser;
-                DbContext.Users.Update(user);
-                DbContext.SaveChanges();
-                return user;
-            }
-            return updatedUser;
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            return UpdateUser(user, user.Id);
         }
 
-        public User DeleteUser(int userId)
+        public User UpdateUser(User user, int userId)
         {
-            User user = Find(userId);
-            if(user != null)
-            {
-                DbContext.Users.Remove(user);
-            }
-            return user; // make sure this deletes users from groups
+            if (userId <= 0) throw new ArgumentOutOfRangeException(nameof(userId));
+
+            DbContext.Users.Update(user);
+            DbContext.SaveChanges();
+            return user;
+        }
+
+        public User DeleteUser(User user)
+        {
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            if (user.Id <= 0) throw new ArgumentException("user.Id was invalid in UserService.DeleteUser");
+
+            DbContext.Users.Remove(user);
+            DbContext.SaveChanges();
+            return user;
         }
 
         public User Find(int id)
@@ -70,6 +74,18 @@ namespace SecretSanta.Domain.Services
                 .Include(u => u.UserGroups)
                     .ThenInclude(ug => ug.Group)
                 .SingleOrDefault(u => u.Id == id);
+        }
+
+        public List<User> GetUsersForGroup(int groupId)
+        {
+            if (groupId <= 0) throw new ArgumentOutOfRangeException(nameof(groupId));
+
+            Group group = DbContext.Groups
+                .Include(g => g.UserGroups)
+                    .ThenInclude(ug => ug.User)
+                .SingleOrDefault(g => g.Id == groupId);
+
+            return group.UserGroups.Select(ug => ug.User).ToList();
         }
 
         public List<User> FetchAll()
@@ -83,18 +99,6 @@ namespace SecretSanta.Domain.Services
         public static User CreateUser(string first, string last)
         {
             return new User { FirstName = first, LastName = last };
-        }
-
-        public List<User> GetUsersForGroup(int groupId)
-        {
-            if (groupId <= 0) throw new ArgumentOutOfRangeException(nameof(groupId));
-
-            Group group = DbContext.Groups
-                .Include(g => g.UserGroups)
-                    .ThenInclude(ug => ug.User)
-                .SingleOrDefault(g => g.Id == groupId);
-
-            return group.UserGroups.Select(ug => ug.User).ToList();
         }
     }
 }

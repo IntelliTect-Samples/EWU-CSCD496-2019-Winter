@@ -18,7 +18,6 @@ namespace SecretSanta.Api.Controllers
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
-        // POST api/Gift/
         [HttpPost]
         public ActionResult CreateGift(DTO.Gift gift)
         {
@@ -30,7 +29,6 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        // PUT api/Gift/
         [HttpPut]
         public ActionResult UpdateGift(DTO.Gift gift)
         {
@@ -41,7 +39,6 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        // DELETE api/Gift/
         [HttpDelete]
         public ActionResult DeleteGift(DTO.Gift gift)
         {
@@ -52,8 +49,6 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-
-        // GET api/Gift/5
         [HttpGet("{userId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
         {
@@ -98,6 +93,5 @@ namespace SecretSanta.Api.Controllers
 
             return Ok();
         }
-
     }
 }

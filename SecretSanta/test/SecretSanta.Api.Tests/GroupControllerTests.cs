@@ -19,6 +19,22 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
+        public void CreateGroup()
+        {
+            var group = GroupControllerTests.GetGroup();
+
+            var testService = new TestableGroupService();
+            testService.CreateGroup(group);
+
+            var controller = new GroupController(testService);
+
+            ActionResult result = controller.CreateGroup(new DTO.Group(group));
+
+            Assert.IsNotNull(result, "Returned Status Code was 200");
+            Assert.AreEqual(group.Title, testService.CreateGroup_Group.Title);
+        }
+
+        [TestMethod]
         public void GroupController_GetAllGroups()
         {
             var group1 = new Group
@@ -52,6 +68,15 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual("Philosophers", resultGroups[0].Title);
             Assert.AreEqual(8, resultGroups[1].Id);
             Assert.AreEqual(2, resultGroups.Count);
+        }
+
+        private static Domain.Models.Group GetGroup()
+        {
+            return new Domain.Models.Group
+            {
+                Id = 3,
+                Title = "Group Title"
+            };
         }
     }
 }

@@ -9,8 +9,6 @@ namespace SecretSanta.Api.Tests
     {
         public List<User> ToReturn { get; set; }
         public int GetUsersForGroup_GroupId { get; set; }
-        public int DeleteUser_UserId { get; set; }
-        public User User { get; set; }
 
         public List<User> GetUsersForGroup(int groupId)
         {
@@ -18,22 +16,30 @@ namespace SecretSanta.Api.Tests
             return ToReturn;
         }
 
+        public User CreateUser_User { get; set; }
         public User CreateUser(User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
-            return user;
+            CreateUser_User = user;
+            return CreateUser_User;
         }
 
+        public User UpdateUser_User { get; set; }
+        public int UpdateUser_UserId { get; set; }
         public User UpdateUser(User user, int userId)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
-            return user;
+            UpdateUser_User = user;
+            UpdateUser_UserId = userId;
+            return UpdateUser_User;
         }
 
-        public User DeleteUser(int userId)
+        public User DeleteUser_User { get; set; }
+        public User DeleteUser(User user)
         {
-            DeleteUser_UserId = userId;
-            return User;
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            DeleteUser_User = user;
+            return DeleteUser_User;
         }
     }
 }

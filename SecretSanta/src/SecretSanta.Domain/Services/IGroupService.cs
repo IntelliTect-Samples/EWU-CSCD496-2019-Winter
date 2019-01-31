@@ -8,5 +8,10 @@ namespace SecretSanta.Domain.Services
     public interface IGroupService
     {
         List<Group> GetAllGroups();
+        User AddUserToGroup(User user, int groupId);
+        int RemoveUserFromGroup(int groupId, int userId);
+        Group CreateGroup(Group group);
+        Group UpdateGroup(Group group);
+        Group DeleteGroup(Group group);
     }
 }
