@@ -17,12 +17,12 @@ namespace SecretSanta.Api.Tests
         }
 
 
-        public List<Gift> GetGiftsForUser_Return { get; set; }
+        public List<Gift> ToReturn { get; set; }
         public int GetGiftsForUser_UserId { get; set; }
         public List<Gift> GetGiftsForUser(int userId)
         {
             GetGiftsForUser_UserId = userId;
-            return GetGiftsForUser_Return;
+            return ToReturn;
         }
 
 
