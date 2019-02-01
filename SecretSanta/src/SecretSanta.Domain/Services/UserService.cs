@@ -5,7 +5,7 @@ using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private ApplicationDbContext DbContext { get; }
 
@@ -26,6 +26,12 @@ namespace SecretSanta.Domain.Services
             DbContext.Users.Update(user);
             DbContext.SaveChanges();
             return user;
+        }
+
+        public void RemoveUser(User user)
+        {
+            DbContext.Users.Remove(user);
+            DbContext.SaveChanges();
         }
 
         public List<User> FetchAll()
