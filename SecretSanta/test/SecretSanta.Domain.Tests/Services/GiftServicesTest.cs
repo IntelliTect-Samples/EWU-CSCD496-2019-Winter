@@ -17,22 +17,13 @@ namespace SecretSanta.Domain.Tests.Services
 
         public Gift CreateGift()
         {
-            User user = new User
-            {
-                FirstName = "Conner",
-                LastName = "Verret",
-                Gifts = new List<Gift>()
-            };
-
             Gift gift = new Gift
             {
                 Title = "Nintendo Switch",
                 OrderOfImportance = 1,
                 Description = "Nintendo's Premier Gaming Console.",
-                Url = "nintendo.com",
-                User = user,
+                Url = "nintendo.com"
             };
-
             return gift;
         }
 
@@ -57,90 +48,103 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-
+        
         [TestMethod]
-        public void AddGift()
+        public void AddGiftToUser()
         {
+            GiftService giftService;
+            UserService userService;
+            Gift gift = CreateGift();
+            User user = new User
+            {
+                FirstName = "Conner",
+                LastName = "Verret",
+                Gifts = new List<Gift>()
+            };
+
             using (var context = new ApplicationDbContext(Options))
             {
-                GiftService giftService = new GiftService(context);
-                Gift gift = CreateGift();
-                Gift userGift = giftService.CreateGift(gift);
-                Assert.AreNotEqual(0, userGift.Id);
+                giftService = new GiftService(context);
+                userService = new UserService(context);
+
+                user = userService.CreateUser(user);
+                giftService.AddGiftToUser(gift, user.Id);
             }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                userService = new UserService(context);
+                user = userService.Find(1);
+            }
+            Assert.AreEqual("Nintendo Switch", user.Gifts[0].Title);
         }
 
         [TestMethod]
-        public void FindGift()
+        public void DeleteGiftFromUser()
         {
             GiftService giftService;
+            UserService userService;
             Gift gift = CreateGift();
+            User user = new User
+            {
+                FirstName = "Conner",
+                LastName = "Verret",
+                Gifts = new List<Gift>()
+            };
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-                giftService.CreateGift(gift);
+                userService = new UserService(context);
+
+                user = userService.CreateUser(user);
+                giftService.AddGiftToUser(gift, user.Id);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+                userService = new UserService(context);
 
-                gift = giftService.Find(1);
-
-                Assert.AreEqual("Nintendo Switch", gift.Title);
+                giftService.DeleteGiftFromUser(gift, user.Id);
+                user = userService.Find(1);
             }
+            Assert.IsTrue(user.Gifts.Count == 0);
         }
 
         [TestMethod]
-        public void UpdateGift()
+        public void UpdateGiftFromUser()
         {
             GiftService giftService;
+            UserService userService;
             Gift gift = CreateGift();
+            User user = new User
+            {
+                FirstName = "Conner",
+                LastName = "Verret",
+                Gifts = new List<Gift>()
+            };
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+                userService = new UserService(context);
 
-                giftService.CreateGift(gift);
+                user = userService.CreateUser(user);
+                giftService.AddGiftToUser(gift, user.Id);
             }
+
+            gift.Title = "Xbox";
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+                userService = new UserService(context);
 
-                gift = giftService.Find(1);
-
-                gift.Title = "Xbox One";
-                giftService.UpdateGift(gift);
+                giftService.UpdateGiftForUser(gift, user.Id);
+                user = userService.Find(1);
             }
-
-            using (var context = new ApplicationDbContext(Options))
-            {
-                giftService = new GiftService(context);
-                gift = giftService.Find(1);
-
-                Assert.AreEqual("Xbox One", gift.Title);
-            }
-        }
-        [TestMethod]
-        public void DeleteGift()
-        {
-            GiftService giftService;
-            Gift gift = CreateGift();
-
-            using (var context = new ApplicationDbContext(Options))
-            {
-                giftService = new GiftService(context);
-                giftService.CreateGift(gift);
-            }
-
-            using (var context = new ApplicationDbContext(Options))
-            {
-                giftService = new GiftService(context);
-                giftService.DeleteGift(gift);
-                Assert.IsNull(giftService.Find(gift.Id));
-            }
+            Assert.AreEqual("Xbox", user.Gifts[0].Title);
         }
     }
 }

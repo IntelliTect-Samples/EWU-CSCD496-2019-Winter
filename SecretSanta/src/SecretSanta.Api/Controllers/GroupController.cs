@@ -19,7 +19,6 @@ namespace SecretSanta.Api.Controllers
             _GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
         }
 
-        // GET api/Group/
         [HttpGet]
         public ActionResult<List<DTO.Group>> GetAllGroups()
         {
@@ -42,6 +41,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (group.Id <= 0) return NotFound();
             if (group is null) return BadRequest();
+
             Group databaseGroup = DTO.Group.ToEntity(group);
             _GroupService.UpdateGroup(databaseGroup);
             return Ok();
@@ -58,13 +58,12 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{groupId}")]
         public ActionResult AddUserToGroup(DTO.User user, int groupId)
         {
-            if (groupId <= 0) return NotFound();
-            if (user is null) return BadRequest();
+            if (groupId <= 0 || user.Id <= 0) return NotFound("GroupId's and UserId's must be greater than 0");
+            if (user is null) return BadRequest("User cannot be null");
 
             User databaseUser = DTO.User.ToEntity(user);
             _GroupService.AddUserToGroup(databaseUser, groupId);
             return Ok();
-
         }
 
         [HttpDelete("{userId}")]

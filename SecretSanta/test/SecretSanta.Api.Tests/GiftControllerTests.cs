@@ -20,57 +20,6 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void CreateGift()
-        {
-            var gift = GiftControllerTests.GetGift();
-
-            var testService = new TestableGiftService();
-            testService.CreateGift(gift);
-
-            var controller = new GiftController(testService);
-
-            ActionResult result = controller.CreateGift(new DTO.Gift(gift));
-
-            Assert.IsNotNull(result, "Returned Status Code was 200");
-            Assert.AreEqual(gift.Title, testService.CreateGift_Return.Title);
-        }
-
-        [TestMethod]
-        public void UpdateGift()
-        {
-            var gift = GiftControllerTests.GetGift();
-            var testService = new TestableGiftService();
-
-            var controller = new GiftController(testService);
-
-            ActionResult result = controller.CreateGift(new DTO.Gift(gift));
-
-            gift.Title = "The Alchemist";
-            testService.UpdateGift(gift);
-
-            result = controller.UpdateGift(new DTO.Gift(gift));
-            Assert.IsNotNull(result, "Returned Status Code was 200");
-            Assert.AreEqual(gift.Title, testService.UpdateGift_Return.Title);
-        }
-
-        [TestMethod]
-        public void DeleteGift()
-        {
-            var gift = GiftControllerTests.GetGift();
-            var testService = new TestableGiftService();
-
-            var controller = new GiftController(testService);
-
-            ActionResult result = controller.CreateGift(new DTO.Gift(gift));
-
-            testService.DeleteGift(gift);
-            result = controller.DeleteGift(new DTO.Gift(gift));
-
-            Assert.IsNotNull(result, "Returned Status Code was 200");
-            Assert.AreEqual(gift.Title, testService.CreateGift_Return.Title);
-        }
-
-        [TestMethod]
         public void UpdateGiftForUser()
         {
             var gift = GiftControllerTests.GetGift();

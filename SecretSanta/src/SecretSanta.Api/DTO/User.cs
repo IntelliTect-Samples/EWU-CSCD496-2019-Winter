@@ -13,6 +13,8 @@ namespace SecretSanta.Api.DTO
         //public List<Gift> Gifts { get; set; }
         //public List<UserGroups> UserGroups { get; set; }
 
+        public User() { }
+
         public User(Domain.Models.User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));

@@ -18,37 +18,6 @@ namespace SecretSanta.Api.Controllers
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
 
-        [HttpPost]
-        public ActionResult CreateGift(DTO.Gift gift)
-        {
-            if (gift is null) return BadRequest();
-            if (gift.Id != 0) gift.Id = 0;
-
-            Gift databaseGift = DTO.Gift.ToEntity(gift);
-            _GiftService.CreateGift(databaseGift);
-            return Ok();
-        }
-
-        [HttpPut]
-        public ActionResult UpdateGift(DTO.Gift gift)
-        {
-            if (gift.Id <= 0) return NotFound();
-            if (gift is null) return BadRequest();
-            Gift databaseGift = DTO.Gift.ToEntity(gift);
-            _GiftService.UpdateGift(databaseGift);
-            return Ok();
-        }
-
-        [HttpDelete]
-        public ActionResult DeleteGift(DTO.Gift gift)
-        {
-            if (gift.Id <= 0) return NotFound();
-            if (gift is null) return BadRequest();
-            Gift databaseGift = DTO.Gift.ToEntity(gift);
-            _GiftService.DeleteGift(databaseGift);
-            return Ok();
-        }
-
         [HttpGet("{userId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
         {

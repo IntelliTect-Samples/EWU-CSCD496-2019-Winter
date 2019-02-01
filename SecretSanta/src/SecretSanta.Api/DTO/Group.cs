@@ -11,6 +11,8 @@ namespace SecretSanta.Api.DTO
         public string Title { get; set; }
         // public List<UserGroups> UserGroups { get; set; }
 
+        public Group() { }
+
         public Group(SecretSanta.Domain.Models.Group group)
         {
             if (group is null) throw new ArgumentNullException(nameof(group));

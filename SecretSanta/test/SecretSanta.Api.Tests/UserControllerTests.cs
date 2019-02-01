@@ -111,7 +111,7 @@ namespace SecretSanta.Api.Tests
 
             testService.UpdateUser(user, 3);
 
-            result = controller.UpdateUser(new DTO.User(user), 3);
+            result = controller.UpdateUser(new DTO.User(user));
 
             Assert.AreEqual(user.FirstName, testService.UpdateUser_User.FirstName);
             Assert.AreEqual(3, testService.UpdateUser_UserId);

@@ -62,7 +62,7 @@ namespace SecretSanta.Domain.Services
 
             Group group = Find(groupId);
             
-            UserGroups userGroups = new UserGroups
+            UserGroups userGroup = new UserGroups
             {
                 User = user,
                 UserId = user.Id,
@@ -70,11 +70,13 @@ namespace SecretSanta.Domain.Services
                 GroupId = group.Id
             };
 
-            if(!group.UserGroups.Contains(userGroups))
-            {
-                DbContext.UserGroups.Add(userGroups);
-                DbContext.SaveChanges();
-            }
+            group.UserGroups.Add(userGroup);
+            user.UserGroups.Add(userGroup);
+
+            DbContext.Groups.Update(group);
+            DbContext.Users.Update(user);
+            DbContext.UserGroups.Add(userGroup);
+            DbContext.SaveChanges();
             return user;
         }
 

@@ -14,7 +14,10 @@ namespace SecretSanta.Domain.Models
         public DbSet<Group> Groups { get; set; }
         public DbSet<UserGroups> UserGroups { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

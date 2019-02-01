@@ -9,5 +9,6 @@ namespace SecretSanta.Domain.Services
         User CreateUser(User user);
         User UpdateUser(User user, int userId);
         User DeleteUser(User user);
+        User Find(int userId);
     }
 }

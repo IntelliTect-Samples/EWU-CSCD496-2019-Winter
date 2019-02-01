@@ -41,5 +41,15 @@ namespace SecretSanta.Api.Tests
             DeleteUser_User = user;
             return DeleteUser_User;
         }
+
+        public User Find_UserId { get; set; }
+        public User Find(int userId)
+        {
+            Find_UserId = new User
+            {
+                Id = userId
+            };
+            return Find_UserId;
+        }
     }
 }
