@@ -1,6 +1,5 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Api.DTO;
 using SecretSanta.Domain.Services;
 
 namespace SecretSanta.Api.Controllers
@@ -18,29 +17,38 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpPost] // Create
-        public ActionResult<User> AddUser(User user)
+        public ActionResult<DTO.User> AddUser([FromBody] DTO.User user)
         {
-            if (user == null) return BadRequest();
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
             var addedUser = _userService.AddUser(DTO.User.ToEntity(user));
-            return Ok(new User(addedUser));
+            return Ok(new DTO.User(addedUser));
         }
 
         // PUT api/User
         [HttpPut] // Update
-        public ActionResult<User> UpdateUser(User user)
+        public ActionResult<DTO.User> UpdateUser([FromBody] DTO.User user)
         {
-            if (user == null) return BadRequest();
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
             var updatedUser = _userService.UpdateUser(DTO.User.ToEntity(user));
-            return Ok(new User(updatedUser));
+            return Ok(new DTO.User(updatedUser));
         }
 
         // DELETE api/User    
         [HttpDelete] // Delete
-        public ActionResult DeleteUser(User user)
+        public ActionResult DeleteUser([FromBody] DTO.User user)
         {
-            if (user == null) return BadRequest();
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
             _userService.DeleteUser(DTO.User.ToEntity(user));
 

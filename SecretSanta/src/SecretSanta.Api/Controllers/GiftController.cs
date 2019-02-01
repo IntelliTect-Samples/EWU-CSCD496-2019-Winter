@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 
 namespace SecretSanta.Api.Controllers
@@ -27,14 +26,14 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            List<Gift> databaseUsers = _giftService.GetGiftsForUser(userId);
+            List<Domain.Models.Gift> databaseUsers = _giftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
         // POST api/Gift/4
         [HttpPost("{userId}")] // Create
-        public ActionResult<DTO.Gift> AddGiftToUser(DTO.Gift gift, int userId)
+        public ActionResult<DTO.Gift> AddGiftToUser([FromBody] DTO.Gift gift, int userId)
         {
             if (userId <= 0)
             {
@@ -46,13 +45,13 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Gift addedGift = _giftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
+            Domain.Models.Gift addedGift = _giftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
             return Ok(new DTO.Gift(addedGift));
         }
 
         // PUT api/Gift/4
         [HttpPut("{userId}")] // Update
-        public ActionResult<DTO.Gift> UpdateGiftForUser(DTO.Gift gift, int userId)
+        public ActionResult<DTO.Gift> UpdateGiftForUser([FromBody] DTO.Gift gift, int userId)
         {
             if (userId <= 0)
             {
@@ -64,13 +63,13 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Gift updatedGift = _giftService.UpdateGiftForUser(userId, DTO.Gift.ToEntity(gift));
+            Domain.Models.Gift updatedGift = _giftService.UpdateGiftForUser(userId, DTO.Gift.ToEntity(gift));
             return Ok(new DTO.Gift(updatedGift));
         }
 
         // PUT api/Gift/4
-        [HttpPut()] // Remove
-        public ActionResult RemoveGiftFromUser(DTO.Gift gift)
+        [HttpDelete()] // Remove
+        public ActionResult RemoveGiftFromUser([FromBody] DTO.Gift gift)
         {
             if (gift == null)
             {

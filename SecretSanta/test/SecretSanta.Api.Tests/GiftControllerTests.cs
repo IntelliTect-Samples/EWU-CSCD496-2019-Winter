@@ -75,7 +75,7 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_InvokesService()
         {
-            var giftDto = new DTO.Gift
+            var giftEntity = new Gift
             {
                 Id = 42,
                 Title = "Title",
@@ -83,10 +83,10 @@ namespace SecretSanta.Api.Tests
                 OrderOfImportance = 1,
                 Url = "Url"
             };
-            var testService = new TestableGiftService {AddGiftToUser_Return = DTO.Gift.ToEntity(giftDto)};
+            var testService = new TestableGiftService {AddGiftToUser_Return = giftEntity};
             var controller = new GiftController(testService);
 
-            var returnedAction = controller.AddGiftToUser(giftDto, 4).Result;
+            var returnedAction = controller.AddGiftToUser(new DTO.Gift(giftEntity), 4).Result;
             
             Assert.IsTrue(returnedAction is OkObjectResult);
 
@@ -98,10 +98,10 @@ namespace SecretSanta.Api.Tests
             var valueOfResult = result.Value as DTO.Gift;
 
             Assert.IsNotNull(valueOfResult);
-            Assert.AreEqual(giftDto.Id, valueOfResult.Id);
+            Assert.AreEqual(giftEntity.Id, valueOfResult.Id);
 
             // Ensure service was called
-            Assert.AreEqual(giftDto.Id, testService.AddGiftToUser_Gift.Id);
+            Assert.AreEqual(giftEntity.Id, testService.AddGiftToUser_Gift.Id);
         }
 
         [TestMethod]
