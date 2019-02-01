@@ -11,7 +11,7 @@ namespace SecretSanta.Domain.Services
         
         Group UpdateGroup(Group group);
         
-        void RemoveGroup(Group group);
+        Group RemoveGroup(Group group);
         
         List<User> FetchGroupUsers(int groupId);
         

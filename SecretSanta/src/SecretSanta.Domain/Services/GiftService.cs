@@ -41,12 +41,13 @@ namespace SecretSanta.Domain.Services
             return DbContext.Gifts.Where(g => g.UserId == userId).ToList();
         }
 
-        public void RemoveGift(Gift gift)
+        public Gift RemoveGift(Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             DbContext.Gifts.Remove(gift);
             DbContext.SaveChanges();
+            return gift;
         }
     }
 }

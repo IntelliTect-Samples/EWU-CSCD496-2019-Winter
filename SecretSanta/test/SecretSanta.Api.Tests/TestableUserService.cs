@@ -23,9 +23,10 @@ namespace SecretSanta.Api.Tests
         }
 
         public User RemoveUser_User { get; set; }
-        public void RemoveUser(User user)
+        public User RemoveUser(User user)
         {
             RemoveUser_User = user;
+            return ToReturn;
         }
 
         public User UpdateUser_User { get; set; }

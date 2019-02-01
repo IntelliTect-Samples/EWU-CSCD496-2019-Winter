@@ -28,10 +28,11 @@ namespace SecretSanta.Domain.Services
             return user;
         }
 
-        public void RemoveUser(User user)
+        public User RemoveUser(User user)
         {
             DbContext.Users.Remove(user);
             DbContext.SaveChanges();
+            return user;
         }
 
         public List<User> FetchAll()

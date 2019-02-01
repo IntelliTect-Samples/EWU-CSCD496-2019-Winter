@@ -6,14 +6,14 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableGiftService : IGiftService
     {
-        public Gift AddGiftToUser_Return { get; set; }
+        public Gift ToReturnAddGift { get; set; }
         public int AddGiftToUser_UserId { get; set; }
         public Gift AddGiftToUser_Gift { get; set; }
         public Gift AddGiftToUser(int userId, Gift gift)
         {
             AddGiftToUser_UserId = userId;
             AddGiftToUser_Gift = gift;
-            return AddGiftToUser_Return;
+            return ToReturnAddGift;
         }
 
 
@@ -27,20 +27,22 @@ namespace SecretSanta.Api.Tests
 
 
         public Gift RemoveGiftToUser_Gift { get; set; }
-        public void RemoveGift(Gift gift)
+        public Gift ToReturnRemoveGift { get; set; }
+        public Gift RemoveGift(Gift gift)
         {
-            RemoveGiftToUser_Gift = gift; 
+            RemoveGiftToUser_Gift = gift;
+            return ToReturnRemoveGift;
         }
 
 
-        public Gift UpdateGiftToUser_Return { get; set; }
+        public Gift ToReturnUpdateGift { get; set; }
         public int UpdateGiftToUser_UserId { get; set; }
         public Gift UpdateGiftToUser_Gift { get; set; }
         public Gift UpdateGiftForUser(int userId, Gift gift)
         {
             UpdateGiftToUser_UserId = userId;
             UpdateGiftToUser_Gift = gift;
-            return UpdateGiftToUser_Return;
+            return ToReturnUpdateGift;
         }
     }
 }

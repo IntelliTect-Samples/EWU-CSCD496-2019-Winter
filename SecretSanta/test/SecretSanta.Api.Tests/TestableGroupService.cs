@@ -31,9 +31,11 @@ namespace SecretSanta.Api.Tests
         }
 
         public Group RemoveGroup_Group { get; set; }
-        public void RemoveGroup(Group group)
+        public Group ToReturnRemoveGroup { get; set; }
+        public Group RemoveGroup(Group group)
         {
             RemoveGroup_Group = group;
+            return ToReturnRemoveGroup;
         }
 
         public Group UpdateGroup_Group { get; set; }

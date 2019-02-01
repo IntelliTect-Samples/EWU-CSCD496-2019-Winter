@@ -27,7 +27,7 @@ namespace SecretSanta.Domain.Services
             DbContext.SaveChanges();
             return @group;
         }
-        public void RemoveGroup(Group group)
+        public Group RemoveGroup(Group group)
         {
             if (@group == null)
             {
@@ -36,6 +36,7 @@ namespace SecretSanta.Domain.Services
 
             DbContext.Remove(@group);
             DbContext.SaveChanges();
+            return group;
         }
 
 

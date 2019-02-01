@@ -61,5 +61,60 @@ namespace SecretSanta.Api.Tests
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
+
+        [TestMethod]
+        public void AddGiftToUser_UserIDInvalid()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.AddGiftToUser(-1,new DTO.Gift());
+
+            Assert.IsTrue(result is NotFoundResult);
+        }
+
+        [TestMethod]
+        public void AddGiftToUser_NullGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.AddGiftToUser(1, null);
+
+            Assert.IsTrue(result is BadRequestResult);
+        }
+
+        [TestMethod]
+        public void RemoveGift_NullGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.RemoveGift(null);
+
+            Assert.IsTrue(result is BadRequestResult);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_InvalidID()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.UpdateGiftForUser(-1,null);
+
+            Assert.IsTrue(result is NotFoundResult);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_NullGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult result = controller.UpdateGiftForUser(1, null);
+
+            Assert.IsTrue(result is BadRequestResult);
+        }
     }
 }

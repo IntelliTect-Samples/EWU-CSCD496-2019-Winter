@@ -9,7 +9,7 @@ namespace SecretSanta.Domain.Services
 
         Gift AddGiftToUser(int userId, Gift gift);
 
-        void RemoveGift(Gift gift);
+        Gift RemoveGift(Gift gift);
 
         Gift UpdateGiftForUser(int userId, Gift gift);
     }
