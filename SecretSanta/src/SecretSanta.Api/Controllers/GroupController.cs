@@ -66,7 +66,7 @@ namespace SecretSanta.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("{userId}")]
+        [HttpDelete("{groupId}/{userId}")]
         public ActionResult RemoveUserFromGroup(int userId, int groupId)
         {
             if (groupId <= 0 || userId <= 0) return NotFound("GroupId's and UserId's must be greater than 0");
