@@ -9,12 +9,8 @@ namespace SecretSanta.Api.DTO
         public string Description { get; set; }
         public int OrderOfImportance { get; set; }
         public string Url { get; set; }
-        public int UserId { get; set; }
 
-        public Gift()
-        {
-                
-        }
+        public Gift() { }
 
         public Gift(Domain.Models.Gift gift)
         {
@@ -25,7 +21,6 @@ namespace SecretSanta.Api.DTO
             Description = gift.Description;
             OrderOfImportance = gift.OrderOfImportance;
             Url = gift.Url;
-            UserId = gift.UserId;
         }
 
         public static Domain.Models.Gift ToDomain(DTO.Gift gift)
@@ -37,7 +32,6 @@ namespace SecretSanta.Api.DTO
                 Description = gift.Description,
                 OrderOfImportance = gift.OrderOfImportance,
                 Url = gift.Url,
-                UserId = gift.UserId
             };
             return domainGift;
         }

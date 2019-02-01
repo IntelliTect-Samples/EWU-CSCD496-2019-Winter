@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SecretSanta.Api.DTO
 {
@@ -11,10 +8,7 @@ namespace SecretSanta.Api.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public User()
-        {
-
-        }
+        public User() { }
 
         public User(Domain.Models.User user)
         {
@@ -23,6 +17,17 @@ namespace SecretSanta.Api.DTO
             Id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;
+        }
+
+        public static Domain.Models.User ToDomain(DTO.User user)
+        {
+            Domain.Models.User domainUser = new Domain.Models.User
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+            return domainUser;
         }
     }
 }
