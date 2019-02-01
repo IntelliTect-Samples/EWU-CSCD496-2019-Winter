@@ -45,7 +45,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.AddGiftToUser(userId, DTO.Gift.ToDomain(gift));
+            _GiftService.AddGiftToUser(userId, DTO.Gift.ToDTO(gift));
             return Ok("gift successfully added");
         }
 
@@ -57,7 +57,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.RemoveGift(DTO.Gift.ToDomain(gift));
+            _GiftService.RemoveGift(DTO.Gift.ToDTO(gift));
             return Ok("gift successfully removed");
         }
 
@@ -73,7 +73,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToDomain(gift));
+            _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToDTO(gift));
             return Ok("gift successfully updated");
         }
     }

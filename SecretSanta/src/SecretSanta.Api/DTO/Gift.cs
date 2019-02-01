@@ -27,7 +27,7 @@ namespace SecretSanta.Api.DTO
         }
 
 
-        public static Domain.Models.Gift ToDomain(Gift gift)
+        public static Domain.Models.Gift ToDTO(Gift gift)
         {
             return new Domain.Models.Gift
             {
