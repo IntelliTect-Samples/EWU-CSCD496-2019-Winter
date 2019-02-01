@@ -87,7 +87,7 @@ namespace SecretSanta.Api.Tests
 
         }*/
 
-        /*[TestMethod]
+        [TestMethod]
         public void RemoveGroup_Success()
         {
             Group group = CreateGroup();
@@ -104,10 +104,10 @@ namespace SecretSanta.Api.Tests
             controller.DeleteGroup(group.Id, new DTO.Group(group));
 
             Assert.AreEqual(service.RemoveGroup_GroupId, group.Id);
-        }*/
+        }
 
 
-        /*[TestMethod]
+        [TestMethod]
         public void UpdateGroup_Success()
         {
             Group group = CreateGroup();
@@ -127,9 +127,10 @@ namespace SecretSanta.Api.Tests
             controller.UpdateGroup(group.Id, new DTO.Group(newGroup));
 
             Assert.AreEqual(service.UpdateGroup_Group.Name, newGroup.Name);
-        }*/
+        }
 
-        /*[TestMethod]
+        /*
+        [TestMethod]
         public void AddUserToGroup_Success()
         {
             TestableGroupService testService = new TestableGroupService();
@@ -148,14 +149,31 @@ namespace SecretSanta.Api.Tests
             ActionResult<DTO.User> result = controller.AddUserToGroup(1, new DTO.User(user));
 
             Assert.IsTrue(result.Result is OkObjectResult);
-            Assert.AreEqual(10, testService.AddUserToGroup_GroupId);
 
-        }*/
+        }
+        */
 
-        /*[TestMethod]
+        /*
+        [TestMethod]
         public void RemoveUserOfGroup_Success()
         {
+            TestableGroupService testService = new TestableGroupService();
+            GroupController controller = new GroupController(testService);
 
+            User user = new User
+            {
+                FirstName = "ted",
+                LastName = "bob",
+                Id = 18
+            };
+
+            Group newGroup = CreateGroup();
+
+            controller.CreateGroup(1, new DTO.Group(newGroup));
+            ActionResult<DTO.User> resultAdd = controller.AddUserToGroup(1, new DTO.User(user));
+            ActionResult<DTO.User> resultRemove = controller.RemoveUserFromGroup(1, new DTO.User(user));
+
+            Assert.AreEqual(resultAdd.Value.Id, resultAdd.Value.Id);
         }*/
     }
 }

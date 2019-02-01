@@ -89,7 +89,7 @@ namespace SecretSanta.Api.Tests
 
             Assert.IsTrue(result.Result is NotFoundResult);
             Assert.AreEqual(0, testService.AddGiftToUser_UserId);
-            Assert.IsNull(testService.AddGiftToUser_Return);
+            Assert.IsNull(testService.AddGiftToUser_Gift);
         }
 
         [TestMethod]
@@ -109,8 +109,8 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void UpdateGiftForUser_RequiresPosId()
         {
-            var service = new TestableGiftService();
-            var controller = new GiftController(service);
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
 
 
             ActionResult<List<DTO.Gift>> result = controller.UpdateGiftFromUser(-1, new DTO.Gift());
@@ -120,14 +120,15 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual(0, service.GetGiftsForUser_UserId);
             Assert.IsNull(service.UpdateGiftToUser_Gift);
         }
+
         [TestMethod]
         public void DeleteGiftForUser_ReturnDelete()
         {
-            var service = new TestableGiftService();
-            var controller = new GiftController(service);
-            var gift = CreateGift();
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+            Gift gift = CreateGift();
             controller.DeleteGiftFromUser(new DTO.Gift(gift), 8);
-            var removedGift = service.RemoveGiftToUser_Gift;
+            Gift removedGift = service.RemoveGiftToUser_Gift;
 
             Assert.AreEqual(removedGift.Id, gift.Id);
             Assert.AreEqual(removedGift.OrderOfImportance, gift.OrderOfImportance);
@@ -135,11 +136,27 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual(removedGift.User, gift.User);
             Assert.AreEqual(removedGift.UserId, gift.UserId);
         }
+
+        [TestMethod]
+        public void AddGiftForUser_ReturnAdd()
+        {
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+            Gift gift = CreateGift();
+            controller.AddGiftToUser(new DTO.Gift(gift), 8);
+
+            Assert.AreEqual(service.AddGiftToUser_Gift.Id, gift.Id);
+            Assert.AreEqual(service.AddGiftToUser_Gift.OrderOfImportance, gift.OrderOfImportance);
+            Assert.AreEqual(service.AddGiftToUser_Gift.Title, gift.Title);
+            Assert.AreEqual(service.AddGiftToUser_Gift.User, gift.User);
+            Assert.AreEqual(service.AddGiftToUser_Gift.UserId, gift.UserId);
+        }
+
         [TestMethod]
         public void UpdateGiftForUser_RequiresGift()
         {
-            var service = new TestableGiftService();
-            var controller = new GiftController(service);
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
 
 
             ActionResult<List<DTO.Gift>> result = controller.UpdateGiftFromUser(1, null);
@@ -153,9 +170,9 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void UpdateGiftForUser_ReturnUpdate()
         {
-            var service = new TestableGiftService();
-            var controller = new GiftController(service);
-            var gift = CreateGift();
+            TestableGiftService service = new TestableGiftService();
+            GiftController controller = new GiftController(service);
+            Gift gift = CreateGift();
             ActionResult<List<DTO.Gift>> updateGift = controller.UpdateGiftFromUser(2, new DTO.Gift(gift));
             Assert.IsTrue(updateGift.Result is OkObjectResult);
         }
