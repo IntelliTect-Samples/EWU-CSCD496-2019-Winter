@@ -29,10 +29,11 @@ namespace SecretSanta.Domain.Services
             return @group;
         }
 
-        public void DeleteGroup(Group group)
+        public Group DeleteGroup(Group @group)
         {
-            DbContext.Groups.Remove(group);
+            DbContext.Groups.Remove(@group);
             DbContext.SaveChanges();
+            return @group;
         }
 
         public List<Group> FetchAll()

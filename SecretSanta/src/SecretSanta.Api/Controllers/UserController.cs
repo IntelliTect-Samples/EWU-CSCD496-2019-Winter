@@ -43,15 +43,14 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/User/
         [HttpDelete]
-        public ActionResult DeleteUser(DTO.User user)
+        public ActionResult<DTO.User> DeleteUser(DTO.User user)
         {
             if (user == null)
             {
                 return BadRequest();
             }
 
-            _UserService.DeleteUser(DTO.User.ToDomain(user));
-            return Ok();
+            return new DTO.User(_UserService.DeleteUser(DTO.User.ToDomain(user)));
         }
     }
 }

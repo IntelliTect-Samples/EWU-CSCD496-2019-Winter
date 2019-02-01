@@ -46,15 +46,14 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/Group/
         [HttpDelete]
-        public ActionResult DeleteGroup(DTO.Group group)
+        public ActionResult<DTO.Group> DeleteGroup(DTO.Group group)
         {
             if (group == null)
             {
                 return BadRequest();
             }
 
-            _GroupService.DeleteGroup(DTO.Group.ToDomain(group));
-            return Ok();
+            return new DTO.Group(_GroupService.DeleteGroup(DTO.Group.ToDomain(group)));
         }
 
         // POST api/Group/{groupId}
