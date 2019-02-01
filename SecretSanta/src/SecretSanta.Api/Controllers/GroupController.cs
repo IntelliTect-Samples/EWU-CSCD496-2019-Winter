@@ -9,11 +9,17 @@ namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GiftController : ControllerBase
+    public class GroupController : ControllerBase
     {
-        private readonly IGiftService _GiftService;
+        private readonly IGroupService _GiftService;
 
-        public GiftController(IGiftService giftService)
+        // Create/Update/Delete groups
+        // Add/Remove users from groups
+        // Query all groups
+        // Query all users in a group
+
+
+        public GroupController(IGroupService giftService)
         {
             _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
         }
@@ -29,26 +35,6 @@ namespace SecretSanta.Api.Controllers
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
-        }
-
-        //POST api/Gift/4
-        [HttpPost("{userId}")]
-        public ActionResult AddGiftToUser(DTO.Gift gift, int userId)
-        {
-            if (userId <= 0)
-            {
-                return NotFound();
-            }
-
-            if (gift == null)
-            {
-                return BadRequest();
-            }
-
-            _GiftService.AddGiftToUser(userId, DTO.Gift.ToEntity(gift));
-            return Ok();
-
-            //return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
     }
 }

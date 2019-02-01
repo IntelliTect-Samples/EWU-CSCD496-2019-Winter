@@ -21,8 +21,8 @@ namespace SecretSanta.Domain.Tests.Services
         {
             var user = new User
             {
-                FirstName = "John",
-                LastName = "Doe"
+                FirstName = "Kevin",
+                LastName = "Bost"
             };
             using (var context = new ApplicationDbContext(Options))
             {
@@ -33,6 +33,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreNotEqual(0, addedUser.Id);
             }
 
+            //Nice test.
             using (var context = new ApplicationDbContext(Options))
             {
                 User retrievedUser = context.Users.Single();
@@ -54,7 +55,7 @@ namespace SecretSanta.Domain.Tests.Services
                 context.Users.Add(user);
                 context.SaveChanges();
             }
-            
+
             user.FirstName = "Jane";
             user.LastName = "Other";
             using (var context = new ApplicationDbContext(Options))
