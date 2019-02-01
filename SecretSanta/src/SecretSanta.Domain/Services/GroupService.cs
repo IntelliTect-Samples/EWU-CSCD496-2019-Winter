@@ -5,7 +5,7 @@ using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GroupService
+    public class GroupService: IGroupService
     {
         private ApplicationDbContext DbContext { get; }
 
@@ -26,6 +26,30 @@ namespace SecretSanta.Domain.Services
             DbContext.Groups.Update(@group);
             DbContext.SaveChanges();
             return @group;
+        }
+        public void RemoveGroup(Group group)
+        {
+            if (@group == null)
+            {
+                throw new ArgumentNullException(nameof(@group));
+            }
+
+            DbContext.Remove(@group);
+            DbContext.SaveChanges();
+        }
+
+
+        public List<User> FetchGroupUsers(int groupId)
+        {
+            if (groupId <= 0)
+            {
+                throw new ArgumentException("groupId must be larger than 0 in FetchAllGroup");
+            }
+            return DbContext.Groups
+                .Where(g => g.Id == groupId)
+                .SelectMany(g => g.GroupUsers)
+                .Select(g => g.User)
+                .ToList();
         }
 
         public List<Group> FetchAll()

@@ -7,9 +7,9 @@ namespace SecretSanta.Api.DTO
 {
     public class User
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int UserId { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
 
         public User()
         {}
@@ -21,17 +21,17 @@ namespace SecretSanta.Api.DTO
                 throw new ArgumentNullException(nameof(user));
             }
                 
-            FirstName = user.FirstName;
-            LastName = user.LastName;
+            UserFirstName = user.FirstName;
+            UserLastName = user.LastName;
         }
 
         public static Domain.Models.User ToModelUser(DTO.User user)
         {
             return new Domain.Models.User
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Id = user.UserId,
+                FirstName = user.UserFirstName,
+                LastName = user.UserLastName,
             };
         }
     }

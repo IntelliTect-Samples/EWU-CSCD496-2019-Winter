@@ -4,11 +4,11 @@ namespace SecretSanta.Api.DTO
 {
     public class Gift
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int OrderOfImportance { get; set; }
-        public string Url { get; set; }
+        public int GiftId { get; set; }
+        public string GiftTitle { get; set; }
+        public string GiftDescription { get; set; }
+        public int GiftOrderOfImportance { get; set; }
+        public string GiftUrl { get; set; }
 
         public Gift()
         {
@@ -17,13 +17,16 @@ namespace SecretSanta.Api.DTO
 
         public Gift(SecretSanta.Domain.Models.Gift gift)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            if (gift == null)
+            {
+                throw new ArgumentNullException(nameof(gift));
+            }
 
-            Id = gift.Id;
-            Title = gift.Title;
-            Description = gift.Description;
-            OrderOfImportance = gift.OrderOfImportance;
-            Url = gift.Url;
+            GiftId = gift.Id;
+            GiftTitle = gift.Title;
+            GiftDescription = gift.Description;
+            GiftOrderOfImportance = gift.OrderOfImportance;
+            GiftUrl = gift.Url;
         }
 
 
@@ -31,11 +34,11 @@ namespace SecretSanta.Api.DTO
         {
             return new Domain.Models.Gift
             {
-                Id = gift.Id,
-                Title = gift.Title,
-                Description = gift.Description,
-                OrderOfImportance = gift.OrderOfImportance,
-                Url = gift.Url
+                Id = gift.GiftId,
+                Title = gift.GiftTitle,
+                Description = gift.GiftDescription,
+                OrderOfImportance = gift.GiftOrderOfImportance,
+                Url = gift.GiftUrl
              };
         }
 

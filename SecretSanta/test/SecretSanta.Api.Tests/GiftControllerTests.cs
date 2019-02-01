@@ -42,11 +42,11 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             DTO.Gift resultGift = result.Value.Single();
-            Assert.AreEqual(gift.Id, resultGift.Id);
-            Assert.AreEqual(gift.Title, resultGift.Title);
-            Assert.AreEqual(gift.Description, resultGift.Description);
-            Assert.AreEqual(gift.Url, resultGift.Url);
-            Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
+            Assert.AreEqual(gift.Id, resultGift.GiftId);
+            Assert.AreEqual(gift.Title, resultGift.GiftTitle);
+            Assert.AreEqual(gift.Description, resultGift.GiftDescription);
+            Assert.AreEqual(gift.Url, resultGift.GiftUrl);
+            Assert.AreEqual(gift.OrderOfImportance, resultGift.GiftOrderOfImportance);
         }
 
         [TestMethod]
