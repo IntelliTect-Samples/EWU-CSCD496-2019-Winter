@@ -11,7 +11,7 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _UserService;
+        private IUserService _UserService;
 
         public UserController(IUserService userService)
         {
@@ -38,7 +38,6 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            _UserService.AddUser(dtoUserId, DTO.User.ToEntity(dtoUser));
             return Ok("User added!");
         }
 

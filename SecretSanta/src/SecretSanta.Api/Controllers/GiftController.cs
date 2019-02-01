@@ -11,7 +11,7 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class GiftController : ControllerBase
     {
-        private readonly IGiftService _GiftService;
+        private IGiftService _GiftService;
 
         public GiftController(IGiftService giftService)
         {

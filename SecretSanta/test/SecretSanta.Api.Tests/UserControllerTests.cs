@@ -133,6 +133,26 @@ namespace SecretSanta.Api.Tests
 
             Assert.IsTrue(result.Result is BadRequestResult);
         }
-        //Delete this comment
+
+        /*[TestMethod]
+        public void GetAllUsersFromGroup_ReturnList()
+        {
+            User newUser = CreateUser();
+            User newUser2 = CreateUser();
+            newUser.Id = 25;
+
+            TestableUserService service = new TestableUserService
+            {
+                ReturnedUsers = new List<User> { newUser, newUser2 }
+            };
+
+            UserController controller = new UserController(service);
+
+            controller.AddUser( newUser.Id, new DTO.User(newUser));
+            controller.AddUser(newUser2.Id, new DTO.User(newUser2));
+
+            ActionResult<List<DTO.User>> result = controller.GetUsersInGroup();
+            Assert.IsNull(result);
+        }*/
     }
 }
