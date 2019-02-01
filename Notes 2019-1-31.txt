@@ -1,0 +1,5 @@
+notes
+in <projectName>.API
+dotnet ef migration add "InitialDb" -p ..\<projectName>.Domain
+
+Data Source-blog.sqlite
