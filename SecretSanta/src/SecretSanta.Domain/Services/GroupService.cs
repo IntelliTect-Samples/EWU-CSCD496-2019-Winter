@@ -21,7 +21,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(group));
             }
-            if (groupId <= 0)
+            if (groupId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(groupId));
             }
@@ -38,7 +38,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(group));
             }
-            if (groupId <= 0)
+            if (groupId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(groupId));
             }
@@ -55,7 +55,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(group));
             }
-            if (groupId <= 0)
+            if (groupId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(groupId));
             }
@@ -72,7 +72,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (groupId <= 0)
+            if (groupId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(groupId));
             }
@@ -119,7 +119,7 @@ namespace SecretSanta.Domain.Services
 
         public List<User> GetAllUsersFromGroup(int groupId)
         {
-            if (groupId <= 0)
+            if (groupId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(groupId));
             }

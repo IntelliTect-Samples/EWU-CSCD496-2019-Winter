@@ -20,7 +20,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(gift));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
@@ -38,7 +38,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(gift));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
@@ -52,7 +52,7 @@ namespace SecretSanta.Domain.Services
 
         public List<Gift> GetGiftsForUser(int userId)
         {
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
@@ -66,7 +66,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(gift));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }

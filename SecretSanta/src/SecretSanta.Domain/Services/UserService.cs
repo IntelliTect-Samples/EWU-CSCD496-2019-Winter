@@ -20,7 +20,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
@@ -37,7 +37,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
@@ -59,7 +59,7 @@ namespace SecretSanta.Domain.Services
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (userId <= 0)
+            if (userId < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));
             }
