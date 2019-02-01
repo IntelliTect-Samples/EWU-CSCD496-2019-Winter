@@ -32,8 +32,8 @@ namespace SecretSanta.Api.Controllers
             
         }
 
-        // POST api/Gift/#
-        [HttpPut]
+        // PUT api/Gift/
+        [HttpPost]
         public ActionResult AddGiftToUser(int userId, DTO.Gift gift)
         {
             if (userId <= 0)
@@ -45,7 +45,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.AddGiftToUser(userId, DTO.Gift.ToDTO(gift));
+            _GiftService.AddGiftToUser(userId, DTO.Gift.ToModelGift(gift));
             return Ok("gift successfully added");
         }
 
@@ -57,7 +57,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.RemoveGift(DTO.Gift.ToDTO(gift));
+            _GiftService.RemoveGift(DTO.Gift.ToModelGift(gift));
             return Ok("gift successfully removed");
         }
 
@@ -73,7 +73,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToDTO(gift));
+            _GiftService.UpdateGiftForUser(userId, DTO.Gift.ToModelGift(gift));
             return Ok("gift successfully updated");
         }
     }

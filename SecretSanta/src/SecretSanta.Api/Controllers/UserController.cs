@@ -18,5 +18,48 @@ namespace SecretSanta.Api.Controllers
         {
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
+
+        [HttpGet]
+        public ActionResult<List<DTO.User>> FetchAll()
+        {
+            return _UserService.FetchAll().Select(x => new DTO.User(x)).ToList();
+        }
+
+        [HttpPost]
+        public ActionResult AddUser(DTO.User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            _UserService.AddUser(DTO.User.ToModelUser(user));
+            return Ok("user successfully added");
+        }
+
+        [HttpPut]
+        public ActionResult UpdateUser(DTO.User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            _UserService.UpdateUser(DTO.User.ToModelUser(user));
+            return Ok("user successfully added");
+        }
+
+        [HttpDelete]
+        public ActionResult RemoveUser(DTO.User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            _UserService.RemoveUser(DTO.User.ToModelUser(user));
+            return Ok("user successfully removed");
+
+        }
     }
 }
