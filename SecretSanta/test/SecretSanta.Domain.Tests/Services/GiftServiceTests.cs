@@ -96,5 +96,22 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual("Horse", gifts[0].Title);
             }
         }
+
+        [TestMethod]
+        public void Main()
+        {
+            var person = new Person();
+            string line = person.Name = "John";
+            Console.WriteLine(line);
+        }
+
+        public class Person
+        {
+            public string Name
+            {
+                get => "Kevin";
+                set { }
+            }
+        }
     }
 }

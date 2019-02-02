@@ -72,5 +72,43 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual(user.LastName, retrievedUser.LastName);
             }
         }
+
+        [TestMethod]
+        public void DeleteUser_ReturnsFalseWhenNotFound()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+
+                bool result = service.DeleteUser(1);
+
+                Assert.IsFalse(result);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteUser_RemovesExistingGroup()
+        {
+            var user = new User
+            {
+                FirstName = "John",
+                LastName = "Doe"
+            };
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+
+                bool result = service.DeleteUser(user.Id);
+
+                Assert.IsTrue(result);
+                Assert.IsFalse(context.Users.Any());
+            }
+        }
     }
 }

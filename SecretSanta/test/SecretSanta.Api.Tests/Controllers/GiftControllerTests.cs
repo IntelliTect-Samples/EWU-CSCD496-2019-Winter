@@ -6,7 +6,7 @@ using SecretSanta.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SecretSanta.Api.Tests
+namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests
