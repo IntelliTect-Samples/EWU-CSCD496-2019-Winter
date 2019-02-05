@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
@@ -14,9 +15,11 @@ namespace SecretSanta.Api.Controllers
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
+        private IMapper Mapper { get; }
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper)
         {
+            Mapper = mapper;
             UserService = userService;
         }
 
@@ -34,7 +37,8 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            //return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // PUT api/<controller>/5
@@ -61,14 +65,15 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            //return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
         [Produces(typeof(ActionResult))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
