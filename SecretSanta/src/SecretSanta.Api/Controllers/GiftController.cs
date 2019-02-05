@@ -22,6 +22,8 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
         {
             if (userId <= 0)
