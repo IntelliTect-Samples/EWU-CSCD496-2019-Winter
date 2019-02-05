@@ -22,6 +22,9 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [Produces(typeof(ActionResult<UserViewModel>))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -36,6 +39,10 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [Produces(typeof(ActionResult<UserViewModel>))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -58,6 +65,9 @@ namespace SecretSanta.Api.Controllers
         }
 
         // DELETE api/<controller>/5
+        [Produces(typeof(ActionResult))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
