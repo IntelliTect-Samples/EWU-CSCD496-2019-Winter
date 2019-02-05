@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
@@ -14,9 +15,11 @@ namespace SecretSanta.Api.Controllers
     public class GiftController : ControllerBase
     {
         private IGiftService GiftService { get; }
+        private IMapper Mapper { get; }
 
-        public GiftController(IGiftService giftService)
+        public GiftController(IGiftService giftService, IMapper mapper)
         {
+            Mapper = mapper;
             GiftService = giftService;
         }
 
@@ -33,7 +36,8 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+            //return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+            return new ActionResult<List<GiftViewModel>>(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
 }
