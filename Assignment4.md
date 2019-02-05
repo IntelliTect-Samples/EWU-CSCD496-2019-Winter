@@ -10,7 +10,7 @@ things turned in until Thursday at midnight
 - Add proper ProducesResponseType and Produces attributes
   - this can be done individually or by applying the global ApiConventionType attribute to the assembly and using the DefaultApiConventions
 
-## Swap out custom transformation code for Automapper
+## Swap out custom transformation code for Automapper *
 - Add a reference to AutoMapper and AutoMapper.Extensions.Microsoft.DependencyInjection
 - Configure mappings and replace custom tranform calls with Mapper.Map calls
 
