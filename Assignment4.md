@@ -26,7 +26,6 @@ things turned in until Thursday at midnight
   - Create a second migration with the updated Model changes
 - Changes that should only be applied at the viewModel level
   - User should require a FirstName
-  - Message should require a ChatMessage
   - Create unit tests to verify that viewModel requirements are working correctly
 
-## Modify all controller actions to return an IActionResult instead of ActionResult or ActionResult<T>
+## Modify all controller actions to return an IActionResult instead of ActionResult or ActionResult&lt;T&gt;
