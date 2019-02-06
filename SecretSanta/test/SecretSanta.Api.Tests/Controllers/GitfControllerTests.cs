@@ -13,6 +13,7 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class GiftControllerTests
     {
+        /*
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
@@ -56,5 +57,6 @@ namespace SecretSanta.Api.Tests.Controllers
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
+        */
     }
 }
