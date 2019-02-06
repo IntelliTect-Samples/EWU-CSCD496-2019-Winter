@@ -28,6 +28,11 @@ namespace SecretSanta.Domain.Models
                 .HasOne(gu => gu.Group)
                 .WithMany(g => g.GroupUsers)
                 .HasForeignKey(gu => gu.GroupId);
+
+            modelBuilder.Entity<Group>().Property(g => g.Name).IsRequired();
+            modelBuilder.Entity<Group>().HasIndex(g => g.Name).IsUnique();
+
+            modelBuilder.Entity<Gift>().Property(g => g.Title).IsRequired();
         }
     }
 }
