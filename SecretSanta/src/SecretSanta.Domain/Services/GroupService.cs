@@ -100,5 +100,10 @@ namespace SecretSanta.Domain.Services
 
             return false;
         }
+
+        public Group GetGroup(int id)
+        {
+            return DbContext.Groups.Find(id);
+        }
     }
 }

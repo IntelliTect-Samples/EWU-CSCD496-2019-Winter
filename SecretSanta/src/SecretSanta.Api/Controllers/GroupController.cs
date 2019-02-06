@@ -13,6 +13,7 @@ using SecretSanta.Domain.Services.Interfaces;
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
@@ -27,23 +28,38 @@ namespace SecretSanta.Api.Controllers
         // GET api/group
         [HttpGet]
         [ProducesResponseType(200)]
-        public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
+        public IActionResult GetAllGroups()
         {
-            return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => Mapper.Map<GroupViewModel>(x)));
+            return Ok(GroupService.FetchAll().Select(x => Mapper.Map<GroupViewModel>(x)));
+        }
+
+        [HttpGet("{id}")]
+        [Produces(typeof(ICollection<GroupViewModel>))]
+        public IActionResult Get(int id)
+        {
+            var group = GroupService.GetGroup(id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<GroupViewModel>(group));
         }
 
         // POST api/group
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
+        [Produces(typeof(ICollection<GroupViewModel>))]
+        public IActionResult CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            return Mapper.Map<GroupViewModel>(GroupService.AddGroup(Mapper.Map<Group>(viewModel)));
+            var newGroup = GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+            return CreatedAtAction(nameof(Get), new { id = newGroup.Id }, Mapper.Map<GroupViewModel>(newGroup));
         }
 
         // PUT api/group/5
@@ -51,7 +67,8 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
+        [Produces(typeof(ICollection<GroupViewModel>))]
+        public IActionResult UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -67,14 +84,14 @@ namespace SecretSanta.Api.Controllers
 
             var persistedGroup = GroupService.UpdateGroup(fetchedGroup);
 
-            return Mapper.Map<GroupViewModel>(persistedGroup);
+            return CreatedAtAction(nameof(Get), new { id = persistedGroup.Id }, Mapper.Map<GroupViewModel>(persistedGroup));
         }
 
         [HttpPut("{groupId}/{userid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult AddUserToGroup(int groupId, int userId)
+        public IActionResult AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -98,7 +115,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult DeleteGroup(int id)
+        public IActionResult DeleteGroup(int id)
         {
             if (id <= 0)
             {
@@ -111,5 +128,6 @@ namespace SecretSanta.Api.Controllers
             }
             return NotFound();
         }
+
     }
 }

@@ -13,6 +13,7 @@ using SecretSanta.Domain.Services.Interfaces;
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
@@ -24,20 +25,42 @@ namespace SecretSanta.Api.Controllers
             Mapper = mapper;
         }
 
+        // GET api/User
+        [HttpGet]
+        [Produces(typeof(ICollection<UserViewModel>))]
+        public IActionResult Get()
+        {
+            return Ok(UserService.FetchAll().Select(x => Mapper.Map<UserViewModel>(x)));
+        }
+
+        [HttpGet("{id}")]
+        [Produces(typeof(UserViewModel))]
+        public IActionResult Get(int id)
+        {
+            var fetchedUser = UserService.GetUser(id);
+            if (fetchedUser == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<UserViewModel>(fetchedUser));
+        }
+
         // POST api/<controller>
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
+        [Produces(typeof(UserViewModel))]
+        public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
                 return BadRequest();
             }
 
-            var persistedUser = UserService.AddUser(Mapper.Map<User>(userViewModel));
+            var createdUser = UserService.AddUser(Mapper.Map<User>(userViewModel));
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return CreatedAtAction(nameof(Get), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
         // PUT api/<controller>/5
@@ -45,7 +68,8 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
+        [Produces(typeof(UserViewModel))]
+        public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -62,14 +86,14 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return CreatedAtAction(nameof(Get), new { id = persistedUser.Id }, Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 

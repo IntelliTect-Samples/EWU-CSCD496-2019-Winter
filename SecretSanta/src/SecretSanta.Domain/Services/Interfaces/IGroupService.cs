@@ -19,5 +19,6 @@ namespace SecretSanta.Domain.Services.Interfaces
         bool AddUserToGroup(int groupId, int userId);
 
         bool RemoveUserFromGroup(int groupId, int userId);
+        Group GetGroup(int id);
     }
 }

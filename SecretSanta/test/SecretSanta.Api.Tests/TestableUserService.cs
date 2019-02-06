@@ -31,5 +31,10 @@ namespace SecretSanta.Api.Tests
         {
             throw new NotImplementedException();
         }
+
+        public User GetUser(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

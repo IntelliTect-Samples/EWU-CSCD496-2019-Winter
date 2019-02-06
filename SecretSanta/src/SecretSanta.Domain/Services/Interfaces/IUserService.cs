@@ -15,5 +15,6 @@ namespace SecretSanta.Domain.Services.Interfaces
         List<User> FetchAll();
 
         bool DeleteUser(int userId);
+        User GetUser(int id);
     }
 }

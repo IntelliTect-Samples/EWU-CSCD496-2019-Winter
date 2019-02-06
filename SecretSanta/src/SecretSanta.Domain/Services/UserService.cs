@@ -51,5 +51,10 @@ namespace SecretSanta.Domain.Services
             DbContext.Users.Remove(userToDelete);
             return (DbContext.SaveChanges() == 1);
         }
+
+        public User GetUser(int id)
+        {
+            return DbContext.Users.Find(id);
+        }
     }
 }
