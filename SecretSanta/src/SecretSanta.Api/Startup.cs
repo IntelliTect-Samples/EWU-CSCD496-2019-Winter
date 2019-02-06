@@ -18,6 +18,7 @@ using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace SecretSanta.Api
 {
     public class Startup
