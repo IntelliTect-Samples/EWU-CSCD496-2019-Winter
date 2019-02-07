@@ -42,12 +42,17 @@ namespace SecretSanta.Domain.Services
             return DbContext.Gifts.Where(g => g.UserId == userId).ToList();
         }
 
-        public void RemoveGift(Gift gift)
+        public bool RemoveGift(int giftId)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            var giftToDelete = DbContext.Gifts.SingleOrDefault(g => g.Id == giftId);
 
-            DbContext.Gifts.Remove(gift);
-            DbContext.SaveChanges();
+            if (giftToDelete == null)
+            {
+                throw new InvalidOperationException("GiftId does not exist");
+            }
+
+            DbContext.Gifts.Remove(giftToDelete);
+            return (DbContext.SaveChanges() == 1);
         }
     }
 }

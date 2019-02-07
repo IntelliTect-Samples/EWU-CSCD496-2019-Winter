@@ -15,13 +15,13 @@ namespace SecretSanta.Api.ViewModels
         {
             if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
 
-            var result = new User
+            var convertedUser = new User
             {
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
             };
 
-            return result;
+            return convertedUser;
         }
     }
 }

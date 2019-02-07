@@ -72,8 +72,8 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public void GetUsers_ReturnsUserInGroup()
         {
-            var user = new User { Id = 42 };
-            var group = new Group { Id = 43 };
+            var user = new User { Id = 42, FirstName = "Conner" };
+            var group = new Group { Id = 43, Name = "Philosophers" };
             var groupUser = new GroupUser { GroupId = group.Id, UserId = user.Id };
             group.GroupUsers = new List<GroupUser> { groupUser };
 

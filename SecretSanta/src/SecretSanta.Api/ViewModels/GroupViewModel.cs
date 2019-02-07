@@ -11,6 +11,8 @@ namespace SecretSanta.Api.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public GroupViewModel() { }
+
         public static GroupViewModel ToViewModel(Group group)
         {
             if (group == null) throw new ArgumentNullException(nameof(group));

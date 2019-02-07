@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
@@ -14,6 +15,7 @@ namespace SecretSanta.Api.Controllers
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
+        private IMapper Mapper { get; }
 
         public GroupController(IGroupService groupService)
         {

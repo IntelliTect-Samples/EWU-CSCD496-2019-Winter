@@ -8,28 +8,44 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableUserService : IUserService
     {
+        public User Find_UserId { get; set; }
+        public User AddUser_User { get; set; }
+        public bool DeleteUser_Bool { get; set; }
+        public List<User> FetchUsers_List { get; set; }
+        public User UpdateUser_User { get; set; }
+
         public User Find(int id)
         {
-            throw new NotImplementedException();
+            Find_UserId = new User
+            {
+                Id = id
+            };
+            return Find_UserId;
         }
         public User AddUser(User user)
         {
-            throw new NotImplementedException();
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            AddUser_User = user;
+            return AddUser_User;
         }
 
         public bool DeleteUser(int userId)
         {
-            throw new NotImplementedException();
+            if (userId > 0) DeleteUser_Bool = true;
+            return DeleteUser_Bool;
         }
 
         public List<User> FetchAll()
         {
-            throw new NotImplementedException();
+            FetchUsers_List = new List<User>();
+            return FetchUsers_List;
         }
 
         public User UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            UpdateUser_User = user;
+            return UpdateUser_User;
         }
     }
 }
