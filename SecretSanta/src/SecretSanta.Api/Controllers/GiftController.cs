@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
@@ -25,10 +26,10 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        [Produces(typeof(ActionResult<List<GiftViewModel>>))]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(200)]
-        public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
+        [Produces(typeof(List<GiftViewModel>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
@@ -36,8 +37,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            //return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
-            return new ActionResult<List<GiftViewModel>>(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
+            return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
 }

@@ -49,7 +49,7 @@ namespace SecretSanta.Domain.Services
             }
 
             DbContext.Users.Remove(userToDelete);
-            return (DbContext.SaveChanges() == 1);
+            return DbContext.SaveChanges() == 1;
         }
     }
 }

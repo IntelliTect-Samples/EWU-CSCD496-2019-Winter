@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
+using SecretSanta.Domain.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
         private IMapper Mapper { get; }
+        public object UserModel { get; private set; }
 
         public UserController(IUserService userService, IMapper mapper)
         {
@@ -23,12 +27,38 @@ namespace SecretSanta.Api.Controllers
             UserService = userService;
         }
 
+        // GET api/user
+        [HttpGet]
+        [Produces(typeof(List<UserViewModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetUsers()
+        {
+            return Ok(UserService.FetchAll().Select(x => Mapper.Map<UserViewModel>(x)));
+        }
+
+        // GET api/user/5
+        [HttpGet("{id}")]
+        [Produces(typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetUser(int id)
+        {
+            User user = UserService.Find(id);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<UserViewModel>(user));
+        }
+
         // POST api/<controller>
         [HttpPost]
-        [Produces(typeof(ActionResult<UserViewModel>))]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
+        [Produces(typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -37,17 +67,16 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
 
-            //return Ok(UserViewModel.ToViewModel(persistedUser));
             return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Produces(typeof(ActionResult<UserViewModel>))]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
+        [Produces(typeof(UserViewModel))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -65,20 +94,18 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            //return Ok(UserViewModel.ToViewModel(persistedUser));
             return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Produces(typeof(ActionResult))]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public ActionResult Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 
-            return userWasDeleted ? (ActionResult)Ok() : (ActionResult)NotFound();
+            return userWasDeleted ? (IActionResult)Ok() : (IActionResult)NotFound();
         }
     }
 }

@@ -23,6 +23,11 @@ namespace SecretSanta.Domain.Services
 
         public Group AddGroup(Group Group)
         {
+            if (DbContext.Groups.Where(g => g.Name == Group.Name).First().Name == Group.Name)
+            {
+                return null;
+            }
+
             DbContext.Groups.Add(Group);
             DbContext.SaveChanges();
             return Group;
