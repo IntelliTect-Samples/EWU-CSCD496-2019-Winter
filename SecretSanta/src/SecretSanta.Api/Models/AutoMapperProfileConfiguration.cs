@@ -28,7 +28,8 @@ namespace SecretSanta.Api.Models
             CreateMap<Gift, GiftViewModel>();
 
            /* CreateMap<Gift, GiftViewModel>();
-            CreateMap<GiftViewModel, Gift>();*/
+            CreateMap<GiftViewModel, Gift>();
+            deleteThisLine*/
 
         }
     }
