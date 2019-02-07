@@ -16,11 +16,11 @@ namespace SecretSanta.Api.Tests.Controllers
     {
         private CustomWebApplicationFactory<Startup> Factory { get; set; }
 
-        [AssemblyInitialize]
+        /*[AssemblyInitialize]
         public static void ConfigureAutoMapper(TestContext context)
         {
             Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
-        }
+        }*/
 
         public GiftControllerTests()
         {
@@ -50,10 +50,10 @@ namespace SecretSanta.Api.Tests.Controllers
 
             GiftController controller = new GiftController(testService, mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
+            OkObjectResult result = controller.GetGiftForUser(4) as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
-            GiftViewModel resultGift = result.Value.Single();
+            GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
             Assert.AreEqual(gift.Description, resultGift.Description);
@@ -68,9 +68,9 @@ namespace SecretSanta.Api.Tests.Controllers
             IMapper mapper = Mapper.Instance;
             GiftController controller = new GiftController(testService, mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
+            NotFoundResult result = controller.GetGiftForUser(-1) as NotFoundResult;
 
-            Assert.IsTrue(result.Result is NotFoundResult);
+            Assert.IsNotNull(result);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;

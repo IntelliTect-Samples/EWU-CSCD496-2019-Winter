@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Api.Tests
@@ -38,6 +40,15 @@ namespace SecretSanta.Api.Tests
 
                     db.Database.EnsureCreated();
                 }
+
+                services.AddAutoMapper(config =>
+                {
+                    config.ShouldMapProperty = Group => false;
+                    config.ShouldMapProperty = Gifts => false;
+                    config.ShouldMapProperty = User => false;
+
+                    config.AddProfile(new AutoMapperProfileConfigs());
+                });
             });
         }
     }

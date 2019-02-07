@@ -19,11 +19,11 @@ namespace SecretSanta.Api.Tests.Controllers
     {
         private CustomWebApplicationFactory<Startup> Factory { get; set; }
 
-        [AssemblyInitialize]
+        /*[AssemblyInitialize]
         public static void ConfigureAutoMapper(TestContext context)
         {
             Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
-        }
+        }*/
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -73,9 +73,9 @@ namespace SecretSanta.Api.Tests.Controllers
             var controller = new GroupController(service.Object, mapper);
 
 
-            IActionResult result = controller.CreateGroup(null);
+            BadRequestResult result = controller.CreateGroup(null) as BadRequestResult;
 
-            Assert.IsTrue(result.Result is BadRequestResult);
+            Assert.IsNotNull(result);
         }
 
         [TestMethod]
@@ -97,10 +97,12 @@ namespace SecretSanta.Api.Tests.Controllers
             IMapper mapper = Mapper.Instance;
             var controller = new GroupController(service.Object, mapper);
 
-            IActionResult result = controller.CreateGroup(group);
+            CreatedAtActionResult result = controller.CreateGroup(group) as CreatedAtActionResult;
+            GroupViewModel value = result.Value as GroupViewModel;
 
-            Assert.AreEqual(2, result.Value.Id);
-            Assert.AreEqual("Group", result.Value.Name);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, value.Id);
+            Assert.AreEqual("Group", value.Name);
             service.VerifyAll();
         }
 
@@ -112,9 +114,9 @@ namespace SecretSanta.Api.Tests.Controllers
             var controller = new GroupController(service.Object, mapper);
 
 
-            IActionResult result = controller.UpdateGroup(-1, null);
+            BadRequestResult result = controller.UpdateGroup(-1, null) as BadRequestResult;
 
-            Assert.IsTrue(result.Result is BadRequestResult);
+            Assert.IsNotNull(result);
         }
 
         [TestMethod]
@@ -138,10 +140,9 @@ namespace SecretSanta.Api.Tests.Controllers
             IMapper mapper = Mapper.Instance;
             var controller = new GroupController(service.Object, mapper);
 
-            IActionResult result = controller.UpdateGroup(2, group);
+            NoContentResult result = controller.UpdateGroup(2, group) as NoContentResult;
 
-            Assert.AreEqual(2, result.Value.Id);
-            Assert.AreEqual("Group", result.Value.Name);
+            Assert.IsNotNull(result);
             service.VerifyAll();
         }
 
