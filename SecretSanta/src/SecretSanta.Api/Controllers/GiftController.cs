@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,23 +17,32 @@ namespace SecretSanta.Api.Controllers
     public class GiftController : ControllerBase
     {
         private IGiftService GiftService { get; }
+        private IMapper Mapper { get; }
 
-        public GiftController(IGiftService giftService)
+        public GiftController(IGiftService giftService, IMapper mapper)
         {
-            GiftService = giftService;
+            GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
-                return NotFound();
+                return BadRequest($"User id {userId} msust be greater than 0");
             }
-            List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
+            else
+            {
+                List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+                var foundGiftsForUser = databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList();
+                return Ok(foundGiftsForUser);
+            }
         }
     }
 }

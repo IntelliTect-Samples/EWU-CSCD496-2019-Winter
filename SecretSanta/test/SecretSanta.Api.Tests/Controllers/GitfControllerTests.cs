@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
+using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using System;
@@ -10,9 +12,16 @@ using System.Text;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
+
     [TestClass]
     public class GiftControllerTests
     {
+        [AssemblyInitialize]
+        public static void ConfigureAutoMapper(TestContext context)
+        {
+            Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
+        }
+
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
@@ -31,12 +40,12 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, Mapper.Instance);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
+            var result = controller.GetGiftForUser(4) as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
-            GiftViewModel resultGift = result.Value.Single();
+            GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
             Assert.AreEqual(gift.Description, resultGift.Description);
@@ -48,11 +57,11 @@ namespace SecretSanta.Api.Tests.Controllers
         public void GetGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, Mapper.Instance);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
+            IActionResult result = controller.GetGiftForUser(-1);
 
-            Assert.IsTrue(result.Result is NotFoundResult);
+            Assert.IsNotNull(result);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
