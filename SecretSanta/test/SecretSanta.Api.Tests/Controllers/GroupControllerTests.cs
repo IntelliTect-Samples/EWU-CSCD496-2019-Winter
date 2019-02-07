@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
@@ -9,13 +11,24 @@ using SecretSanta.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GroupControllerTests
     {
+        private CustomWebApplicationFactory<Startup> Factory { get; set; }
+
+        [TestInitialize]
+        public void CreateWebFactory()
+        {
+            Factory = new CustomWebApplicationFactory<Startup>();
+        }
+
         [TestMethod]
         public void GetAllGroups_ReturnsGroups()
         {
@@ -223,6 +236,54 @@ namespace SecretSanta.Api.Tests.Controllers
 
             Assert.IsTrue(result is OkResult);
             service.VerifyAll();
+        }
+
+        [TestMethod]
+        public async Task CreateGroupViaApi_FailsDueToMissingName()
+        {
+            var client = Factory.CreateClient();
+
+            var viewModel = new GroupInputViewModel
+            {
+                Name = ""
+            };
+
+            var response = await client.PostAsJsonAsync("/api/group", viewModel);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var problemDetails = JsonConvert.DeserializeObject<ProblemDetails>(result);
+
+            var errors = problemDetails.Extensions["errors"] as JObject;
+
+            var firstError = (JProperty)errors.First;
+
+            var errorMessage = firstError.Value[0];
+
+            Assert.AreEqual("The Name field is required.", ((JValue)errorMessage).Value);
+        }
+
+        [TestMethod]
+        public async Task CreateGroupViaApi_FailsDueToNonUniqueName()
+        {
+            var client = Factory.CreateClient();
+
+            var viewModel = new GroupInputViewModel
+            {
+                Name = "Group1"
+            };
+
+            var secondViewModel = new GroupInputViewModel
+            {
+                Name = "Group1"
+            };
+
+            var response = await client.PostAsJsonAsync("/api/group", viewModel);
+            response = await client.PostAsJsonAsync("/api/group", secondViewModel);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         private static void AssertAreEqual(GroupViewModel expected, Group actual)

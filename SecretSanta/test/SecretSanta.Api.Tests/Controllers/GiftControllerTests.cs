@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
@@ -8,7 +10,10 @@ using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
 {

@@ -58,6 +58,18 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
+            List<Group> databaseGroups = GroupService.FetchAll();
+            if (databaseGroups != null)
+            {
+                var selectedGroups = databaseGroups.Select(x => x.Name == viewModel.Name).ToList();
+
+                if (selectedGroups != null && selectedGroups.Count > 0)
+                {
+                    return BadRequest();
+                }
+            }
+
+
             var newGroup = GroupService.AddGroup(Mapper.Map<Group>(viewModel));
             return CreatedAtAction(nameof(Get), new { id = newGroup.Id }, Mapper.Map<GroupViewModel>(newGroup));
         }

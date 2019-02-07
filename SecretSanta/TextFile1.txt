@@ -1,18 +1,15 @@
-Test Name:	AddUserViaApi_CompletesSuccessfully
-Test FullName:	SecretSanta.Api.Tests.Controllers.UserControllerTests.AddUserViaApi_CompletesSuccessfully
-Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\UserControllerTests.cs : line 55
+Test Name:	CreateGroup_ReturnsCreatedGroup
+Test FullName:	SecretSanta.Api.Tests.Controllers.GroupControllerTests.CreateGroup_ReturnsCreatedGroup
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs : line 77
 Test Outcome:	Failed
-Test Duration:	0:00:00.0587354
+Test Duration:	0:00:00.0442879
 
-Result StackTrace:	at SecretSanta.Api.Tests.Controllers.UserControllerTests.AddUserViaApi_CompletesSuccessfully() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\UserControllerTests.cs:line 67
-Result Message:	Assert.AreEqual failed. Expected:<Created>. Actual:<NotFound>.
-Result StandardOutput:	
-info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[0]
-      User profile is available. Using 'C:\Users\Richard Teller\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
-      Request starting HTTP/2.0 POST http://localhost/api/users application/json; charset=utf-8 
-warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
-      Failed to determine the https port for redirect.
-info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
-      Request finished in 1.4631ms 404
+Result StackTrace:	
+at System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   at SecretSanta.Api.Controllers.GroupController.CreateGroup(GroupInputViewModel viewModel) in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Api\Controllers\GroupController.cs:line 62
+   at SecretSanta.Api.Tests.Controllers.GroupControllerTests.CreateGroup_ReturnsCreatedGroup() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs:line 94
+Result Message:	
+Test method SecretSanta.Api.Tests.Controllers.GroupControllerTests.CreateGroup_ReturnsCreatedGroup threw exception: 
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
 
