@@ -1,11 +1,18 @@
-Test Name:	UpdateGroup_ReturnsUpdatedGroup
-Test FullName:	SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup
-Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs : line 102
+Test Name:	AddUserViaApi_CompletesSuccessfully
+Test FullName:	SecretSanta.Api.Tests.Controllers.UserControllerTests.AddUserViaApi_CompletesSuccessfully
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\UserControllerTests.cs : line 55
 Test Outcome:	Failed
-Test Duration:	0:00:00.0507055
+Test Duration:	0:00:00.0587354
 
-Result StackTrace:	at SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs:line 121
-Result Message:	
-Test method SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup threw exception: 
-System.InvalidCastException: Unable to cast object of type 'Microsoft.AspNetCore.Mvc.CreatedAtActionResult' to type 'Microsoft.AspNetCore.Mvc.NoContentResult'.
+Result StackTrace:	at SecretSanta.Api.Tests.Controllers.UserControllerTests.AddUserViaApi_CompletesSuccessfully() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\UserControllerTests.cs:line 67
+Result Message:	Assert.AreEqual failed. Expected:<Created>. Actual:<NotFound>.
+Result StandardOutput:	
+info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[0]
+      User profile is available. Using 'C:\Users\Richard Teller\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      Request starting HTTP/2.0 POST http://localhost/api/users application/json; charset=utf-8 
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      Request finished in 1.4631ms 404
 

@@ -34,7 +34,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", viewModel);
+            var response = await client.PostAsJsonAsync("/api/user", viewModel);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -62,7 +62,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", userViewModel);
+            var response = await client.PostAsJsonAsync("/api/user", userViewModel);
 
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
 
