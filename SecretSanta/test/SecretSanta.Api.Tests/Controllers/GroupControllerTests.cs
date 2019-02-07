@@ -19,12 +19,6 @@ namespace SecretSanta.Api.Tests.Controllers
     {
         private CustomWebApplicationFactory<Startup> Factory { get; set; }
 
-        /*[AssemblyInitialize]
-        public static void ConfigureAutoMapper(TestContext context)
-        {
-            Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
-        }*/
-
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GroupController_RequiresGiftService()
@@ -127,9 +121,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 Name = "Group"
             };
             var service = new Mock<IGroupService>();
-            service.Setup(x => x.Find(2)).Returns(new Group { Id = 2, Name = "My Group" }).Verifiable();
-            service.Setup(x => x.UpdateGroup(It.Is<Group>(g =>
-                    g.Name == group.Name)))
+            service.Setup(x => x.Find(2))
                 .Returns(new Domain.Models.Group
                 {
                     Id = 2,

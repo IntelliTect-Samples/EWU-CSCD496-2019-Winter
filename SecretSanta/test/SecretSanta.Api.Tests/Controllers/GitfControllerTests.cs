@@ -16,11 +16,11 @@ namespace SecretSanta.Api.Tests.Controllers
     {
         private CustomWebApplicationFactory<Startup> Factory { get; set; }
 
-        /*[AssemblyInitialize]
+        [AssemblyInitialize]
         public static void ConfigureAutoMapper(TestContext context)
         {
             Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
-        }*/
+        }
 
         public GiftControllerTests()
         {

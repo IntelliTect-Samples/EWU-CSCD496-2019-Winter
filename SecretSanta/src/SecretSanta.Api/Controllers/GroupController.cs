@@ -98,7 +98,7 @@ namespace SecretSanta.Api.Controllers
         // PUT api/group/5
         [HttpPut("{id}")]
         [Produces(typeof(GroupViewModel))]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdateGroup(int id, GroupInputViewModel viewModel)
@@ -113,9 +113,11 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            fetchedGroup.Name = viewModel.Name;
+            Mapper.Map(viewModel, fetchedGroup);
 
-            return Ok(GroupService.UpdateGroup(fetchedGroup));
+            GroupService.UpdateGroup(fetchedGroup);
+
+            return NoContent();
         }
 
         // PUT /api/Group/add/5
