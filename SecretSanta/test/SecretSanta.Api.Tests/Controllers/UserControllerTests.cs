@@ -31,7 +31,7 @@ namespace SecretSanta.Api.Tests.Controllers
             var viewModel = new UserInputViewModel
             {
                 FirstName = "",
-                LastName = "Montoya"
+                LastName = "Bobby"
             };
 
             var response = await client.PostAsJsonAsync("/api/user", viewModel);
@@ -58,8 +58,8 @@ namespace SecretSanta.Api.Tests.Controllers
 
             var userViewModel = new UserInputViewModel
             {
-                FirstName = "Inigo",
-                LastName = "Montoya"
+                FirstName = "Billy",
+                LastName = "Bobby"
             };
 
             var response = await client.PostAsJsonAsync("/api/user", userViewModel);
