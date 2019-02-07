@@ -23,12 +23,12 @@ namespace SecretSanta.Api
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,11 +39,9 @@ namespace SecretSanta.Api
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IUserService, UserService>();
 
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
-                builder.UseSqlite(connection);
+                builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents

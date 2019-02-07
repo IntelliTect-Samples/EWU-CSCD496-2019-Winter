@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SecretSanta.Api.Controllers;
+using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -15,11 +17,20 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class GroupControllerTests
     {
+        private CustomWebApplicationFactory<Startup> Factory { get; set; }
+
+        [AssemblyInitialize]
+        public static void ConfigureAutoMapper(TestContext context)
+        {
+            Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GroupController_RequiresGiftService()
         {
-            new GroupController(null);
+            IMapper mapper = Mapper.Instance;
+            new GroupController(null, mapper);
         }
 
         [TestMethod]
@@ -41,8 +52,8 @@ namespace SecretSanta.Api.Tests.Controllers
                 .Returns(new List<Group> { group1, group2 })
                 .Verifiable();
 
-
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult<IEnumerable<GroupViewModel>> result = controller.GetAllGroups();
 
@@ -58,7 +69,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public void CreateGroup_RequiresGroup()
         {
             var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
 
             ActionResult<GroupViewModel> result = controller.CreateGroup(null);
@@ -82,7 +94,8 @@ namespace SecretSanta.Api.Tests.Controllers
                 })
                 .Verifiable();
 
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult<GroupViewModel> result = controller.CreateGroup(group);
 
@@ -95,7 +108,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public void UpdateGroup_RequiresGroup()
         {
             var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
 
             ActionResult<GroupViewModel> result = controller.UpdateGroup(-1, null);
@@ -121,7 +135,8 @@ namespace SecretSanta.Api.Tests.Controllers
                 })
                 .Verifiable();
 
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult<GroupViewModel> result = controller.UpdateGroup(2, group);
 
@@ -136,7 +151,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public void DeleteGroup_RequiresPositiveId(int groupId)
         {
             var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.DeleteGroup(groupId);
 
@@ -150,7 +166,8 @@ namespace SecretSanta.Api.Tests.Controllers
             service.Setup(x => x.DeleteGroup(2))
                 .Returns(false)
                 .Verifiable();
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.DeleteGroup(2);
 
@@ -164,7 +181,8 @@ namespace SecretSanta.Api.Tests.Controllers
             service.Setup(x => x.DeleteGroup(2))
                 .Returns(true)
                 .Verifiable();
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.DeleteGroup(2);
 
@@ -177,7 +195,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public void AddUserToGroup_RequiresPositiveGroupId(int groupId)
         {
             var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.AddUserToGroup(groupId, 1);
 
@@ -191,7 +210,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public void AddUserToGroup_RequiresPositiveUserId(int userId)
         {
             var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.AddUserToGroup(1, userId);
 
@@ -205,7 +225,8 @@ namespace SecretSanta.Api.Tests.Controllers
             service.Setup(x => x.AddUserToGroup(2, 3))
                 .Returns(false)
                 .Verifiable();
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.AddUserToGroup(2, 3);
 
@@ -219,7 +240,8 @@ namespace SecretSanta.Api.Tests.Controllers
             service.Setup(x => x.AddUserToGroup(2, 3))
                 .Returns(true)
                 .Verifiable();
-            var controller = new GroupController(service.Object);
+            IMapper mapper = Mapper.Instance;
+            var controller = new GroupController(service.Object, mapper);
 
             ActionResult result = controller.AddUserToGroup(2, 3);
 

@@ -1,18 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
+using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests
     {
+        private CustomWebApplicationFactory<Startup> Factory { get; set; }
+
+        [AssemblyInitialize]
+        public static void ConfigureAutoMapper(TestContext context)
+        {
+            Mapper.Initialize(config => config.AddProfile(new AutoMapperProfileConfigs()));
+        }
+
+        public GiftControllerTests()
+        {
+            Factory = new CustomWebApplicationFactory<Startup>();
+        }
+
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
@@ -31,7 +45,10 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+
+            IMapper mapper = Mapper.Instance;
+
+            GiftController controller = new GiftController(testService, mapper);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
 
@@ -47,8 +64,9 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public void GetGiftForUser_RequiresPositiveUserId()
         {
-            var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            TestableGiftService testService = new TestableGiftService();
+            IMapper mapper = Mapper.Instance;
+            GiftController controller = new GiftController(testService, mapper);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
 
