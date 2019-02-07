@@ -1,0 +1,11 @@
+Test Name:	UpdateGroup_ReturnsUpdatedGroup
+Test FullName:	SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs : line 102
+Test Outcome:	Failed
+Test Duration:	0:00:00.0507055
+
+Result StackTrace:	at SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GroupControllerTests.cs:line 121
+Result Message:	
+Test method SecretSanta.Api.Tests.Controllers.GroupControllerTests.UpdateGroup_ReturnsUpdatedGroup threw exception: 
+System.InvalidCastException: Unable to cast object of type 'Microsoft.AspNetCore.Mvc.CreatedAtActionResult' to type 'Microsoft.AspNetCore.Mvc.NoContentResult'.
+
