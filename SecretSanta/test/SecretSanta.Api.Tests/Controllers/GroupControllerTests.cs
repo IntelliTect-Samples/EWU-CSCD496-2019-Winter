@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
@@ -10,7 +11,10 @@ using SecretSanta.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -18,6 +22,11 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GroupControllerTests
     {
         private CustomWebApplicationFactory<Startup> Factory { get; set; }
+
+        public GroupControllerTests()
+        {
+            Factory = new CustomWebApplicationFactory<Startup>();
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -68,6 +77,35 @@ namespace SecretSanta.Api.Tests.Controllers
 
 
             BadRequestResult result = controller.CreateGroup(null) as BadRequestResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void CreateGroup_ConflictGroupAlreadyExist()
+        {
+            GroupInputViewModel viewModel = new GroupInputViewModel
+            {
+                Name = "The Titans"
+            };
+            Mock<IGroupService> service = new Mock<IGroupService>();
+            service.Setup(x => x.AddGroup(It.Is<Domain.Models.Group>(g => g.Name == viewModel.Name)))
+                .Returns(new Domain.Models.Group
+                {
+                    Id = 2,
+                    Name = viewModel.Name
+                })
+                .Verifiable();
+
+            IMapper mapper = Mapper.Instance;
+            GroupController controller = new GroupController(service.Object, mapper);
+
+            controller.CreateGroup(viewModel);
+
+            service.Setup(x => x.AddGroup(It.Is<Domain.Models.Group>(g => g.Name == viewModel.Name)))
+                .Returns<IGroupService, Group>(null);
+
+            ConflictObjectResult result = controller.CreateGroup(viewModel) as ConflictObjectResult;
 
             Assert.IsNotNull(result);
         }

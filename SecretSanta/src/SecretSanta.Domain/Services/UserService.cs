@@ -45,7 +45,7 @@ namespace SecretSanta.Domain.Services
 
             if (userToDelete == null)
             {
-                throw new InvalidOperationException("UserId does not exist");
+                return false;
             }
 
             DbContext.Users.Remove(userToDelete);

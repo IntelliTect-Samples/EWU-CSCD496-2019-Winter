@@ -53,30 +53,30 @@ namespace SecretSanta.Api.Controllers
             return Ok(Mapper.Map<UserViewModel>(user));
         }
 
-        // POST api/<controller>
+        // POST api/user
         [HttpPost]
         [Produces(typeof(UserViewModel))]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(UserInputViewModel userViewModel)
+        public IActionResult CreateUser(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
                 return BadRequest();
             }
 
-            var persistedUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
+            User newUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id },  Mapper.Map<UserViewModel>(newUser));
         }
 
-        // PUT api/<controller>/5
+        // PUT api/user/5
         [HttpPut("{id}")]
         [Produces(typeof(UserViewModel))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(int id, UserInputViewModel userViewModel)
+        public IActionResult UpdateUser(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -92,16 +92,16 @@ namespace SecretSanta.Api.Controllers
             foundUser.FirstName = userViewModel.FirstName;
             foundUser.LastName = userViewModel.LastName;
 
-            var persistedUser = UserService.UpdateUser(foundUser);
+            User updatedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(updatedUser));
         }
 
-        // DELETE api/<controller>/5
+        // DELETE api/user/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteUser(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 
