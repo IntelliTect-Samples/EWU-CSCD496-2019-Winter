@@ -10,9 +10,7 @@ namespace SecretSanta.Domain.Models
         public DbSet<Message> Messages { get; set; }
         public DbSet<Pairing> Pairings { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

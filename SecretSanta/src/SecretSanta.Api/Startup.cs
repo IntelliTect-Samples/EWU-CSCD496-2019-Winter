@@ -32,11 +32,11 @@ namespace SecretSanta.Api
 
             services.AddScoped<IGiftService, GiftService>();
 
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
+            //var connection = new SqliteConnection("DataSource=:memory:");
+            //connection.Open();
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
-                builder.UseSqlite(connection);
+                builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
