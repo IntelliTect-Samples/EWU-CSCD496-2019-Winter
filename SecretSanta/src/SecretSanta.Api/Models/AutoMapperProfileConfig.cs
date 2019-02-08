@@ -17,6 +17,8 @@ namespace SecretSanta.Api.Models
             CreateMap<UserInputViewModel, User>();
             CreateMap<User, UserInputViewModel>();
             CreateMap<User, UserViewModel>();
+
+
         }
 
     }

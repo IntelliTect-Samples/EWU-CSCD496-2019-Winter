@@ -22,6 +22,8 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/group
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
         {
             return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => GroupViewModel.ToViewModel(x)));
@@ -29,6 +31,8 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/group
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
@@ -41,6 +45,9 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/group/5
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
@@ -59,6 +66,9 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{groupId}/{userid}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
@@ -80,6 +90,9 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/group/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult DeleteGroup(int id)
         {
             if (id <= 0)

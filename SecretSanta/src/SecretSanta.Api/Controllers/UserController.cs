@@ -24,6 +24,8 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -38,6 +40,9 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -60,6 +65,8 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
