@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
@@ -22,6 +23,9 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
         public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -36,6 +40,10 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
@@ -59,6 +67,9 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public ActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
