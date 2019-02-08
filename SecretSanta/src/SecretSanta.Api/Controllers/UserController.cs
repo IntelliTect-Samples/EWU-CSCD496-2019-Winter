@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
-
+using AutoMapper;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Api.Controllers
@@ -14,15 +14,17 @@ namespace SecretSanta.Api.Controllers
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
+        private IMapper Mapper { get; }
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             UserService = userService;
+            Mapper = mapper;
         }
 
         // POST api/<controller>
         [HttpPost]
-        public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
+        public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -31,12 +33,12 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
+        public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -48,18 +50,17 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
+            Mapper.Map(userViewModel, foundUser);
 
-            foundUser.FirstName = userViewModel.FirstName;
-            foundUser.LastName = userViewModel.LastName;
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 
