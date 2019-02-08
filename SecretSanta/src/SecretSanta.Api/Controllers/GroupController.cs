@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,33 +16,36 @@ namespace SecretSanta.Api.Controllers
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
+        private IMapper Mapper { get; }
 
-        public GroupController(IGroupService groupService)
+        public GroupController(IGroupService groupService, IMapper mapper)
         {
             GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
+            Mapper = mapper;
         }
 
         // GET api/group
         [HttpGet]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
+        public IActionResult GetAllGroups()
         {
-            return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => GroupViewModel.ToViewModel(x)));
+            GroupViewModel m = new GroupViewModel();
+            var res = new List<GroupViewModel>(GroupService.FetchAll().Select(x => Mapper.Map<GroupViewModel>(x))); 
+            return Ok(res);
         }
 
         // POST api/group
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
+        public IActionResult CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            return GroupViewModel.ToViewModel(GroupService.AddGroup(GroupInputViewModel.ToModel(viewModel)));
+            return Ok( Mapper.Map<GroupViewModel>(GroupService.AddGroup(Mapper.Map<Group>(viewModel))) );
         }
 
         // PUT api/group/5
@@ -48,7 +53,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
+        public IActionResult UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -62,14 +67,14 @@ namespace SecretSanta.Api.Controllers
 
             fetchedGroup.Name = viewModel.Name;
 
-            return GroupViewModel.ToViewModel(GroupService.UpdateGroup(fetchedGroup));
+            return Ok( Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup)) );
         }
 
         [HttpPut("{groupId}/{userid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult AddUserToGroup(int groupId, int userId)
+        public IActionResult AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {

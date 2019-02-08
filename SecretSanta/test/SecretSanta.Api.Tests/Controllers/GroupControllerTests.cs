@@ -13,7 +13,7 @@ using System.Text;
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
-    public class GroupControllerTests
+    public class GroupControllerTests : ControllerTestBase
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

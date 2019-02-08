@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
-    class UserControllerTests
+    class UserControllerTests : ControllerTestBase
     {
     }
 }

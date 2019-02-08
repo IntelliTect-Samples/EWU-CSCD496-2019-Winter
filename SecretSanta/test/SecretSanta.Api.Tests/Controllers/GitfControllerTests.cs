@@ -11,7 +11,7 @@ using System.Text;
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
-    public class GiftControllerTests
+    public class GiftControllerTests : ControllerTestBase
     {
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()

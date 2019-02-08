@@ -14,10 +14,14 @@ namespace SecretSanta.Api.Models
 
         public AutoMapperProfileConfig()
         {
-            CreateMap<UserInputViewModel, User>();
-            CreateMap<User, UserInputViewModel>();
-            CreateMap<User, UserViewModel>();
+            CreateMap<Gift, GiftViewModel>();
 
+            CreateMap<User, UserViewModel>();
+            CreateMap<UserInputViewModel, User>();
+
+            CreateMap<Group, GroupViewModel>();
+            CreateMap<GroupInputViewModel, Group>();
+            //CreateMap<GroupUser, GroupUserViewModel>();
 
         }
 
