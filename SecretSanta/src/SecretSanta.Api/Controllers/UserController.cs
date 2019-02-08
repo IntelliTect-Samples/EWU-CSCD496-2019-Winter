@@ -30,7 +30,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
+        public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -48,7 +48,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
+        public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -74,7 +74,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 

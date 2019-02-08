@@ -29,9 +29,9 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
+        public IActionResult GetAllGroups()
         {
-            return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => Mapper.Map<GroupViewModel>(x)));
+            return Ok(new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => Mapper.Map<GroupViewModel>(x))) );
         }
 
         // POST api/group
@@ -39,14 +39,14 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
+        public IActionResult CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            return Mapper.Map<GroupViewModel>(Mapper.Map<Group>(viewModel));
+            return Ok(Mapper.Map<GroupViewModel>(Mapper.Map<Group>(viewModel)) );
         }
 
         // PUT api/group/5
@@ -55,7 +55,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
+        public IActionResult UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -69,7 +69,7 @@ namespace SecretSanta.Api.Controllers
 
             fetchedGroup.Name = viewModel.Name;
 
-            return Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup));
+            return Ok(Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup)) );
         }
 
         [HttpPut("{groupId}/{userid}")]
@@ -77,7 +77,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult AddUserToGroup(int groupId, int userId)
+        public IActionResult AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -102,7 +102,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult DeleteGroup(int id)
+        public IActionResult DeleteGroup(int id)
         {
             if (id <= 0)
             {

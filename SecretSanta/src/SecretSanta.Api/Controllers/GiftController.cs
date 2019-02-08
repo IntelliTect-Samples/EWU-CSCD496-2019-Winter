@@ -29,7 +29,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
+        public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
@@ -37,7 +37,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList();
+            return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
 }
