@@ -7,15 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoMapper;
+using SecretSanta.Api.Models;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests : ControllerTestBase
     {
+
+
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
+            var mapper = Mapper.Instance;
             var gift = new Gift
             {
                 Id = 3,
@@ -31,9 +36,9 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
+            ActionResult<List<GiftViewModel>> result = (ActionResult) controller.GetGiftForUser(4);
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             GiftViewModel resultGift = result.Value.Single();
@@ -47,10 +52,11 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public void GetGiftForUser_RequiresPositiveUserId()
         {
+            var mapper = Mapper.Instance;
             var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
+            ActionResult<List<GiftViewModel>> result = (ActionResult) controller.GetGiftForUser(-1);
 
             Assert.IsTrue(result.Result is NotFoundResult);
             //This check ensures that the service was not called

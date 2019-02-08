@@ -18,18 +18,27 @@ namespace SecretSanta.Api.Tests.Controllers
 {
     public class ControllerTestBase
     {
-        CustomWebApplicationFactory<Startup> Factory { get; set; }
+        protected CustomWebApplicationFactory<Startup> Factory { get; set; }
 
-        [AssemblyInitialize]
-        public static void ConfigureAutoMapper(TestContext context)
+        static ControllerTestBase()
+        {
+            ConfigureAutoMapper();
+        }
+
+        protected ControllerTestBase()
+        {
+            CreateWebFactory();
+            Factory = new CustomWebApplicationFactory<Startup>();
+        }
+
+        private static void ConfigureAutoMapper()
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfig()));
         }
 
-        [TestInitialize]
-        public void CreateWebFactory()
+        public static void CreateWebFactory()
         {
-            Factory = new CustomWebApplicationFactory<Startup>();
+            
         }
 
        
