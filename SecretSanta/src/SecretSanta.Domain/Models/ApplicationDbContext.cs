@@ -9,13 +9,12 @@ namespace SecretSanta.Domain.Models
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Pairing> Pairings { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Group>().Property(g => g.Name).IsRequired();
             modelBuilder.Entity<Group>().HasIndex(g => g.Name).IsUnique();
-            modelBuilder.Entity<Gift>().Property(g => g.Title).IsRequired();
 
             modelBuilder.Entity<GroupUser>().HasKey(gu => new { gu.UserId, gu.GroupId });
 

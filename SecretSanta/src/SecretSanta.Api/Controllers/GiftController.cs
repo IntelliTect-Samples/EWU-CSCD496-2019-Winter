@@ -28,26 +28,35 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
-                return NotFound();
+                return BadRequest();
             }
-            List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+            List<Gift> databaseGifts = GiftService.GetGiftsForUser(userId);
+
+            if (databaseGifts is null || databaseGifts.Count == 0) return NotFound();
+
+            var viewModelGiftList = databaseGifts.Select(x => Mapper.Map<GiftViewModel>(x)).ToList();
+
+            return Ok(viewModelGiftList);
         }
 
         // POST api/Gift/userId
         [HttpPost("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult AddGiftToUser(int userId, GiftInputViewModel giftInputViewModel)
         {
             if (giftInputViewModel is null || userId <= 0) return BadRequest();
 
             var persistedGift = GiftService.AddGiftToUser(userId, Mapper.Map<Gift>(giftInputViewModel));
+
+            if (persistedGift is null) return NotFound();
 
             return Ok(Mapper.Map<GiftViewModel>(persistedGift));
         }
@@ -56,11 +65,14 @@ namespace SecretSanta.Api.Controllers
         [HttpPut("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdateGiftForUser(int userId, GiftInputViewModel giftInputViewModel)
         {
             if (giftInputViewModel is null || userId <= 0) return BadRequest();
 
             var persistedGift = GiftService.UpdateGiftForUser(userId, Mapper.Map<Gift>(giftInputViewModel));
+
+            if (persistedGift is null) return NotFound();
 
             return Ok(Mapper.Map<GiftViewModel>(persistedGift));
         }

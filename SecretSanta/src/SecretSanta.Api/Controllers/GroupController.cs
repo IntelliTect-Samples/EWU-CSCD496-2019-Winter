@@ -5,45 +5,66 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
         private IMapper Mapper { get; }
 
-        public GroupController(IGroupService groupService)
+        public GroupController(IGroupService groupService, IMapper mapper)
         {
             GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
+            Mapper = mapper;
         }
 
         // GET api/group
         [HttpGet]
-        public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetAllGroups()
         {
-            return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => GroupViewModel.ToViewModel(x)));
+            var groups = GroupService.FetchAll();
+
+            if (groups.Count() == 0) return NotFound();
+
+            var viewModels = groups.Select(x => Mapper.Map<GroupViewModel>(x));
+
+            return Ok(groups);
         }
 
         // POST api/group
         [HttpPost]
-        public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
-            return GroupViewModel.ToViewModel(GroupService.AddGroup(GroupInputViewModel.ToModel(viewModel)));
+            var createdGroup = GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+
+            if (createdGroup is null) return BadRequest();
+
+            return Ok(Mapper.Map<GroupViewModel>(createdGroup));
         }
 
         // PUT api/group/5
         [HttpPut("{id}")]
-        public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -57,11 +78,16 @@ namespace SecretSanta.Api.Controllers
 
             fetchedGroup.Name = viewModel.Name;
 
-            return GroupViewModel.ToViewModel(GroupService.UpdateGroup(fetchedGroup));
+            var updatedGroup = GroupService.UpdateGroup(fetchedGroup);
+
+            return Ok(Mapper.Map<GroupViewModel>(updatedGroup));
         }
 
         [HttpPut("{groupId}/{userid}")]
-        public ActionResult AddUserToGroup(int groupId, int userId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -82,7 +108,10 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/group/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteGroup(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult DeleteGroup(int id)
         {
             if (id <= 0)
             {
@@ -94,6 +123,21 @@ namespace SecretSanta.Api.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        [HttpGet("/Users/{groupId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetUserForGroup(int groupId)
+        {
+            if (groupId <= 0) return BadRequest("GroupId must be greater than 0");
+
+            var users = GroupService.GetUsers(groupId);
+
+            if (users is null) return NotFound();
+
+            return Ok(Mapper.Map<GroupViewModel>(users));
         }
     }
 }

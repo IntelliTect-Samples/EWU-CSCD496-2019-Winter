@@ -29,8 +29,10 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Get(int userId)
         {
+            if (userId <= 0) return BadRequest();
             var foundUser = UserService.Find(userId);
             if (foundUser is null) return NotFound();
 

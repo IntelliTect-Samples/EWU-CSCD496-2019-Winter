@@ -13,6 +13,7 @@ namespace SecretSanta.Domain.Services.Interfaces
         Group AddGroup(Group group);
 
         Group UpdateGroup(Group group);
+        List<User> GetUsers(int groupId);
 
         bool DeleteGroup(int groupId);
 

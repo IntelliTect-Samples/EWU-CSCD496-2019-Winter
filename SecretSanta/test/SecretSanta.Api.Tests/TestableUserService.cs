@@ -8,11 +8,20 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableUserService : IUserService
     {
+        public int GetUser_UserId { get; set; }
+        public User GetUser { get; set; }
         public User Find_UserId { get; set; }
         public User AddUser_User { get; set; }
         public bool DeleteUser_Bool { get; set; }
         public List<User> FetchUsers_List { get; set; }
+        public int UpdateUser_UserId { get; set; }
         public User UpdateUser_User { get; set; }
+
+        public User Get(int userId)
+        {
+            GetUser_UserId = userId;
+            return GetUser;
+        }
 
         public User Find(int id)
         {
