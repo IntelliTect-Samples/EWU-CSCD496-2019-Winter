@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,10 +17,12 @@ namespace SecretSanta.Api.Controllers
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
+        private IMapper Mapper { get; }
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             UserService = userService;
+
         }
 
         // POST api/<controller>
@@ -33,9 +37,9 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            var persistedUser = UserService.AddUser(UserInputViewModel.ToModel(userViewModel));
+            var persistedUser = UserService.AddUser(Mapper.Map<User>(userViewModel));
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // PUT api/<controller>/5
@@ -62,7 +66,7 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5

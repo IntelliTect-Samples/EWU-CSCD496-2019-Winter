@@ -5,6 +5,7 @@ using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,10 +16,12 @@ namespace SecretSanta.Api.Controllers
     public class GiftController : ControllerBase
     {
         private IGiftService GiftService { get; }
+        private IMapper Mapper { get; }
 
-        public GiftController(IGiftService giftService)
+        public GiftController(IGiftService giftService, IMapper mapper)
         {
             GiftService = giftService;
+            Mapper = mapper;
         }
 
         // GET api/Gift/5
@@ -34,7 +37,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+            return databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList();
         }
     }
 }
