@@ -12,7 +12,7 @@ namespace SecretSanta.Api.Tests.Controllers
     {
 
         [TestMethod]
-        public void CreateUser_CompletesUnsuccessfully()
+        public void CreateUser_CompletesUnsuccessfully_EmptyFirstName()
         {
             UserInputViewModel userViewModel = new UserInputViewModel
             {
@@ -28,7 +28,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void CreateUser_CompletesSuccessfully()
+        public void CreateUser_CompletesSuccessfully_NonEmptyFirstName()
         {
             UserInputViewModel userViewModel = new UserInputViewModel
             {

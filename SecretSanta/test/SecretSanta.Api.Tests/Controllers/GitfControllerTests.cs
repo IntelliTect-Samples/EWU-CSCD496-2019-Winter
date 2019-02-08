@@ -7,6 +7,7 @@ using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -64,6 +65,38 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.IsNotNull(result);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
+        public void CreateGift_CompletesUnsuccessfully_EmptyName()
+        {
+            Gift gift = new Gift
+            {
+                Title = "",
+                Id = 30
+            };
+
+            List<ValidationResult> validationResults = new List<ValidationResult>();
+            bool actual = Validator.TryValidateObject(gift, new System.ComponentModel.DataAnnotations.ValidationContext(gift), validationResults, true);
+
+            Assert.IsFalse(actual, "Value must be null.");
+            Assert.AreEqual(1, validationResults.Count, "Expected Error from Empty First Name.");
+        }
+
+        [TestMethod]
+        public void CreateGift_CompletesSuccessfully_NonEmptyName()
+        {
+            Gift gift = new Gift
+            {
+                Title = "Blue Eyes White Dragon",
+                Id = 30
+            };
+
+            List<ValidationResult> validationResults = new List<ValidationResult>();
+            bool actual = Validator.TryValidateObject(gift, new System.ComponentModel.DataAnnotations.ValidationContext(gift), validationResults, true);
+
+            Assert.IsTrue(actual, "Value must be an instance.");
+            Assert.AreEqual(0, validationResults.Count, "Expected no Error from Non-Empty First Name.");
         }
     }
 }

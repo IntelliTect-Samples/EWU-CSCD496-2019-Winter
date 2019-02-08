@@ -5,7 +5,7 @@ namespace SecretSanta.Domain.Models
     public class Gift
     {
         public int Id { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public string Title { get; set; }
         public string Description { get; set; }
         public int? OrderOfImportance { get; set; }
