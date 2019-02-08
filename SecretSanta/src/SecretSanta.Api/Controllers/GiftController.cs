@@ -27,15 +27,22 @@ namespace SecretSanta.Api.Controllers
         // GET api/Gift/5
         [HttpGet("{userId}")]
         [Produces(typeof(List<GiftViewModel>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
                 return NotFound();
             }
+
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
+
+            if(databaseUsers.Count == 0)
+            {
+                return NoContent();
+            }
 
             return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
