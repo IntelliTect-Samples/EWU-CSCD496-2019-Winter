@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -17,30 +18,31 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GroupControllerTests
     {
         [TestMethod]
-        public void GetAllGroups_ReturnsGroups()
+        public async Task GetAllGroups_ReturnsGroups()
         {
-            var group1 = new Group
+            Group group1 = new Group
             {
                 Id = 1,
                 Name = "Group 1"
             };
-            var group2 = new Group
+            Group group2 = new Group
             {
                 Id = 2,
                 Name = "Group 2"
             };
 
-            var service = new Mock<IGroupService>();
+            Mock<IGroupService> service = new Mock<IGroupService>();
             service.Setup(x => x.FetchAll())
-                .Returns(new List<Group> { group1, group2 })
+                .Returns(Task.Run( () => new List<Group> { group1, group2 }))
                 .Verifiable();
 
 
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Get() as OkObjectResult;
+            IActionResult result = await Task.Run(() => controller.Get());
+            OkObjectResult resultAsOk = result as OkObjectResult;
 
-            List<GroupViewModel> groups = ((IEnumerable<GroupViewModel>)result.Value).ToList();
+            List<GroupViewModel> groups = ((IEnumerable<GroupViewModel>)resultAsOk.Value).ToList();
 
             Assert.AreEqual(2, groups.Count);
             AssertAreEqual(groups[0], group1);
@@ -49,19 +51,19 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void CreateGroup_RequiresGroup()
+        public async Task CreateGroup_RequiresGroup()
         {
-            var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            Mock<IGroupService> service = new Mock<IGroupService>(MockBehavior.Strict);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-
-            var result = controller.Post(null) as BadRequestResult;
+            IActionResult task = await Task.Run(() => controller.Post(null));
+            BadRequestResult result = task as BadRequestResult;
 
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        public void CreateGroup_ReturnsCreatedGroup()
+        public async Task CreateGroup_ReturnsCreatedGroup()
         {
             var group = new GroupInputViewModel
             {
@@ -69,110 +71,136 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var service = new Mock<IGroupService>();
             service.Setup(x => x.AddGroup(It.Is<Group>(g => g.Name == group.Name)))
-                .Returns(new Group
+                .Returns(Task.Run(() => new Group
                 {
                     Id = 2,
                     Name = group.Name
-                })
+                }))
                 .Verifiable();
 
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Post(group) as CreatedAtActionResult;
-            var resultValue = result.Value as GroupViewModel;
+            IActionResult result = await controller.Post(group);
 
-            Assert.IsNotNull(resultValue);
-            Assert.AreEqual(2, resultValue.Id);
-            Assert.AreEqual("Group", resultValue.Name);
+            CreatedAtActionResult resultAsCreationResult = result as CreatedAtActionResult;
+            GroupViewModel resultAsGroupView = resultAsCreationResult.Value as GroupViewModel;
+
+            Assert.IsNotNull(resultAsGroupView);
+            Assert.AreEqual(2, resultAsGroupView.Id);
+            Assert.AreEqual("Group", resultAsGroupView.Name);
             service.VerifyAll();
         }
 
         [TestMethod]
-        public void UpdateGroup_RequiresGroup()
+        public async Task UpdateGroup_RequiresGroup()
         {
-            var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            Mock<IGroupService> service = new Mock<IGroupService>(MockBehavior.Strict);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
+            IActionResult result = await controller.Put(1, null);
 
-            var result = controller.Put(1, null) as BadRequestResult;
+            BadRequestResult resultAsBadRequest = result as BadRequestResult;
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(resultAsBadRequest);
         }
 
         [TestMethod]
-        public void UpdateGroup_ReturnsUpdatedGroup()
+        public async Task UpdateGroup_ReturnsUpdatedGroup()
         {
-            var group = new GroupInputViewModel
+            GroupInputViewModel group = new GroupInputViewModel
             {
                 Name = "Group"
             };
-            var service = new Mock<IGroupService>();
-            service.Setup(x => x.GetById(2))
-                .Returns(new Group
-                {
-                    Id = 2,
-                    Name = group.Name
-                })
-                .Verifiable();
 
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            Mock<IGroupService> service = new Mock<IGroupService>();
 
-            var result = controller.Put(2, group) as NoContentResult;
+            service.Setup( x => x.GetById(2) )
+                                            .Returns(Task.Run( () => new Group
+                                                                    {
+                                                                        Id = 2,
+                                                                        Name = group.Name
+                                                                    }
+                                                              )
+                                                     ).Verifiable();
 
-            Assert.IsNotNull(result);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.Put(2, group);
+
+            NoContentResult resultAsNoContentResult = result as NoContentResult;
+
+            Assert.IsNotNull(resultAsNoContentResult);
             service.VerifyAll();
         }
 
         [TestMethod]
         [DataRow(-1)]
         [DataRow(0)]
-        public void DeleteGroup_RequiresPositiveId(int groupId)
+        public async Task DeleteGroup_RequiresPositiveId(int groupId)
         {
-            var service = new Mock<IGroupService>(MockBehavior.Strict);
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            Mock<IGroupService> service = new Mock<IGroupService>(MockBehavior.Strict);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Delete(groupId);
+            IActionResult result = await controller.Delete(groupId);
 
-            Assert.IsTrue(result is BadRequestObjectResult);
+            bool isResultBadRequestObj = result is BadRequestObjectResult;
+
+            Assert.IsTrue(isResultBadRequestObj);
         }
 
         [TestMethod]
-        public void DeleteGroup_ReturnsNotFoundWhenTheGroupFailsToDelete()
+        public async Task DeleteGroup_ReturnsNotFoundWhenTheGroupFailsToDelete()
         {
-            var service = new Mock<IGroupService>();
+            Mock<IGroupService> service = new Mock<IGroupService>();
             service.Setup(x => x.DeleteGroup(2))
-                .Returns(false)
+                .Returns(Task.Run(() => false))
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Delete(2);
+            IActionResult result = await controller.Delete(2);
 
-            Assert.IsTrue(result is NotFoundResult);
+            bool isResultNotFound = result is NotFoundResult;
+
+            Assert.IsTrue(isResultNotFound);
+
             service.VerifyAll();
         }
 
         [TestMethod]
-        public void DeleteGroup_ReturnsOkWhenGroupIsDeleted()
+        public async Task DeleteGroup_ReturnsOkWhenGroupIsDeleted()
         {
-            var service = new Mock<IGroupService>();
+            Mock<IGroupService> service = new Mock<IGroupService>();
+
             service.Setup(x => x.DeleteGroup(2))
-                .Returns(true)
+                .Returns(Task.Run(() => true))
                 .Verifiable();
-            var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Delete(2);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            Assert.IsTrue(result is OkResult);
+            IActionResult result = await controller.Delete(2);
+
+            bool isResultOk = result is OkResult;
+
+            Assert.IsTrue(isResultOk);
+
             service.VerifyAll();
         }
 
         private static void AssertAreEqual(GroupViewModel expected, Group actual)
         {
-            if (expected == null && actual == null) return;
-            if (expected == null || actual == null) Assert.Fail();
-
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.Name, actual.Name);
+            if (expected == null && actual == null)
+            {
+                return;
+            }
+            else if (expected == null || actual == null)
+            {
+                Assert.Fail();
+            }
+            else
+            {
+                Assert.AreEqual(expected.Id, actual.Id);
+                Assert.AreEqual(expected.Name, actual.Name);
+            }
         }
     }
 }

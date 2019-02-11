@@ -26,27 +26,27 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task AddUserViaApi_FailsDueToMissingFirstName()
         {
-            var client = Factory.CreateClient();
+            HttpClient client = Factory.CreateClient();
 
-            var viewModel = new UserInputViewModel
+            UserInputViewModel viewModel = new UserInputViewModel
             {
                 FirstName = "",
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", viewModel);
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", viewModel);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
 
-            var problemDetails = JsonConvert.DeserializeObject<ProblemDetails>(result);
+            ProblemDetails problemDetails = JsonConvert.DeserializeObject<ProblemDetails>(result);
 
-            var errors = problemDetails.Extensions["errors"] as JObject;
+            JObject errors = problemDetails.Extensions["errors"] as JObject;
 
-            var firstError = (JProperty)errors.First;
+            JProperty firstError = (JProperty)errors.First;
 
-            var errorMessage = firstError.Value[0];
+            JToken errorMessage = firstError.Value[0];
 
             Assert.AreEqual("The FirstName field is required.", ((JValue)errorMessage).Value);
         }
@@ -54,21 +54,21 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task AddUserViaApi_CompletesSuccessfully()
         {
-            var client = Factory.CreateClient();
+            HttpClient client = Factory.CreateClient();
 
-            var userViewModel = new UserInputViewModel
+            UserInputViewModel userViewModel = new UserInputViewModel
             {
                 FirstName = "Inigo",
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", userViewModel);
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", userViewModel);
 
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
 
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
 
-            var resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
+            UserViewModel resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
 
             Assert.AreEqual(userViewModel.FirstName, resultViewModel.FirstName);
         }

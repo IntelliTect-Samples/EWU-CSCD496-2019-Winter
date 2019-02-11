@@ -17,11 +17,11 @@ namespace SecretSanta.Api.Tests
         {
             builder.ConfigureServices(services =>
             {
-                var serviceProvider = new ServiceCollection()
+                ServiceProvider serviceProvider = new ServiceCollection()
                     .AddEntityFrameworkSqlite()
                     .BuildServiceProvider();
 
-                var connection = new SqliteConnection("Data Source=:memory:");
+                SqliteConnection connection = new SqliteConnection("Data Source=:memory:");
                 connection.Open();
 
                 services.AddDbContext<ApplicationDbContext>(options =>
@@ -30,12 +30,12 @@ namespace SecretSanta.Api.Tests
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
-                var sp = services.BuildServiceProvider();
+                ServiceProvider sp = services.BuildServiceProvider();
 
-                using (var scope = sp.CreateScope())
+                using (IServiceScope scope = sp.CreateScope())
                 {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+                    IServiceProvider scopedServices = scope.ServiceProvider;
+                    ApplicationDbContext db = scopedServices.GetRequiredService<ApplicationDbContext>();
 
                     db.Database.EnsureCreated();
                 }

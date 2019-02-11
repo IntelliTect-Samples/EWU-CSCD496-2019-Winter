@@ -37,7 +37,7 @@ namespace SecretSanta.Domain.Tests.Services
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 context.Database.EnsureCreated();
             }
