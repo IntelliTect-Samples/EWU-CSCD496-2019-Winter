@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecretSanta.Domain.Services.Interfaces
+namespace SecretSanta.Domain.Services
 {
-    public interface IGiftService
+    public interface IPairingService
     {
-        Task<List<Gift>> GetGiftsForUser(int userId);
+        Task<bool> GeneratePairingsForGroup(int groupId);
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -15,38 +17,38 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public User AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
             DbContext.Users.Add(user);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
             return user;
         }
 
-        public User UpdateUser(User user)
+        public async Task<User> UpdateUser(User user)
         {
             DbContext.Users.Update(user);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
             return user;
         }
 
-        public User GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            return DbContext.Users.Find(id);
+            return await DbContext.Users.FindAsync(id);
         }
 
-        public List<User> FetchAll()
+        public async Task<List<User>> FetchAll()
         {
-            return DbContext.Users.ToList();
+            return await DbContext.Users.ToListAsync();
         }
 
-        public bool DeleteUser(int userId)
+        public async Task<bool> DeleteUser(int userId)
         {
-            User foundUser = DbContext.Users.Find(userId);
+            User foundUser = await DbContext.Users.FindAsync(userId);
 
             if (foundUser != null)
             {
                 DbContext.Users.Remove(foundUser);
-                DbContext.SaveChanges();
+                await DbContext.SaveChangesAsync();
                 return true;
             }
 
