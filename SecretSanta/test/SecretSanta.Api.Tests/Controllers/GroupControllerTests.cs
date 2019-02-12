@@ -20,26 +20,26 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public void GetAllGroups_ReturnsGroups()
         {
-            var group1 = new Group
+            Group group1 = new Group
             {
                 Id = 1,
                 Name = "Group 1"
             };
-            var group2 = new Group
+            Group group2 = new Group
             {
                 Id = 2,
                 Name = "Group 2"
             };
 
-            var service = new Mock<IGroupService>();
+            Mock<IGroupService> service = new Mock<IGroupService>();
             service.Setup(x => x.FetchAll())
                 .Returns(new List<Group> { group1, group2 })
                 .Verifiable();
 
 
-            var controller = new GroupsController(service.Object, Mapper.Instance);
+            GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Get() as OkObjectResult;
+            OkObjectResult result = controller.Get() as OkObjectResult;
 
             List<GroupViewModel> groups = ((IEnumerable<GroupViewModel>)result.Value).ToList();
 
