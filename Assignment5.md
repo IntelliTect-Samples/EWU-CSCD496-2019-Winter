@@ -1,5 +1,7 @@
 ## Assignment 5
 
+**DATE CHANGE:** Due to weather and EWU cancelling classes on 2/12. The due date for this assignment is 11:59pm on 2/17/19
+
 For this assignment start from the existing intellitect/Assignment5 branch.
 
 *- Update all of the service classes to use the async EF (Entity Framework) methods. 
@@ -21,16 +23,21 @@ For this assignment start from the existing intellitect/Assignment5 branch.
 ### Going above and beyond
 - Ensure that there are not multiple loops in the pairings. That is, if you were to follow each pairing (going from the Santa to the Recipient) you should end up back at the person you started with. 
 For example: John, Jane, Jim, Jaun
+  
 Pairing with one loop:
+```
 John => Jane
 Jane => Jim
 Jim => Jaun
 Jaun => John
+```
 Pairing with two loops:
+```
 John => Jane
 Jane => John
 Jim => Jaun
 Jaun => John
+```
 - The existing controllers and sevices are not fully unit tested. Update the existing unit tests so they are fully tested.
 - The current Pairing object does not track what group created it. Add the ability to associate the pairing to the group it was created for. Test to ensure that you can add two pairings that differ only by the group.
 
