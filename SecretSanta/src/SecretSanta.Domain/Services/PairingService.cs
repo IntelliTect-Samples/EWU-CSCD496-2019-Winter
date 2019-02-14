@@ -12,6 +12,7 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService
     {
+        private object _Locker = new object();
         private ApplicationDbContext DbContext { get; }
 
         public PairingService(ApplicationDbContext dbContext)
@@ -41,13 +42,12 @@ namespace SecretSanta.Domain.Services
 
         private List<Pairing> BuildPairings(List<int> userIds)
         {
-            object locker = new object();
             List<Pairing> pairings = new List<Pairing>();
             List<bool> hasPair = new List<bool>(userIds.Capacity);
 
             Randomizer(ref userIds);
 
-            lock (locker)
+            lock (_Locker)
             {
                 for(int index = 1; index < userIds.Count; index++)
                 {

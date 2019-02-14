@@ -21,7 +21,7 @@ namespace SecretSanta.Domain.Services
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
-            await DbContext.Gifts.AddAsync(gift);
+            DbContext.Gifts.Add(gift);
             await DbContext.SaveChangesAsync();
 
             return gift;

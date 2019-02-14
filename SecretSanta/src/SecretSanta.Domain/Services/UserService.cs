@@ -18,7 +18,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<User> AddUser(User user)
         {
-            await DbContext.Users.AddAsync(user);
+            DbContext.Users.Add(user);
             await DbContext.SaveChangesAsync();
             return user;
         }
