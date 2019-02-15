@@ -12,7 +12,7 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService
     {
-        private object _Locker = new object();
+        private readonly object _Locker = new object();
         private ApplicationDbContext DbContext { get; }
 
         public PairingService(ApplicationDbContext dbContext)
@@ -49,7 +49,7 @@ namespace SecretSanta.Domain.Services
 
             lock (_Locker)
             {
-                for(int index = 1; index < userIds.Count; index++)
+                for(int index = 0; index < userIds.Count - 1; index++)
                 {
                     Pairing pairing = new Pairing
                     {

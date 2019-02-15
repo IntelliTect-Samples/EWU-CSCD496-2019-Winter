@@ -18,7 +18,7 @@ For this assignment start from the existing intellitect/Assignment5 branch.
 * - Because generating the pairings could take some time, the work of generating the pairings should be done inside of a Task. 
 * - The pairings should be randomized.
 * - For a collection of pairings to be valid, every person in the group should be the Santa for exactly one other person. And every person should be the Recipient of exactly one other person. And no person can be their own Santa.
-  - This service should be unit tested
+* - This service should be unit tested
 
 ### Going above and beyond
 - Ensure that there are not multiple loops in the pairings. That is, if you were to follow each pairing (going from the Santa to the Recipient) you should end up back at the person you started with. 
