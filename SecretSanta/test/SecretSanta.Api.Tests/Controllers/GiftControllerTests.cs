@@ -22,8 +22,8 @@ namespace SecretSanta.Api.Tests.Controllers
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
 
-        /*[TestMethod]TODO:
-        public void GetGiftForUser_ReturnsUsersFromService()
+        [TestMethod]
+        public async Task GetGiftForUser_ReturnsUsersFromService()
         {
             var gift = new Gift
             {
@@ -42,7 +42,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var controller = new GiftsController(testService, Mapper.Instance);
 
-            var result = controller.GetGiftForUser(4) as OkObjectResult;
+            var result = await controller.GetGiftForUser(4) as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
@@ -51,7 +51,7 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(gift.Description, resultGift.Description);
             Assert.AreEqual(gift.Url, resultGift.Url);
             Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
-        }*/
+        }
 
         [TestMethod]
         public async Task GetGiftForUser_RequiresPositiveUserId()
