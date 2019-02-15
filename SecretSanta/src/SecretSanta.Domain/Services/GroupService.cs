@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -16,47 +17,44 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public Group AddGroup(Group group)
+        public async Task<Group> AddGroup(Group group)
         {
             DbContext.Groups.Add(group);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
             return group;
         }
 
-        public Group GetById(int id)
+        public async Task<Group> GetById(int id)
         {
-            return DbContext.Groups.Find(id);
+            return await DbContext.Groups.FindAsync(id);
         }
 
-        public Group UpdateGroup(Group group)
+        public async Task<Group> UpdateGroup(Group group)
         {
             DbContext.Groups.Update(group);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
             return group;
         }
 
-        public List<Group> FetchAll()
+        public async Task<List<Group>> FetchAll()
         {
-            return DbContext.Groups.ToList();
+            return await DbContext.Groups.ToListAsync();
         }
 
-        public List<User> GetUsers(int groupId)
+        public async Task<List<User>> GetUsers(int groupId)
         {
-            return DbContext.Groups
-                .Where(x => x.Id == groupId)
-                .SelectMany(x => x.GroupUsers)
-                .Select(x => x.User)
-                .ToList();
+            Group group = await DbContext.Groups.SingleOrDefaultAsync(x => x.Id == groupId);
+            return group.GroupUsers.Select(x => x.User).ToList();
         }
 
-        public bool AddUserToGroup(int groupId, int userId)
+        public async Task<bool> AddUserToGroup(int groupId, int userId)
         {
-            Group foundGroup = DbContext.Groups
+            Group foundGroup = await DbContext.Groups
                 .Include(x => x.GroupUsers)
-                .FirstOrDefault(x => x.Id == groupId);
+                .FirstOrDefaultAsync(x => x.Id == groupId);
             if (foundGroup == null) return false;
 
-            User foundUser = DbContext.Users.Find(userId);
+            User foundUser = await DbContext.Users.FindAsync(userId);
             if (foundUser == null) return false;
 
             var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
@@ -65,35 +63,35 @@ namespace SecretSanta.Domain.Services
                 foundGroup.GroupUsers = new List<GroupUser>();
             }
             foundGroup.GroupUsers.Add(groupUser);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool RemoveUserFromGroup(int groupId, int userId)
+        public async Task<bool> RemoveUserFromGroup(int groupId, int userId)
         {
-            Group foundGroup = DbContext.Groups
+            Group foundGroup =await DbContext.Groups
                 .Include(x => x.GroupUsers)
-                .FirstOrDefault(x => x.Id == groupId);
+                .FirstOrDefaultAsync(x => x.Id == groupId);
 
             GroupUser mapping = foundGroup?.GroupUsers.FirstOrDefault(x => x.UserId == userId);
 
             if (mapping == null) return false;
 
             foundGroup.GroupUsers.Remove(mapping);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool DeleteGroup(int groupId)
+        public async Task<bool> DeleteGroup(int groupId)
         {
-            Group foundGroup = DbContext.Groups.Find(groupId);
+            Group foundGroup = await DbContext.Groups.FindAsync(groupId);
 
             if (foundGroup != null)
             {
                 DbContext.Groups.Remove(foundGroup);
-                DbContext.SaveChanges();
+                await DbContext.SaveChangesAsync();
                 return true;
             }
 
