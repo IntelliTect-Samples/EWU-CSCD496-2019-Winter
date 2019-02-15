@@ -1,0 +1,226 @@
+Test Name:	GeneratePairings_SuccessfullyCreatesPairings
+Test FullName:	SecretSanta.Domain.Tests.Services.PairingServiceTests.GeneratePairings_SuccessfullyCreatesPairings
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Domain.Tests\Services\PairingServiceTests.cs : line 56
+Test Outcome:	Failed
+Test Duration:	0:00:01.9358731
+
+Result StackTrace:	
+at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at SecretSanta.Domain.Services.PairingService.GetPairingsSingleLoop(List`1 userIds) in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\Services\PairingService.cs:line 46
+   at SecretSanta.Domain.Services.PairingService.<>c__DisplayClass4_0.<GeneratePairings>b__3() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\Services\PairingService.cs:line 32
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at SecretSanta.Domain.Services.PairingService.GeneratePairings(Int32 groupId) in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\src\SecretSanta.Domain\Services\PairingService.cs:line 32
+   at SecretSanta.Domain.Tests.Services.PairingServiceTests.GeneratePairings_SuccessfullyCreatesPairings() in C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Domain.Tests\Services\PairingServiceTests.cs:line 61
+Result Message:	
+Test method SecretSanta.Domain.Tests.Services.PairingServiceTests.GeneratePairings_SuccessfullyCreatesPairings threw exception: 
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+Result StandardOutput:	
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10400]
+      Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data, this mode should only be enabled during development.
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 2.2.1-servicing-10028 initialized 'ApplicationDbContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: SensitiveDataLoggingEnabled 
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      PRAGMA foreign_keys=ON;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Groups" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Groups" PRIMARY KEY AUTOINCREMENT,
+          "Name" TEXT NOT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Users" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Users" PRIMARY KEY AUTOINCREMENT,
+          "FirstName" TEXT NULL,
+          "LastName" TEXT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Gifts" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Gifts" PRIMARY KEY AUTOINCREMENT,
+          "Title" TEXT NOT NULL,
+          "Description" TEXT NULL,
+          "OrderOfImportance" INTEGER NULL,
+          "Url" TEXT NULL,
+          "UserId" INTEGER NOT NULL,
+          CONSTRAINT "FK_Gifts_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "GroupUser" (
+          "GroupId" INTEGER NOT NULL,
+          "UserId" INTEGER NOT NULL,
+          CONSTRAINT "PK_GroupUser" PRIMARY KEY ("UserId", "GroupId"),
+          CONSTRAINT "FK_GroupUser_Groups_GroupId" FOREIGN KEY ("GroupId") REFERENCES "Groups" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_GroupUser_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Messages" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Messages" PRIMARY KEY AUTOINCREMENT,
+          "SenderId" INTEGER NOT NULL,
+          "RecipientId" INTEGER NOT NULL,
+          "ChatMessage" TEXT NULL,
+          CONSTRAINT "FK_Messages_Users_RecipientId" FOREIGN KEY ("RecipientId") REFERENCES "Users" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_Messages_Users_SenderId" FOREIGN KEY ("SenderId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Pairings" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Pairings" PRIMARY KEY AUTOINCREMENT,
+          "SantaId" INTEGER NOT NULL,
+          "RecipientId" INTEGER NOT NULL,
+          CONSTRAINT "FK_Pairings_Users_RecipientId" FOREIGN KEY ("RecipientId") REFERENCES "Users" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_Pairings_Users_SantaId" FOREIGN KEY ("SantaId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Gifts_UserId" ON "Gifts" ("UserId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX "IX_Groups_Name" ON "Groups" ("Name");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_GroupUser_GroupId" ON "GroupUser" ("GroupId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Messages_RecipientId" ON "Messages" ("RecipientId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Messages_SenderId" ON "Messages" ("SenderId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Pairings_RecipientId" ON "Pairings" ("RecipientId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Pairings_SantaId" ON "Pairings" ("SantaId");
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 2.2.1-servicing-10028 initialized 'ApplicationDbContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: SensitiveDataLoggingEnabled 
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[@p0='Billy' (Size = 5), @p1='Bobby' (Size = 5)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "Users" ("FirstName", "LastName")
+      VALUES (@p0, @p1);
+      SELECT "Id"
+      FROM "Users"
+      WHERE changes() = 1 AND "Id" = last_insert_rowid();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='Randolph' (Size = 8), @p1='Ruby' (Size = 4)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "Users" ("FirstName", "LastName")
+      VALUES (@p0, @p1);
+      SELECT "Id"
+      FROM "Users"
+      WHERE changes() = 1 AND "Id" = last_insert_rowid();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='Rinaldo' (Size = 7), @p1='Rodney' (Size = 6)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "Users" ("FirstName", "LastName")
+      VALUES (@p0, @p1);
+      SELECT "Id"
+      FROM "Users"
+      WHERE changes() = 1 AND "Id" = last_insert_rowid();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='Group1' (Nullable = false) (Size = 6)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "Groups" ("Name")
+      VALUES (@p0);
+      SELECT "Id"
+      FROM "Groups"
+      WHERE changes() = 1 AND "Id" = last_insert_rowid();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x"."Id", "x"."Name"
+      FROM "Groups" AS "x"
+      WHERE "x"."Id" = @__groupId_0
+      ORDER BY "x"."Id"
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x.GroupUsers"."UserId", "x.GroupUsers"."GroupId"
+      FROM "GroupUser" AS "x.GroupUsers"
+      INNER JOIN (
+          SELECT "x0"."Id"
+          FROM "Groups" AS "x0"
+          WHERE "x0"."Id" = @__groupId_0
+          ORDER BY "x0"."Id"
+          LIMIT 1
+      ) AS "t" ON "x.GroupUsers"."GroupId" = "t"."Id"
+      ORDER BY "t"."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='1' (DbType = String), @p1='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "GroupUser" ("UserId", "GroupId")
+      VALUES (@p0, @p1);
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x"."Id", "x"."Name"
+      FROM "Groups" AS "x"
+      WHERE "x"."Id" = @__groupId_0
+      ORDER BY "x"."Id"
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x.GroupUsers"."UserId", "x.GroupUsers"."GroupId"
+      FROM "GroupUser" AS "x.GroupUsers"
+      INNER JOIN (
+          SELECT "x0"."Id"
+          FROM "Groups" AS "x0"
+          WHERE "x0"."Id" = @__groupId_0
+          ORDER BY "x0"."Id"
+          LIMIT 1
+      ) AS "t" ON "x.GroupUsers"."GroupId" = "t"."Id"
+      ORDER BY "t"."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='2' (DbType = String), @p1='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "GroupUser" ("UserId", "GroupId")
+      VALUES (@p0, @p1);
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x"."Id", "x"."Name"
+      FROM "Groups" AS "x"
+      WHERE "x"."Id" = @__groupId_0
+      ORDER BY "x"."Id"
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x.GroupUsers"."UserId", "x.GroupUsers"."GroupId"
+      FROM "GroupUser" AS "x.GroupUsers"
+      INNER JOIN (
+          SELECT "x0"."Id"
+          FROM "Groups" AS "x0"
+          WHERE "x0"."Id" = @__groupId_0
+          ORDER BY "x0"."Id"
+          LIMIT 1
+      ) AS "t" ON "x.GroupUsers"."GroupId" = "t"."Id"
+      ORDER BY "t"."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p0='3' (DbType = String), @p1='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "GroupUser" ("UserId", "GroupId")
+      VALUES (@p0, @p1);
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 2.2.1-servicing-10028 initialized 'ApplicationDbContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: SensitiveDataLoggingEnabled 
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x"."Id", "x"."Name"
+      FROM "Groups" AS "x"
+      WHERE "x"."Id" = @__groupId_0
+      ORDER BY "x"."Id"
+      LIMIT 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__groupId_0='1' (DbType = String)], CommandType='Text', CommandTimeout='30']
+      SELECT "x.GroupUsers"."UserId", "x.GroupUsers"."GroupId"
+      FROM "GroupUser" AS "x.GroupUsers"
+      INNER JOIN (
+          SELECT "x0"."Id"
+          FROM "Groups" AS "x0"
+          WHERE "x0"."Id" = @__groupId_0
+          ORDER BY "x0"."Id"
+          LIMIT 1
+      ) AS "t" ON "x.GroupUsers"."GroupId" = "t"."Id"
+      ORDER BY "t"."Id"
+
