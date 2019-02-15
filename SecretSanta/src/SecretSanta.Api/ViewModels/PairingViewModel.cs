@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Api.ViewModels
 {
-    public class ParingViewModel
+    public class PairingViewModel
     {
         public int Id { get; set; }
         public int SantaId { get; set; }
