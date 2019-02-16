@@ -69,8 +69,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                List<User> users = userService.FetchAll();
-                List<Gift> gifts = giftService.GetGiftsForUser(users[0].Id);
+                List<User> users = await userService.FetchAll();
+                List<Gift> gifts = await giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
 
@@ -83,8 +83,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                List<User> users = userService.FetchAll();
-                List<Gift> gifts = giftService.GetGiftsForUser(users[0].Id);
+                List<User> users = await userService.FetchAll();
+                List<Gift> gifts = await giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
                 Assert.AreEqual("Horse", gifts[0].Title);            

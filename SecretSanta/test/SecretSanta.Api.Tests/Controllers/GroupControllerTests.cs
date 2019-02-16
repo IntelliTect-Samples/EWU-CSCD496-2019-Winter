@@ -18,7 +18,7 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GroupControllerTests
     {
         [TestMethod]
-        public void GetAllGroups_ReturnsGroups()
+        public async Task GetAllGroups_ReturnsGroups()
         {
             Group group1 = new Group
             {
@@ -33,13 +33,13 @@ namespace SecretSanta.Api.Tests.Controllers
 
             Mock<IGroupService> service = new Mock<IGroupService>();
             service.Setup(x => x.FetchAll())
-                .Returns(new List<Group> { group1, group2 })
+                .ReturnsAsync(new List<Group> { group1, group2 })
                 .Verifiable();
 
 
             GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            OkObjectResult result = controller.Get() as OkObjectResult;
+            OkObjectResult result = await controller.Get() as OkObjectResult;
 
             List<GroupViewModel> groups = ((IEnumerable<GroupViewModel>)result.Value).ToList();
 

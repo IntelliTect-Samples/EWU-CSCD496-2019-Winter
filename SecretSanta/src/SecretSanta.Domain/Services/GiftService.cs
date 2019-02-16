@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -38,9 +39,9 @@ namespace SecretSanta.Domain.Services
             return gift;
         }
 
-        public List<Gift> GetGiftsForUser(int userId)
+        public async Task<List<Gift>> GetGiftsForUser(int userId)
         {
-            return DbContext.Gifts.Where(g => g.UserId == userId).ToList();
+            return await DbContext.Gifts.Where(g => g.UserId == userId).ToListAsync();
         }
 
         public async Task RemoveGift(Gift gift)

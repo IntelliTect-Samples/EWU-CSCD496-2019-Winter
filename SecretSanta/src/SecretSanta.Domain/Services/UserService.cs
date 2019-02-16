@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -35,9 +36,9 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Users.FindAsync(id);
         }
 
-        public List<User> FetchAll()
+        public async Task<List<User>> FetchAll()
         {
-            return DbContext.Users.ToList();
+            return await DbContext.Users.ToListAsync();
         }
 
         public async Task<bool> DeleteUser(int userId)

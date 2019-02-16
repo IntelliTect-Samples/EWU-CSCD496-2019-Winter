@@ -36,18 +36,18 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public List<Group> FetchAll()
+        public async Task<List<Group>> FetchAll()
         {
-            return DbContext.Groups.ToList();
+            return await DbContext.Groups.ToListAsync();
         }
 
-        public List<User> GetUsers(int groupId)
+        public async Task<List<User>> GetUsers(int groupId)
         {
-            return DbContext.Groups
+            return await DbContext.Groups
                 .Where(x => x.Id == groupId)
                 .SelectMany(x => x.GroupUsers)
                 .Select(x => x.User)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<bool> AddUserToGroup(int groupId, int userId)

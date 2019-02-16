@@ -27,13 +27,13 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public IActionResult GetGiftForUser(int userId)
+        public async Task<IActionResult> GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
                 return NotFound();
             }
-            List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);
 
             return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }

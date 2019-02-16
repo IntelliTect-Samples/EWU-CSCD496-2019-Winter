@@ -28,9 +28,9 @@ namespace SecretSanta.Api.Controllers
         // GET api/User
         [HttpGet]
         [Produces(typeof(ICollection<UserViewModel>))]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(UserService.FetchAll().Select(x => Mapper.Map<UserViewModel>(x)));
+            return Ok((await UserService.FetchAll()).Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
