@@ -59,9 +59,11 @@ namespace SecretSanta.Api.Tests.Controllers
             var testService = new TestableGiftService();
             var controller = new GiftsController(testService, Mapper.Instance);
 
-            var result = await controller.GetGiftForUser(-1) as NotFoundResult;
+            IActionResult result = await controller.GetGiftForUser(-1) as NotFoundResult;
 
-            Assert.IsNotNull(result);
+            NotFoundResult notFoundResult = result as NotFoundResult;
+
+            Assert.IsNotNull(notFoundResult);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }

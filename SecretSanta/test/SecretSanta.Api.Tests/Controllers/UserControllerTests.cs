@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SecretSanta.Api.Controllers;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -71,6 +76,46 @@ namespace SecretSanta.Api.Tests.Controllers
             var resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
 
             Assert.AreEqual(userViewModel.FirstName, resultViewModel.FirstName);
+        }
+
+        [TestMethod]
+        public async Task UpdateUserViaApi_ValidParams_ReturnsUpdatedUser()
+        {
+            int userId = 1;
+            var user = new UserInputViewModel
+            {
+                FirstName = "Chuck",
+                LastName = "Norris"
+            };
+
+            var updatedUser = new UserInputViewModel
+            {
+                FirstName = "Nikola",
+                LastName = "Tesla"
+            };
+
+            var userEntity = Mapper.Map<User>(user);
+            userEntity.Id = userId;
+
+            var service = new Mock<IUserService>();
+            service.Setup(x => x.GetById(userId))
+                .ReturnsAsync(userEntity)
+                .Verifiable();
+
+            var insertUser = Mapper.Map<User>(updatedUser);
+            insertUser.Id = userId;
+
+            service.Setup(x => x.UpdateUser(insertUser))
+                .ReturnsAsync(insertUser)
+                .Verifiable();
+
+            var controller = new UsersController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.Put(userId, updatedUser);
+
+            OkObjectResult okObjectResult = result as OkObjectResult;
+
+            Assert.IsTrue(okObjectResult is OkObjectResult);
         }
     }
 }

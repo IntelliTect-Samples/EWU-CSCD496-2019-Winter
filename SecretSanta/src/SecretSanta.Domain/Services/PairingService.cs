@@ -10,14 +10,14 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService
     {
-        public ApplicationDbContext DbContext { get; set; }
+        private ApplicationDbContext DbContext { get; }
 
         public PairingService(ApplicationDbContext dbContext)
         {
             DbContext = dbContext;
         }
 
-        public async Task<bool> GeneratePairingsForGroup(int groupId)
+        public async Task<List<Pairing>> GeneratePairingsForGroup(int groupId)
         {
             Group group = await DbContext.Groups
                 .Include(g => g.GroupUsers)
@@ -25,7 +25,7 @@ namespace SecretSanta.Domain.Services
 
             List<int> userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
 
-            if (userIds is null || userIds.Count < 2) return false;
+            if (userIds is null || userIds.Count < 2) return null;
 
             Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds));
             List<Pairing> pairings = await task;
@@ -33,31 +33,43 @@ namespace SecretSanta.Domain.Services
             await DbContext.Pairings.AddRangeAsync(pairings);
             await DbContext.SaveChangesAsync();
 
-            return true;
+            return pairings;
         }
 
         private List<Pairing> GetPairings(List<int> userIds)
         {
+            var random = new Random();
+            bool noMoreZeros = false;
+
+            int[] isSanta = new int[userIds.Count];
+            int[] isRecipient = new int[userIds.Count];
             var pairings = new List<Pairing>();
 
-            for(int i = 0; i < userIds.Count - 1; i++)
+            while(!noMoreZeros)
             {
-                var pairing = new Pairing
+                int santaIndex = random.Next(userIds.Count);
+                int recipientIndex = random.Next(userIds.Count);
+
+                if (isRecipient[recipientIndex] == 0 && isSanta[santaIndex] == 0 
+                        && santaIndex != recipientIndex)
                 {
-                    SantaId = userIds[i],
-                    RecipientId = userIds[i + 1]
-                    
-                };
-                pairings.Add(pairing);
+                    var pairing = new Pairing
+                    {
+                        SantaId = userIds[santaIndex],
+                        RecipientId = userIds[recipientIndex]
+                    };
+
+                    pairings.Add(pairing);
+
+                    isSanta[santaIndex] = 1;
+                    isRecipient[recipientIndex] = 1;
+                }
+
+                if(!(isSanta.Contains(0) || isRecipient.Contains(0)))
+                {
+                    noMoreZeros = true;
+                }
             }
-
-            var lastPairing = new Pairing
-            {
-                SantaId = userIds.First(),
-                RecipientId = userIds.Last()
-            };
-            pairings.Add(lastPairing);
-
             return pairings;
         }
     }

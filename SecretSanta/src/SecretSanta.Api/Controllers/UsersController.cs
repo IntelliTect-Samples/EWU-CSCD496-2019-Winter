@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -63,6 +64,10 @@ namespace SecretSanta.Api.Controllers
 
         // PUT api/User/5
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces(typeof(UserViewModel))]
         public async Task<IActionResult> Put(int id, UserInputViewModel viewModel)
         {
             if (viewModel == null)
@@ -75,9 +80,10 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            Mapper.Map(viewModel, fetchedUser);
-            await UserService.UpdateUser(fetchedUser);
-            return NoContent();
+            fetchedUser = Mapper.Map<User>(viewModel);
+
+            var updatedUser = await UserService.UpdateUser(fetchedUser);
+            return Ok(Mapper.Map<UserViewModel>(updatedUser));
         }
 
         // DELETE api/User/5

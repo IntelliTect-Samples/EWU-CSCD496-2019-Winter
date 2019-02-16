@@ -8,6 +8,6 @@ namespace SecretSanta.Domain.Services
 {
     public interface IPairingService
     {
-        Task<bool> GeneratePairingsForGroup(int groupId);
+        Task<List<Pairing>> GeneratePairingsForGroup(int groupId);
     }
 }

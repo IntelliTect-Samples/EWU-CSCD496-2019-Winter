@@ -15,7 +15,8 @@ namespace SecretSanta.Api.Tests
         public Task<List<Gift>> GetGiftsForUser(int userId)
         {
             GetGiftsForUser_UserId = userId;
-            return Task.FromResult(ToReturn);
+            Task<List<Gift>> returnTask = Task.FromResult(ToReturn);
+            return returnTask;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             var service = new Mock<IGroupService>();
             service.Setup(x => x.FetchAll())
-                .Returns(Task.Run(() => new List<Group> { group1, group2 }))
+                .ReturnsAsync( new List<Group> { group1, group2 })
                 .Verifiable();
 
 
@@ -70,7 +70,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var service = new Mock<IGroupService>();
             service.Setup(x => x.AddGroup(It.Is<Group>(g => g.Name == group.Name)))
-                .Returns(Task.Run(() =>  new Group { Id = 2, Name = group.Name }))
+                .ReturnsAsync( new Group { Id = 2, Name = group.Name })
                 .Verifiable();
 
             var controller = new GroupsController(service.Object, Mapper.Instance);
@@ -105,11 +105,11 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var service = new Mock<IGroupService>();
             service.Setup(x => x.GetById(2))
-                .Returns(Task.Run(() => new Group
+                .ReturnsAsync( new Group
                 {
                     Id = 2,
                     Name = group.Name
-                }))
+                })
                 .Verifiable();
 
             var controller = new GroupsController(service.Object, Mapper.Instance);
@@ -120,17 +120,20 @@ namespace SecretSanta.Api.Tests.Controllers
             service.VerifyAll();
         }
 
-        [TestMethod]
+        [DataTestMethod]
         [DataRow(-1)]
         [DataRow(0)]
-        public void DeleteGroup_RequiresPositiveId(int groupId)
+        public async Task DeleteGroup_RequiresPositiveId(int groupId)
         {
-            var service = new Mock<IGroupService>(MockBehavior.Strict);
+            var service = new Mock<IGroupService>();
+
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            var result = controller.Delete(groupId);
+            IActionResult result = await controller.Delete(groupId);
 
-            Assert.IsTrue(result is BadRequestObjectResult);
+            BadRequestObjectResult badRequestObjRes = result as BadRequestObjectResult;
+
+            Assert.IsTrue(badRequestObjRes is BadRequestObjectResult);
         }
 
         [TestMethod]
@@ -138,7 +141,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             var service = new Mock<IGroupService>();
             service.Setup(x => x.DeleteGroup(2))
-                .Returns(Task.Run(() => false))
+                .ReturnsAsync(false)
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
@@ -153,7 +156,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             var service = new Mock<IGroupService>();
             service.Setup(x => x.DeleteGroup(2))
-                .Returns(Task.Run(() => true))
+                .ReturnsAsync(true)
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
