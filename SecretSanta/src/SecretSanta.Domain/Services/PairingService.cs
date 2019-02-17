@@ -11,13 +11,15 @@ namespace SecretSanta.Domain.Services
     public class PairingService : IPairingService
     {
         private ApplicationDbContext DbContext { get; }
+        private IRandom Random { get; }
 
-        public PairingService(ApplicationDbContext dbContext)
+        public PairingService(ApplicationDbContext dbContext, IRandom random)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
-        public async Task<bool> GeneratePairings(int groupId)
+        public async Task<List<Pairing>> GeneratePairings(int groupId)
         {
             Group group = await DbContext.Groups
                 .Include(x => x.GroupUsers)
@@ -26,7 +28,7 @@ namespace SecretSanta.Domain.Services
             List<int> userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
             if (userIds == null || userIds.Count < 2)
             {
-                return false;
+                return null;
             }
 
             Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds));
@@ -35,13 +37,12 @@ namespace SecretSanta.Domain.Services
             await DbContext.Pairings.AddRangeAsync(myPairings);
             await DbContext.SaveChangesAsync();
 
-            return true;
+            return myPairings;
         }
 
         private List<Pairing> GetPairings(List<int> userIds)
         {   
-            // TODO: Implement threadsafe Random
-            
+            // TODO: Implement Randomization
             var pairings = new List<Pairing>();
 
             for (int i = 0; i < userIds.Count - 1; i++)
