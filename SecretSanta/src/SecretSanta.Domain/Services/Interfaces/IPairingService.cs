@@ -9,5 +9,6 @@ namespace SecretSanta.Domain.Services
     public interface IPairingService
     {
         Task<List<Pairing>> GeneratePairingsForGroup(int groupId);
+        Task<List<Pairing>> GetPairingsForGroup(int groupId);
     }
 }

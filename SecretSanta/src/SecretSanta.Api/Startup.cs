@@ -40,6 +40,7 @@ namespace SecretSanta.Api
             services.AddScoped<IGiftService, GiftService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IPairingService, PairingService>();
 
             services.AddDbContext<ApplicationDbContext>(builder =>
             {

@@ -17,6 +17,13 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext;
         }
 
+        public async Task<List<Pairing>> GetPairingsForGroup(int groupId)
+        {
+            return await DbContext.Pairings
+                .Where(p => p.GroupId == groupId)
+                .ToListAsync();
+        }
+
         public async Task<List<Pairing>> GeneratePairingsForGroup(int groupId)
         {
             Group group = await DbContext.Groups
@@ -27,7 +34,7 @@ namespace SecretSanta.Domain.Services
 
             if (userIds is null || userIds.Count < 2) return null;
 
-            Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds));
+            Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds, groupId));
             List<Pairing> pairings = await task;
 
             await DbContext.Pairings.AddRangeAsync(pairings);
@@ -36,40 +43,41 @@ namespace SecretSanta.Domain.Services
             return pairings;
         }
 
-        private List<Pairing> GetPairings(List<int> userIds)
+        private List<Pairing> GetPairings(List<int> userIds, int groupId)
         {
             var random = new Random();
-            bool noMoreZeros = false;
-
-            int[] isSanta = new int[userIds.Count];
-            int[] isRecipient = new int[userIds.Count];
+            var randomUserIds = new List<int>();
             var pairings = new List<Pairing>();
+            int listSize = userIds.Count;
 
-            while(!noMoreZeros)
+            while (randomUserIds.Count < listSize)
             {
-                int santaIndex = random.Next(userIds.Count);
-                int recipientIndex = random.Next(userIds.Count);
+                int index = random.Next(userIds.Count);
 
-                if (isRecipient[recipientIndex] == 0 && isSanta[santaIndex] == 0 
-                        && santaIndex != recipientIndex)
-                {
-                    var pairing = new Pairing
-                    {
-                        SantaId = userIds[santaIndex],
-                        RecipientId = userIds[recipientIndex]
-                    };
-
-                    pairings.Add(pairing);
-
-                    isSanta[santaIndex] = 1;
-                    isRecipient[recipientIndex] = 1;
-                }
-
-                if(!(isSanta.Contains(0) || isRecipient.Contains(0)))
-                {
-                    noMoreZeros = true;
-                }
+                randomUserIds.Add(userIds[index]);
+                userIds.Remove(userIds[index]);
             }
+
+            for (int i = 0; i < randomUserIds.Count - 1; i++)
+            {
+                var pairing = new Pairing
+                {
+                    SantaId = randomUserIds[i],
+                    RecipientId = randomUserIds[i + 1],
+                    GroupId = groupId
+                };
+                pairings.Add(pairing);
+            }
+
+            var lastPairing = new Pairing
+            {
+                SantaId = randomUserIds.Last(),
+                RecipientId = randomUserIds.First(),
+                GroupId = groupId
+            };
+
+            pairings.Add(lastPairing);
+
             return pairings;
         }
     }
