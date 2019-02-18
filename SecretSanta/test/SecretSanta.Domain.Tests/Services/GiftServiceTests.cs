@@ -21,7 +21,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = userService.AddUserAsync(user);
 
                 var gift = new Gift
                 {
@@ -49,7 +49,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = userService.AddUserAsync(user);
 
                 var gift = new Gift
                 {
@@ -67,7 +67,7 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = userService.FetchAll();
+                var users = userService.FetchAllAsync();
                 var gifts = giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
@@ -81,7 +81,7 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = userService.FetchAll();
+                var users = userService.FetchAllAsync();
                 var gifts = giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);

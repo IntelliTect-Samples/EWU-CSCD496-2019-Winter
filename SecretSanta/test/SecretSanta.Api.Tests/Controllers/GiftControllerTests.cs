@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Threading.Tasks;
+
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
@@ -22,7 +24,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetGiftForUser_ReturnsUsersFromService()
+        public async Task GetGiftForUser_ReturnsUsersFromServiceAsync()
         {
             var gift = new Gift
             {
@@ -41,7 +43,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var controller = new GiftsController(testService, Mapper.Instance);
 
-            var result = controller.GetGiftForUser(4) as OkObjectResult;
+            var result = await controller.GetGiftForUser(4) as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
@@ -53,12 +55,12 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetGiftForUser_RequiresPositiveUserId()
+        public async Task GetGiftForUser_RequiresPositiveUserIdAsync()
         {
             var testService = new TestableGiftService();
             var controller = new GiftsController(testService, Mapper.Instance);
 
-            var result = controller.GetGiftForUser(-1) as NotFoundResult;
+            var result = await controller.GetGiftForUser(-1) as NotFoundResult;
 
             Assert.IsNotNull(result);
             //This check ensures that the service was not called

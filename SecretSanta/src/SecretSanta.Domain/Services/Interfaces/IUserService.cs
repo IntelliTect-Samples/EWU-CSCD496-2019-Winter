@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Services.Interfaces
 {
     public interface IUserService
     {
-        List<User> FetchAll();
-        User GetById(int id);
-        User AddUser(User user);
-        User UpdateUser(User user);
-        bool DeleteUser(int userId);
+        Task<List<User>> FetchAll();
+        Task<User> GetById(int id);
+        Task<User> AddUser(User user);
+        Task<User> UpdateUser(User user);
+        Task<bool> DeleteUser(int userId);
     }
 }
