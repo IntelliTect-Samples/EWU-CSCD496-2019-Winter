@@ -10,14 +10,14 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService
     {
-        private ApplicationDbContext DbContext { get; }
-        private IRandom Random { get; }
-
         public PairingService(ApplicationDbContext dbContext, IRandom random)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             Random = random ?? throw new ArgumentNullException(nameof(random));
         }
+
+        private ApplicationDbContext DbContext { get; }
+        private IRandom Random { get; }
 
         public async Task<List<Pairing>> GeneratePairings(int groupId)
         {
@@ -25,11 +25,8 @@ namespace SecretSanta.Domain.Services
                 .Include(x => x.GroupUsers)
                 .FirstOrDefaultAsync(x => x.Id == groupId);
 
-            List<int> userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
-            if (userIds == null || userIds.Count < 2)
-            {
-                return null;
-            }
+            var userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
+            if (userIds == null || userIds.Count < 2) return null;
 
             Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds));
             List<Pairing> myPairings = await task;
@@ -41,11 +38,11 @@ namespace SecretSanta.Domain.Services
         }
 
         private List<Pairing> GetPairings(List<int> userIds)
-        {   
-            // TODO: Implement Randomization
-            var pairings = new List<Pairing>();
+        {
+            // Leverage Linq to randomize list
+            List<Pairing> pairings = new List<Pairing>().OrderBy(x => Random.Next()).ToList();
 
-            for (int i = 0; i < userIds.Count - 1; i++)
+            for (var i = 0; i < userIds.Count - 1; i++)
             {
                 var pairing = new Pairing
                 {
