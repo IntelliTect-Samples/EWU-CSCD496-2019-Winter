@@ -10,10 +10,10 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService
     {
-        public PairingService(ApplicationDbContext dbContext, IRandom random)
+        public PairingService(ApplicationDbContext dbContext, IRandom random = null)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            Random = random ?? throw new ArgumentNullException(nameof(random));
+            Random = random ?? new BetterRandom();
         }
 
         private ApplicationDbContext DbContext { get; }
