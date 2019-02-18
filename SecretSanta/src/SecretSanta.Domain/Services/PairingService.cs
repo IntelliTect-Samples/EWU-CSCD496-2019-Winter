@@ -40,14 +40,16 @@ namespace SecretSanta.Domain.Services
         private List<Pairing> GetPairings(List<int> userIds, int groupId)
         {
             // Leverage Linq to randomize list
-            List<Pairing> pairings = new List<Pairing>().OrderBy(x => Random.Next()).ToList();
+            List<int> randomizedUserIds = userIds.OrderBy(x => Random.Next()).ToList();
+            
+            List<Pairing> pairings = new List<Pairing>();
 
-            for (var i = 0; i < userIds.Count - 1; i++)
+            for (var i = 0; i < randomizedUserIds.Count - 1; i++)
             {
                 var pairing = new Pairing
                 {
-                    SantaId = userIds[i],
-                    RecipientId = userIds[i + 1],
+                    SantaId = randomizedUserIds[i],
+                    RecipientId = randomizedUserIds[i + 1],
                     GroupOrigin = groupId
                 };
                 pairings.Add(pairing);
@@ -55,8 +57,8 @@ namespace SecretSanta.Domain.Services
 
             var lastPairing = new Pairing
             {
-                SantaId = userIds.Last(),
-                RecipientId = userIds.First(),
+                SantaId = randomizedUserIds.Last(),
+                RecipientId = randomizedUserIds.First(),
                 GroupOrigin = groupId
             };
             pairings.Add(lastPairing);
