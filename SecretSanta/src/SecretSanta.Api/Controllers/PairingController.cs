@@ -27,7 +27,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> generateUserPairings(int groupId)
+        public async Task<IActionResult> GenerateUserPairings(int groupId)
         {
             if (groupId <= 0)
             {
