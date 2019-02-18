@@ -28,7 +28,7 @@ namespace SecretSanta.Domain.Services
             var userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
             if (userIds == null || userIds.Count < 2) return null;
 
-            Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds));
+            Task<List<Pairing>> task = Task.Run(() => GetPairings(userIds, groupId));
             List<Pairing> myPairings = await task;
 
             await DbContext.Pairings.AddRangeAsync(myPairings);
@@ -37,7 +37,7 @@ namespace SecretSanta.Domain.Services
             return myPairings;
         }
 
-        private List<Pairing> GetPairings(List<int> userIds)
+        private List<Pairing> GetPairings(List<int> userIds, int groupId)
         {
             // Leverage Linq to randomize list
             List<Pairing> pairings = new List<Pairing>().OrderBy(x => Random.Next()).ToList();
@@ -47,7 +47,8 @@ namespace SecretSanta.Domain.Services
                 var pairing = new Pairing
                 {
                     SantaId = userIds[i],
-                    RecipientId = userIds[i + 1]
+                    RecipientId = userIds[i + 1],
+                    GroupOrigin = groupId
                 };
                 pairings.Add(pairing);
             }
@@ -55,7 +56,8 @@ namespace SecretSanta.Domain.Services
             var lastPairing = new Pairing
             {
                 SantaId = userIds.Last(),
-                RecipientId = userIds.First()
+                RecipientId = userIds.First(),
+                GroupOrigin = groupId
             };
             pairings.Add(lastPairing);
 
