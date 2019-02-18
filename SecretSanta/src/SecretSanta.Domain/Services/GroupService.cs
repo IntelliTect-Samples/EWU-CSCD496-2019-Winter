@@ -60,12 +60,13 @@ namespace SecretSanta.Domain.Services
             User foundUser = await DbContext.Users.FindAsync(userId);
             if (foundUser == null) return false;
 
-            var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
+            GroupUser groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
             if (foundGroup.GroupUsers == null)
             {
                 foundGroup.GroupUsers = new List<GroupUser>();
             }
             foundGroup.GroupUsers.Add(groupUser);
+            DbContext.Groups.Update(foundGroup);
             await DbContext.SaveChangesAsync();
 
             return true;
@@ -82,6 +83,7 @@ namespace SecretSanta.Domain.Services
             if (mapping == null) return false;
 
             foundGroup.GroupUsers.Remove(mapping);
+            DbContext.Groups.Update(foundGroup);
             await DbContext.SaveChangesAsync();
 
             return true;
