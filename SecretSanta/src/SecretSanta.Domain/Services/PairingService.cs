@@ -49,19 +49,19 @@ namespace SecretSanta.Domain.Services
             int i = 0;
             foreach (int userId in userIds)
             {
-                int idRecipient = userId;
                 int indexRecipient = i;
 
                 //no person can be their own santa && each recipient has only one santa
-                while (i == indexRecipient && !assignedRecipients.Contains(idRecipient) )
+                while (i == indexRecipient || assignedRecipients.Contains(userIds[indexRecipient]) )
                     indexRecipient = GetIndexLocked() % userIds.Count();
 
-                assignedRecipients.Add( userIds[indexRecipient] );
+                int recipientId = userIds[indexRecipient];
+                assignedRecipients.Add(recipientId);
 
                 var pairing = new Pairing
                 {
                     SantaId = userId,
-                    RecipientId = userIds[indexRecipient]
+                    RecipientId = recipientId
                 };
                 pairings.Add(pairing);
                 i++;
