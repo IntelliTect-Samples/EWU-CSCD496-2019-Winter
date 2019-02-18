@@ -28,6 +28,7 @@ namespace SecretSanta.Api.Controllers
         [Produces(typeof(PairingViewModel))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Post(int groupId)
         {
@@ -40,7 +41,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return Ok();
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }
