@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Services
 {
-    class PairingService : IPairingService
+    public class PairingService : IPairingService
     {
         private ApplicationDbContext DbContext { get; }
         private Random Random { get; } = new Random();
@@ -33,6 +33,8 @@ namespace SecretSanta.Domain.Services
             }
 
             List<Pairing> pairings = await Task.Run( () => GetPairings(userIds));
+            if(pairings == null)
+                
             await DbContext.Pairings.AddRangeAsync(pairings);
             await DbContext.SaveChangesAsync();
 
@@ -44,15 +46,17 @@ namespace SecretSanta.Domain.Services
             var pairings = new List<Pairing>();
             var assignedRecipients = new List<int>();
 
+            int i = 0;
             foreach (int userId in userIds)
             {
-                int indexRecipient = userId;
+                int idRecipient = userId;
+                int indexRecipient = i;
 
                 //no person can be their own santa && each recipient has only one santa
-                while (userIds[indexRecipient] == userId && !assignedRecipients.Contains(indexRecipient) )    
+                while (i == indexRecipient && !assignedRecipients.Contains(idRecipient) )
                     indexRecipient = GetIndexLocked() % userIds.Count();
 
-                assignedRecipients.Add(indexRecipient);
+                assignedRecipients.Add( userIds[indexRecipient] );
 
                 var pairing = new Pairing
                 {
@@ -60,6 +64,7 @@ namespace SecretSanta.Domain.Services
                     RecipientId = userIds[indexRecipient]
                 };
                 pairings.Add(pairing);
+                i++;
             }
 
             return pairings;

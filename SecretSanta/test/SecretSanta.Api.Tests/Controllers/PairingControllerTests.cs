@@ -12,31 +12,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class PairingControllerTests
     {
-        [AssemblyInitialize]
-        public static void ConfigureAutoMapper(TestContext context)
-        {
-            Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
-        }
-        private CustomWebApplicationFactory<Startup> Factory { get; set; }
-
-        [TestInitialize]
-        public void CreateWebFactory()
-        {
-            Factory = new CustomWebApplicationFactory<Startup>();
-
-        }
 
 
         [TestMethod]
         public async Task GeneratePairings_Valid()
         {
             //valid group
+
             /*
             User user1 = new User { FirstName = "fname1", LastName = "lname1" };
             User user2 = new User { FirstName = "fname2", LastName = "lname2" };
@@ -52,22 +41,25 @@ namespace SecretSanta.Api.Tests.Controllers
             group.GroupUsers.Add(user2);
             */
 
-
-
-
-
+            Assert.AreEqual(0, 0);
         }
 
         [TestMethod]
         public async Task GeneratePairings_InvalidId()
         {
             //invalid group
+
+            Assert.AreEqual(0, 0);
         }
 
         [TestMethod]
         public async Task GeneratePairings_GroupDoesNotContainMembers()
         {
             //group doesn't contain members
+
+
+
+            Assert.AreEqual(0, 0);
         }
     }
 }
