@@ -128,7 +128,56 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-        private static int _groupCount = 0; // ensures that the users/group name are unique. Keeps count of groups seeded
+        [TestMethod]
+        public async Task PairingService_EveryPersonIsSantaForExactlyOneOther()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                int userIds = 3;
+                var temp = await SeedDatabase(userIds);
+                var pairingService = new PairingService(context);
+                var result = await pairingService.GeneratePairings(temp.groupId);
+
+                int distinctSantas = result.Select(pairing => pairing.SantaId).Distinct().Count();
+                
+                Assert.AreEqual(userIds, distinctSantas);
+            }
+        }
+        
+        [TestMethod]
+        public async Task PairingService_EveryPersonIsRecipientOfOneOther()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                int userIds = 3;
+                var temp = await SeedDatabase(userIds);
+                var pairingService = new PairingService(context);
+                var result = await pairingService.GeneratePairings(temp.groupId);
+
+                int distinctRecipients = result.Select(pairing => pairing.RecipientId).Distinct().Count();
+                
+                Assert.AreEqual(userIds, distinctRecipients);
+            }
+        }
+        
+        [TestMethod]
+        public async Task PairingService_NoPersonIsOwnSanta() // Technically this is checked by a couple other tests
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                int userIds = 3;
+                var temp = await SeedDatabase(userIds);
+                var pairingService = new PairingService(context);
+                var result = await pairingService.GeneratePairings(temp.groupId);
+
+                foreach (Pairing cur in result)
+                {
+                    Assert.AreNotEqual(cur.SantaId, cur.RecipientId);
+                }
+            }
+        }
+
+        private static int _seededGroupCount = 0; // ensures that the users/group name are unique. Keeps count of groups seeded
         private async Task<(List<User> addedUsers, int groupId)> SeedDatabase(int userCount)
         {
             using (var context = new ApplicationDbContext(Options))
@@ -141,8 +190,8 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     User user = new User
                     {
-                        FirstName = $"User{i}-{++_groupCount}",
-                        LastName = $"User{i}-{++_groupCount}"
+                        FirstName = $"User{i}-{++_seededGroupCount}",
+                        LastName = $"User{i}-{++_seededGroupCount}"
                     };
                     usersAdded.Add(user);
                     await userService.AddUser(user);
@@ -150,7 +199,7 @@ namespace SecretSanta.Domain.Tests.Services
                 
                 var group = new Group
                 {
-                    Name = $"Group-{++_groupCount}"
+                    Name = $"Group-{++_seededGroupCount}"
                 };
                 
                 var groupService = new GroupService(context);
