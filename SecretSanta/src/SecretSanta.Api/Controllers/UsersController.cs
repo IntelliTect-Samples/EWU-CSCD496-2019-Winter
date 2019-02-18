@@ -80,7 +80,8 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            fetchedUser = Mapper.Map<User>(viewModel);
+            fetchedUser.FirstName = viewModel.FirstName;
+            fetchedUser.LastName = viewModel.LastName;
 
             var updatedUser = await UserService.UpdateUser(fetchedUser);
             return Ok(Mapper.Map<UserViewModel>(updatedUser));

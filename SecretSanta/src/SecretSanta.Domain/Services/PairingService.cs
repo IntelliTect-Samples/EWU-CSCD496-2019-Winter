@@ -19,9 +19,11 @@ namespace SecretSanta.Domain.Services
 
         public async Task<List<Pairing>> GetPairingsForGroup(int groupId)
         {
-            return await DbContext.Pairings
+            List<Pairing> pairings = await DbContext.Pairings
                 .Where(p => p.GroupId == groupId)
                 .ToListAsync();
+
+            return pairings;
         }
 
         public async Task<List<Pairing>> GeneratePairingsForGroup(int groupId)

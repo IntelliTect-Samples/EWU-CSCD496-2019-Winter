@@ -11,8 +11,6 @@ namespace SecretSanta.Domain.Models
         public int RecipientId { get; set; }
         [ForeignKey("RecipientId")]
         public User Recipient { get; set; }
-        public Group Group { get; set; }
-        [ForeignKey("GroupId")]
         public int GroupId { get; set; }
     }
 }

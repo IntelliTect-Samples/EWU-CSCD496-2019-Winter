@@ -93,6 +93,8 @@ namespace SecretSanta.Domain.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("GroupId");
+
                     b.Property<int>("RecipientId");
 
                     b.Property<int>("SantaId");
