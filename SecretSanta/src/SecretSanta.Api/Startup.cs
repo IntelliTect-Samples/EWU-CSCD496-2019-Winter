@@ -41,6 +41,9 @@ namespace SecretSanta.Api
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
 
+            services.AddScoped<IPairingService, PairingService>();
+            services.AddScoped<IRandomService, RandomService>();
+
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
