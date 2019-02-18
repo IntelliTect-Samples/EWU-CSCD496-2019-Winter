@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SecretSanta.Api.Controllers;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -72,5 +77,9 @@ namespace SecretSanta.Api.Tests.Controllers
 
             Assert.AreEqual(userViewModel.FirstName, resultViewModel.FirstName);
         }
+
+
+
+
     }
 }

@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             TestableGiftService testService = new TestableGiftService
             {
-                ToReturn = Task.Run( () => new List<Gift>
+                ToReturn = Task.FromResult(new List<Gift>
                 {
                     gift
                 })
