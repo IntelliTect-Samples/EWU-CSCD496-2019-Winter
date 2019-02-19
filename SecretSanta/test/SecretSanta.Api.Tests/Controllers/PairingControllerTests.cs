@@ -37,7 +37,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task BuildPairingForAGroup_NotFound()
+        public async Task BuildPairingForAGroup_BadRequest_GroupNotFound()
         {
             Group group = new Group()
             {
@@ -50,13 +50,13 @@ namespace SecretSanta.Api.Tests.Controllers
 
             PairingController controller = new PairingController(service.Object, Mapper.Instance);
 
-            NotFoundResult result = await controller.Post(group.Id + 1) as NotFoundResult;
+            BadRequestResult result = await controller.Post(group.Id + 1) as BadRequestResult;
 
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        public async Task BuildPairingForAGroup_BadRequest()
+        public async Task BuildPairingForAGroup_BadRequest_DueToTooFew()
         {
             Mock<IPairingService> service = new Mock<IPairingService>(MockBehavior.Strict);
             PairingController controller = new PairingController(service.Object, Mapper.Instance);
