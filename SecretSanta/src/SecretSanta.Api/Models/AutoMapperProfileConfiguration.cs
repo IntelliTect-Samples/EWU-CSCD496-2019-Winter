@@ -13,6 +13,7 @@ namespace SecretSanta.Api.Models
         public AutoMapperProfileConfiguration()
         {
             CreateMap<Gift, GiftViewModel>();
+            CreateMap<GiftInputViewModel, Gift>();
 
             CreateMap<User, UserViewModel>();
             CreateMap<UserInputViewModel, User>();
