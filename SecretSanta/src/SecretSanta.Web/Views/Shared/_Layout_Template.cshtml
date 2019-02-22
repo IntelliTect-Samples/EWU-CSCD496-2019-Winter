@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    <!-- Stylesheets -->
+    <% for (var filename in htmlWebpackPlugin.files.css) { %>
+    <link href="~<%= htmlWebpackPlugin.files.css[filename] %>" rel="stylesheet" />
+    <% } %>
+    <!-- End Stylesheets -->
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" asp-controller="Home">
+                Secret Santa
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" asp-controller="Users">
+                    Users
+                </a>
+                <a class="navbar-item">
+                    Groups
+                </a>
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <script src="~<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+    <% } %>
+    <!-- End Scripts -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>

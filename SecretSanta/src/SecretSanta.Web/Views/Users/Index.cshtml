@@ -1,0 +1,7 @@
+﻿<h1 class="heading">Welcome to the Users Page</h1>
+<ul>
+    @foreach (var user in ViewBag.Users)
+    {
+        <li>@user.FirstName @user.LastName</li>
+    }
+</ul>
