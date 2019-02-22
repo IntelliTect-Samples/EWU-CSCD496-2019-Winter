@@ -78,6 +78,7 @@ namespace SecretSanta.Api.Controllers
 
             Mapper.Map(viewModel, fetchedUser);
             await UserService.UpdateUser(fetchedUser);
+
             return NoContent();
         }
 
@@ -94,6 +95,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return Ok();
             }
+
             return NotFound();
         }
     }
