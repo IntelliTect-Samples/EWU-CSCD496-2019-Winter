@@ -4,4 +4,4 @@
 
 [![Build Status](https://dev.azure.com/rbrintont8230014/SecretSantaOrganization/_apis/build/status/SecretSantaOrganization-ASP.NET%20Core-CI?branchName=Assignment6)](https://dev.azure.com/rbrintont8230014/SecretSantaOrganization/_build/latest?definitionId=2&branchName=Assignment6)
 
-[WebApp URL](https://secretsantaapi-rteller.azurewebsites.net/)
+WebApp URL: https://secretsantaapi-rteller.azurewebsites.net/
