@@ -12,6 +12,8 @@ namespace SecretSanta.Domain.Tests.Services
     [TestClass]
     public class PairingServiceTests
     {
+        /**/
+
         /*[TestInitialize]
         public async Task Initialize()
         {
