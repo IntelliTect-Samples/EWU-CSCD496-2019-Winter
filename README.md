@@ -4,4 +4,6 @@
 
 
 Updated for assignment 1
+
+[![Build Status](https://dev.azure.com/CaseyWhite/SecretSanta/_apis/build/status/SecretSanta?branchName=Assignment5)](https://dev.azure.com/CaseyWhite/SecretSanta/_build/latest?definitionId=5&branchName=Assignment5)
  
