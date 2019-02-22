@@ -2,8 +2,7 @@
 
 [![Join the chat at https://gitter.im/IntelliTect/CSCD496-2019-Winter](https://badges.gitter.im/IntelliTect/CSCD496-2019-Winter.svg)](https://gitter.im/IntelliTect/CSCD496-2019-Winter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Build status](https://dev.azure.com/rbrintont823/SecretSanta/_apis/build/status/SecretSanta-Azure%20Web%20App%20for%20ASP.NET-CI)](https://dev.azure.com/rbrintont823/SecretSanta/_build/latest?definitionId=2)
-
+[![Build Status](https://dev.azure.com/rbrintont8230014/SecretSantaOrganization/_apis/build/status/SecretSantaOrganization-ASP.NET%20Core-CI?branchName=Assignment6)](https://dev.azure.com/rbrintont8230014/SecretSantaOrganization/_build/latest?definitionId=2&branchName=Assignment6)
 
 
 Updated for assignment 1
