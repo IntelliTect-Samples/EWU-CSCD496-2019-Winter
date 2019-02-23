@@ -55,21 +55,21 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task AddUserViaApi_CompletesSuccessfully()
         {
-            var client = Factory.CreateClient();
+            HttpClient client = Factory.CreateClient();
 
-            var userViewModel = new UserInputViewModel
+            UserInputViewModel userViewModel = new UserInputViewModel
             {
                 FirstName = "Inigo",
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", userViewModel);
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", userViewModel);
 
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
 
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
 
-            var resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
+            UserViewModel resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
 
             Assert.AreEqual(userViewModel.FirstName, resultViewModel.FirstName);
         }

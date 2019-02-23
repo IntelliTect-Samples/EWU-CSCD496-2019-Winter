@@ -21,7 +21,10 @@ namespace SecretSanta.Api.Models
             CreateMap<GroupInputViewModel, Group>();
 
             CreateMap<GroupUser, GroupUserViewModel>();
+            CreateMap<GroupUserViewModel, GroupUser>();
+
             CreateMap<Pairing, PairingViewModel>();
+            CreateMap<PairingViewModel, Pairing>();
         }
     }
 }

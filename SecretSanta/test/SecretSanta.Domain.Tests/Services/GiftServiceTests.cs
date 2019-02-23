@@ -17,7 +17,7 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var user = new User
+                User user = new User
                 {
                     FirstName = "Inigo",
                     LastName = "Montoya"
@@ -25,7 +25,7 @@ namespace SecretSanta.Domain.Tests.Services
 
                 user = await userService.AddUser(user);
 
-                var gift = new Gift
+                Gift gift = new Gift
                 {
                     Title = "Sword",
                     OrderOfImportance = 1
@@ -40,12 +40,12 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public async Task UpdateGift()
         {
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var user = new User
+                User user = new User
                 {
                     FirstName = "Inigo",
                     LastName = "Montoya"
@@ -53,7 +53,7 @@ namespace SecretSanta.Domain.Tests.Services
 
                 user = await userService.AddUser(user);
 
-                var gift = new Gift
+                Gift gift = new Gift
                 {
                     Title = "Sword",
                     OrderOfImportance = 1
@@ -64,13 +64,13 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
                 List<User> users = await userService.FetchAll();
-                List<Gift> gifts =  await giftService.GetGiftsForUser(users[0].Id);
+                List<Gift> gifts = await giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
 
@@ -78,7 +78,7 @@ namespace SecretSanta.Domain.Tests.Services
                 await giftService.UpdateGiftForUser(users[0].Id, gifts[0]);                
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);

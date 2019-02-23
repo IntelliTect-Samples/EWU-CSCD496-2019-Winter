@@ -43,12 +43,11 @@ namespace SecretSanta.Domain.Services
 
         public async Task<List<User>> GetUsers(int groupId)
         {
-            Group group = await DbContext.Groups.SingleOrDefaultAsync(x => x.Id == groupId);
-            List<User> users = group.GroupUsers
+            return await DbContext.Groups
+                .Where(x => x.Id == groupId)
+                .SelectMany(x => x.GroupUsers)
                 .Select(x => x.User)
-                .ToList();
-
-            return users;
+                .ToListAsync();
         }
 
         public async Task<bool> AddUserToGroup(int groupId, int userId)
@@ -61,12 +60,13 @@ namespace SecretSanta.Domain.Services
             User foundUser = await DbContext.Users.FindAsync(userId);
             if (foundUser == null) return false;
 
-            var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
+            GroupUser groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
             if (foundGroup.GroupUsers == null)
             {
                 foundGroup.GroupUsers = new List<GroupUser>();
             }
             foundGroup.GroupUsers.Add(groupUser);
+            DbContext.Groups.Update(foundGroup);
             await DbContext.SaveChangesAsync();
 
             return true;
@@ -83,6 +83,7 @@ namespace SecretSanta.Domain.Services
             if (mapping == null) return false;
 
             foundGroup.GroupUsers.Remove(mapping);
+            DbContext.Groups.Update(foundGroup);
             await DbContext.SaveChangesAsync();
 
             return true;

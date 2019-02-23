@@ -30,8 +30,7 @@ namespace SecretSanta.Api.Controllers
         [Produces(typeof(ICollection<GroupViewModel>))]
         public async Task<IActionResult> Get()
         {
-            List<Group> groups = await GroupService.FetchAll();
-            return Ok(groups.Select(x => Mapper.Map<GroupViewModel>(x)));
+            return Ok((await GroupService.FetchAll()).Select(x => Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]

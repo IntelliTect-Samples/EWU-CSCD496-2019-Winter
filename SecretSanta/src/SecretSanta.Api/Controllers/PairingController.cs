@@ -1,12 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Api.ViewModels;
-using SecretSanta.Domain.Models;
-using SecretSanta.Domain.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Services.Interfaces;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -23,37 +23,24 @@ namespace SecretSanta.Api.Controllers
             Mapper = mapper;
         }
 
+        //POST api/pairing/5
         [HttpPost]
-        [Produces(typeof(List<PairingViewModel>))]
+        [Produces(typeof(PairingViewModel))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> Post(int groupId)
         {
             if(groupId <= 0)
             {
-                return BadRequest("Group ID must be positive.");
+                return BadRequest("A group id must be specified");
             }
-            List<Pairing> domainPairings = await PairingService.GeneratePairings(groupId);
 
-            if(domainPairings == null)
+            if(await PairingService.GenerateAllPairs(groupId))
             {
-                return BadRequest("There must be two or more users in a group to generate parings.");
+                return Ok();
             }
-            List<PairingViewModel> viewPairings = domainPairings.Select(x => Mapper.Map<PairingViewModel>(x)).ToList();
-
-            return Created($"api/Pairing/{groupId}" ,viewPairings);
-        }
-
-        [HttpGet("{groupId}")]
-        [Produces(typeof(List<Pairing>))]
-        public async Task<IActionResult> Get(int groupId)
-        {
-            List<Pairing> domainPairings = await PairingService.GetPairingsByGroupId(groupId);
-            if(domainPairings == null)
-            {
-                return NotFound();
-            }
-            List<PairingViewModel> viewPairings = domainPairings.Select(x => Mapper.Map<PairingViewModel>(x)).ToList();
-
-            return Ok(viewPairings);
+            return BadRequest();
         }
     }
 }

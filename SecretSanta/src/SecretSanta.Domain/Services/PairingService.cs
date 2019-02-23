@@ -5,93 +5,84 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Services
 {
-    public class PairingService : IPairingService {
-        private IRandomService Random { get; }
-        private readonly object RandomKey = new object();
+    public class PairingService : IPairingService
+    {
+        private readonly object _Locker = new object();
         private ApplicationDbContext DbContext { get; }
 
-        public PairingService(ApplicationDbContext dbContext, IRandomService random)
+        public PairingService(ApplicationDbContext dbContext)
         {
-            Random = random ?? throw new ArgumentNullException(nameof(random));
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
-        public async Task<List<Pairing>> GeneratePairings(int groupId)
-        {
-            if (groupId <= 0)
-            {
-                return null;
-            }
 
-            Group group = await DbContext.Groups
-                .Include(x => x.GroupUsers)
-                .SingleOrDefaultAsync(x => x.Id == groupId);
+        public async Task<bool> GenerateAllPairs(int groupId)
+        {
+            Group group = await DbContext.Groups.Include(x => x.GroupUsers).FirstOrDefaultAsync(x => x.Id == groupId);
 
             List<int> userIds = group?.GroupUsers?.Select(x => x.UserId).ToList();
 
-            if(userIds == null|| userIds.Count < 2)
+            if(userIds == null || userIds.Count < 2)
             {
-                return null;
+                return false;
             }
 
-            List<Pairing> pairings = await Task.Run(()=> ConfigurePairings(userIds, groupId));
+            Task<List<Pairing>> supportTask = Task.Run(() => BuildPairings(userIds));
+            List<Pairing> pairings = await supportTask;
 
-            DbContext.Pairings.AddRange(pairings);
+            await DbContext.Pairings.AddRangeAsync(pairings);
             await DbContext.SaveChangesAsync();
 
-            return pairings;
+            return true;
         }
-        private List<Pairing> ConfigurePairings(List<int> userIds, int groupId)
+
+        private List<Pairing> BuildPairings(List<int> userIds)
         {
-            int index;
-            List<int> indices = new List<int>();
-            List<int> randomIndices = new List<int>();
+            List<Pairing> pairings = new List<Pairing>();
+            List<bool> hasPair = new List<bool>(userIds.Capacity);
 
-            for(int i = 0; i < userIds.Count; i++)
+            Randomizer(ref userIds);
+
+            lock (_Locker)
             {
-                indices.Add(i);
-            }
-
-            int indexRange = indices.Count;
-            indexRange--;
-
-            lock (RandomKey)
-            {
-                for(int i = 0; i < userIds.Count; i++, indexRange--)
+                for(int index = 0; index < userIds.Count - 1; index++)
                 {
-                    index = Random.Next(indexRange);
-
-                    randomIndices.Add(indices[index]);
-                    indices.Remove(indices[index]);
+                    Pairing pairing = new Pairing
+                    {
+                        SantaId = userIds[index],
+                        RecipientId = userIds[index + 1]
+                    };
+                    pairings.Add(pairing);
                 }
+
+                Pairing lastPair = new Pairing
+                {
+                    SantaId = userIds.Last(),
+                    RecipientId = userIds.First()
+                };
+                pairings.Add(lastPair);
             }
-
-            var pairings = new List<Pairing>();
-
-            for(int i = 0; i < userIds.Count-1; i++)
-            {
-                pairings.Add(new Pairing {
-                    SantaId = userIds[randomIndices[i]],
-                    RecipientId = userIds[randomIndices[i + 1]],
-                    GroupId = groupId
-                });
-            }
-
-            pairings.Add(new Pairing{
-                SantaId = userIds[randomIndices.Last()],
-                RecipientId = userIds[randomIndices.First()],
-                GroupId = groupId
-            });
 
             return pairings;
         }
 
-        public async Task<List<Pairing>> GetPairingsByGroupId(int groupId)
+        private void Randomizer(ref List<int> list)
         {
-            return await DbContext.Pairings?.Where(x => x.GroupId == groupId).ToListAsync();
+            ThreadLocal<Random> random = new ThreadLocal<Random>(() => new Random());
+            int size = list.Count;
+
+            while(size > 1)
+            {
+                size--;
+                int randex = random.Value.Next(size + 1);
+                int temp = list[randex];
+                list[randex] = list[size];
+                list[size] = temp; 
+            }
         }
     }
 }

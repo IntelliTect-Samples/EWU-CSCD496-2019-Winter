@@ -30,15 +30,14 @@ namespace SecretSanta.Api.Controllers
         [Produces(typeof(ICollection<UserViewModel>))]
         public async Task<IActionResult> Get()
         {
-            List<User> users = await UserService.FetchAll();
-            return Ok(users.Select(x => Mapper.Map<UserViewModel>(x)));
+            return Ok((await UserService.FetchAll()).Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         [Produces(typeof(UserViewModel))]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var fetchedUser = UserService.GetById(id);
+            User fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
@@ -70,7 +69,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            User fetchedUser =  await UserService.GetById(id);
+            User fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
@@ -89,7 +88,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest("A User id must be specified");
             }
-            
+
             if (await UserService.DeleteUser(id))
             {
                 return Ok();
