@@ -74,7 +74,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 {
                     Id = 2,
                     Name = group.Name
-                }))
+                })
                 .Verifiable();
 
             GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
@@ -113,7 +113,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 {
                     Id = 2,
                     Name = group.Name
-                }))
+                })
                 .Verifiable();
 
             GroupsController controller = new GroupsController(service.Object, Mapper.Instance);

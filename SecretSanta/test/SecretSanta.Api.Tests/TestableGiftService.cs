@@ -16,7 +16,7 @@ namespace SecretSanta.Api.Tests
         {
             await Task.Yield();
             GetGiftsForUser_UserId = userId;
-            return Task.FromResult(ToReturn);
+            return await Task.FromResult(ToReturn);
         }
     }
 }
