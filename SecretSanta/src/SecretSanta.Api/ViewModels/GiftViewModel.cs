@@ -12,6 +12,5 @@ namespace SecretSanta.Api.ViewModels
         public string Description { get; set; }
         public int OrderOfImportance { get; set; }
         public string Url { get; set; }
-
     }
 }

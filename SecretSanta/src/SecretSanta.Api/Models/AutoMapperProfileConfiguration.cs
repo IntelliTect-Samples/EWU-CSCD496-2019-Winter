@@ -15,12 +15,15 @@ namespace SecretSanta.Api.Models
             CreateMap<Gift, GiftViewModel>();
 
             CreateMap<User, UserViewModel>();
+
             CreateMap<UserInputViewModel, User>();
 
             CreateMap<Group, GroupViewModel>();
+
             CreateMap<GroupInputViewModel, Group>();
 
             CreateMap<GroupUser, GroupUserViewModel>();
+
             CreateMap<Pairing, PairingViewModel>();
         }
     }

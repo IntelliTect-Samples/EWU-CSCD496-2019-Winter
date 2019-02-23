@@ -9,6 +9,7 @@ namespace SecretSanta.Domain.Services.Interfaces
     public interface IGroupService
     {
         Task<List<Group>> FetchAll();
+
         Task<Group> GetById(int id);
 
         Task<Group> AddGroup(Group group);

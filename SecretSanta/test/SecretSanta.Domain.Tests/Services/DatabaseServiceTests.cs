@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
-using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Tests.Services
 {
@@ -38,7 +37,7 @@ namespace SecretSanta.Domain.Tests.Services
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 context.Database.EnsureCreated();
             }

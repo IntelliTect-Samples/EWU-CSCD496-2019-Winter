@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Moq.AutoMock;
 using SecretSanta.Api.Controllers;
-using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
-using SecretSanta.Domain.Services.Interfaces;
+using SecretSanta.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
@@ -16,131 +15,187 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class PairingControllerTests
     {
-        private AutoMocker Mocker { get; set; }
-        private Mock<IPairingService> MockPairingService { get; set; }
-        private Mock<IMapper> MockMapper { get; set; }
+        private CustomWebApplicationFactory<Startup> Factory { get; set; }
 
         [TestInitialize]
-        public void SetProperties()
+        public void CreateWebFactory()
         {
-            Mocker = new AutoMocker();
-            MockPairingService = Mocker.GetMock<IPairingService>();
-            MockMapper = Mocker.GetMock<IMapper>();
-            Mocker.Use(Mapper.Instance);
+            Factory = new CustomWebApplicationFactory<Startup>();
         }
 
         [TestMethod]
-        [DataRow(new int[] { 1, 2, 3, 4, 5 })]
-        [DataRow(new int[] { 45, 68 })]
-        public async Task PostPairing_ValidGroupNumber_ReturnsCreated(int[] ids)
+        public async Task GeneratePairings_ReturnRandomPairingsList_OKResult()
         {
-            List<int> userIds = new List<int> (ids);
-            int groupId = 1;
+            HttpClient client = Factory.CreateClient();
 
-            List<Pairing> pairings = CreatePairings(userIds, groupId);
+            List<Pairing> pairings = GetTestPairings(3);
 
-            MockPairingService.Setup(x => x.GeneratePairings(groupId))
-                .Returns(Task.FromResult(pairings));
+            Mock<IPairingService> service = new Mock<IPairingService>();
 
-            var controller = Mocker.CreateInstance<PairingController>();
+            service.Setup(x => x.GeneratePairing(1))
+                .ReturnsAsync(pairings)
+                .Verifiable();
 
-            CreatedResult result = await controller.Post(groupId) as CreatedResult;
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
 
-            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
-            var firstPairing = resultPairings.First();
-            var lastPairing = resultPairings.Last();
+            IActionResult result = await controller.GeneratePairings(1);
 
-            Assert.AreEqual<int>(groupId, firstPairing.GroupId);
-            Assert.AreEqual<int>(userIds.First(), firstPairing.SantaId);
-            Assert.AreEqual<int>(userIds[1], firstPairing.RecipientId);
-            Assert.AreEqual<int>(userIds.Last(), lastPairing.SantaId);
-            Assert.AreEqual<int>(userIds.First(), lastPairing.RecipientId);
-            Mocker.VerifyAll();
+            OkObjectResult okObjectResult = result as OkObjectResult;
+
+            Assert.IsTrue(okObjectResult is OkObjectResult);
         }
 
         [TestMethod]
-        public async Task PostPairing_ValidGroupNumberButServiceReturnsNull_ReturnsBadRequestObject()
+        public async Task GeneratePairings_ReturnRandomPairingsListList_NotFoundResult()
         {
-            int groupId = 1;
-            var controller = Mocker.CreateInstance<PairingController>();
+            HttpClient client = Factory.CreateClient();
 
-            MockPairingService.Setup(x => x.GeneratePairings(It.IsAny<int>()))
-                .Returns(Task.FromResult<List<Pairing>>(null));
+            List<Pairing> pairings = GetTestPairings(2);
 
-            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
+            Mock<IPairingService> service = new Mock<IPairingService>();
 
-            Assert.IsNotNull(result);
+            service.Setup(x => x.GeneratePairing(13))
+                .ReturnsAsync(pairings)
+                .Verifiable();
+
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.GeneratePairings(14);
+
+            NotFoundResult notFoundResult = result as NotFoundResult;
+
+            Assert.IsTrue(notFoundResult is NotFoundResult);
+
         }
 
-        [TestMethod]
-        [DataRow(0)]
+
         [DataRow(-1)]
-        public async Task PostPairing_RequiresPositiveId_ReturnsBadRequestResult(int groupId)
+        [DataRow(0)]
+        [TestMethod]
+        public async Task GeneratePairings_ReturnRandomPairingsList_BadRequest(int invalidGroupId)
         {
-            var controller = Mocker.CreateInstance<PairingController>();
-            MockPairingService = new Mock<IPairingService>(MockBehavior.Strict);
+            HttpClient client = Factory.CreateClient();
 
-            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
+            List<Pairing> pairings = GetTestPairings(3);
 
-            Assert.IsNotNull(result);
+            Mock<IPairingService> service = new Mock<IPairingService>();
+
+            service.Setup(x => x.GeneratePairing(invalidGroupId))
+                .ReturnsAsync(pairings)
+                .Verifiable();
+
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.GeneratePairings(invalidGroupId);
+
+            BadRequestResult badRequestResult = result as BadRequestResult;
+
+            Assert.IsTrue(badRequestResult is BadRequestResult);
+        }
+
+
+
+        [TestMethod]
+        public async Task GetPairings_ReturnPairingsList_OKResult()
+        {
+            HttpClient client = Factory.CreateClient();
+
+            List<Pairing> pairings = GetTestPairings(3);
+
+            Mock<IPairingService> service = new Mock<IPairingService>();
+
+            service.Setup(x => x.GetPairingsList(1))
+                .ReturnsAsync(pairings)
+                .Verifiable();
+
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.GetPairingList(1);
+
+            OkObjectResult okObjectResult = result as OkObjectResult;
+
+            Assert.IsTrue(okObjectResult is OkObjectResult);
         }
 
         [TestMethod]
-        public async Task GetPairingsByGroupId_FoundPairings_ReturnsOKwithList()
+        public async  Task GetPairings_ReturnPairingsList_NotFoundResult()
         {
-            List<int> userIds = new List<int> { 1, 2 };
-            int groupId = 1;
-            List<Pairing> pairings = CreatePairings(userIds, groupId);
+            HttpClient client = Factory.CreateClient();
 
-            MockPairingService.Setup(x => x.GetPairingsByGroupId(groupId))
-                .Returns(Task.FromResult(pairings));
+            List<Pairing> pairings = GetTestPairings(2);
 
-            var controller = Mocker.CreateInstance<PairingController>();
+            Mock<IPairingService> service = new Mock<IPairingService>();
 
-            OkObjectResult result = await controller.Get(groupId) as OkObjectResult;
-            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
+            service.Setup(x => x.GetPairingsList(13))
+                .ReturnsAsync(pairings)
+                .Verifiable();
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual<int>(1, resultPairings.First().GroupId);
-            Assert.AreEqual<int>(1, resultPairings.Last().GroupId);
-            Mocker.VerifyAll();
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.GetPairingList(14);
+
+            NotFoundResult notFoundResult = result as NotFoundResult;
+
+            Assert.IsTrue(notFoundResult is NotFoundResult);
+
         }
 
+
+        [DataRow(-1)]
+        [DataRow(0)]
         [TestMethod]
-        public async Task GetPairingsByGroupId_NoFoundPairings_ReturnsNotFound()
+        public async Task GetPairings_ReturnPairingsList_BadRequest(int invalidGroupId)
         {
-            MockPairingService.Setup(x => x.GetPairingsByGroupId(1))
-                .Returns(Task.FromResult<List<Pairing>>(null));
+            HttpClient client = Factory.CreateClient();
 
-            var controller = Mocker.CreateInstance<PairingController>();
+            List<Pairing> pairings = GetTestPairings(3);
 
-            NotFoundResult result = await controller.Get(1) as NotFoundResult;
+            Mock<IPairingService> service = new Mock<IPairingService>();
 
-            Assert.IsNotNull(result);
-            Mocker.VerifyAll();
+            service.Setup(x => x.GetPairingsList(invalidGroupId))
+                .ReturnsAsync(pairings)
+                .Verifiable();
+
+            PairingController controller = new PairingController(service.Object, Mapper.Instance);
+
+            IActionResult result = await controller.GetPairingList(invalidGroupId);
+
+            BadRequestResult badRequestResult = result as BadRequestResult;
+
+            Assert.IsTrue(badRequestResult is BadRequestResult);
         }
 
-        //Pairings do not need to be "randomized" for controller tests.
-        private List<Pairing> CreatePairings(List<int> userIds, int groupId)
+
+        private List<Pairing> GetTestPairings(int numUsers)
         {
-            var pairings = new List<Pairing>();
+            List<Pairing> pairings = new List<Pairing>();
+
+            List<int> userIds = new List<int>();
+            for (int i = 1; i < numUsers; i++)
+            {
+                userIds.Add(i);
+            }
 
             for (int i = 0; i < userIds.Count - 1; i++)
             {
-                pairings.Add(new Pairing
+                Pairing pairing = new Pairing
                 {
                     SantaId = userIds[i],
-                    RecipientId = userIds[i + 1],
-                    GroupId = groupId
-                });
+                    RecipientId = userIds[i],
+                    GroupId = 1
+                };
+
+                pairings.Add(pairing);
             }
 
-            pairings.Add(new Pairing
+            Pairing lastPairing = new Pairing
             {
                 SantaId = userIds.Last(),
                 RecipientId = userIds.First(),
-                GroupId = groupId
-            });
+                GroupId = 1
+            };
+
+            pairings.Add(lastPairing);
 
             return pairings;
         }

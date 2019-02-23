@@ -9,6 +9,5 @@ namespace SecretSanta.Domain.Services.Interfaces
     public interface IGiftService
     {
         Task<List<Gift>> GetGiftsForUser(int userId);
-
     }
 }

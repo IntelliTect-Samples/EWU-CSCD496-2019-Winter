@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -20,43 +21,60 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{groupId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
                 return BadRequest();
             }
-
-            if (userId <= 0)
+            else if (userId <= 0)
             {
                 return BadRequest();
             }
-
-            if (await GroupService.AddUserToGroup(groupId, userId))
+            else
             {
-                return Ok();
+                bool isAdded = await GroupService.AddUserToGroup(groupId, userId);
+
+                if (isAdded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            return NotFound();
         }
 
         [HttpDelete("{groupId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> RemoveUserFromGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
                 return BadRequest();
             }
-
-            if (userId <= 0)
+            else if (userId <= 0)
             {
                 return BadRequest();
             }
-
-            if (await GroupService.RemoveUserFromGroup(groupId, userId))
+            else
             {
-                return Ok();
+                bool isRemoved = await GroupService.RemoveUserFromGroup(groupId, userId);
+
+                if (isRemoved)
+                {
+                    return Ok();
+                }
+                return NotFound();
             }
-            return NotFound();
         }
     }
 }

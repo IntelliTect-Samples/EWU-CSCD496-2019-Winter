@@ -1,21 +1,22 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
-using SecretSanta.Domain.Services.Interfaces;
-using System;
+using SecretSanta.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SecretSanta.Api.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class PairingController : ControllerBase
     {
-        private IPairingService PairingService { get; }
-        private IMapper Mapper { get; }
+        private IPairingService PairingService { get; set; }
+        private IMapper Mapper { get; set; }
 
         public PairingController(IPairingService pairingService, IMapper mapper)
         {
@@ -23,37 +24,61 @@ namespace SecretSanta.Api.Controllers
             Mapper = mapper;
         }
 
-        [HttpPost]
-        [Produces(typeof(List<PairingViewModel>))]
-        public async Task<IActionResult> Post(int groupId)
+        [HttpGet("groupId")]
+        [Produces(typeof(ICollection<PairingViewModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetPairingList(int groupId)
         {
-            if(groupId <= 0)
+            if (groupId <= 0)
             {
-                return BadRequest("Group ID must be positive.");
+                return BadRequest(); //400
             }
-            List<Pairing> domainPairings = await PairingService.GeneratePairings(groupId);
 
-            if(domainPairings == null)
+            else
             {
-                return BadRequest("There must be two or more users in a group to generate parings.");
-            }
-            List<PairingViewModel> viewPairings = domainPairings.Select(x => Mapper.Map<PairingViewModel>(x)).ToList();
+                List<Pairing> generatedPairings = await PairingService.GetPairingsList(groupId);
 
-            return Created($"api/Pairing/{groupId}" ,viewPairings);
+                if (generatedPairings == null)
+                {
+                    return NotFound(); //404
+                }
+                else
+                {
+                    return Ok(generatedPairings.Select(pair => Mapper.Map<PairingViewModel>(pair))
+                                                                                           .ToList()); //200
+                }
+            }
         }
 
-        [HttpGet("{groupId}")]
-        [Produces(typeof(List<Pairing>))]
-        public async Task<IActionResult> Get(int groupId)
+        [HttpPost("groupId")]
+        [Produces(typeof(ICollection<PairingViewModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GeneratePairings(int groupId)
         {
-            List<Pairing> domainPairings = await PairingService.GetPairingsByGroupId(groupId);
-            if(domainPairings == null)
+            if (groupId <= 0)
             {
-                return NotFound();
+                return BadRequest(); //400
             }
-            List<PairingViewModel> viewPairings = domainPairings.Select(x => Mapper.Map<PairingViewModel>(x)).ToList();
+            else
+            {
+                List<Pairing> databasePairings = await PairingService.GeneratePairing(groupId);
 
-            return Ok(viewPairings);
+                if (databasePairings == null)
+                {
+                    return NotFound(); //404
+                }
+                else
+                {
+                    return Ok(databasePairings.Select(p => Mapper.Map<PairingViewModel>(p))
+                                                                                           .ToList()); //200
+                }
+            }
         }
     }
 }

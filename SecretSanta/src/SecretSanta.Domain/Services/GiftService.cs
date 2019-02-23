@@ -22,7 +22,7 @@ namespace SecretSanta.Domain.Services
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
-            DbContext.Gifts.Add(gift);
+            await DbContext.Gifts.AddAsync(gift);
             await DbContext.SaveChangesAsync();
 
             return gift;
@@ -44,12 +44,13 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Gifts.Where(g => g.UserId == userId).ToListAsync();
         }
 
-        public async Task RemoveGift(Gift gift)
+        public async Task<bool> RemoveGift(Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             DbContext.Gifts.Remove(gift);
             await DbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

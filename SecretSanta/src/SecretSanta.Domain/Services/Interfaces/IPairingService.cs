@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecretSanta.Domain.Services.Interfaces
+namespace SecretSanta.Domain.Services
 {
     public interface IPairingService
     {
-        Task<List<Pairing>> GeneratePairings(int groupId);
-        Task<List<Pairing>> GetPairingsByGroupId(int pairingId);
+        Task<List<Pairing>> GeneratePairing(int groupId);
+        Task<List<Pairing>> GetPairingsList(int groupId);
     }
 }

@@ -25,7 +25,7 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task GetGiftForUser_ReturnsUsersFromService()
         {
-            var gift = new Gift
+            Gift gift = new Gift
             {
                 Id = 3,
                 Title = "Gift Tile",
@@ -33,19 +33,21 @@ namespace SecretSanta.Api.Tests.Controllers
                 Url = "http://www.gift.url",
                 OrderOfImportance = 1
             };
-            var testService = new TestableGiftService
+            TestableGiftService testService = new TestableGiftService
             {
-                ToReturn = new List<Gift>
+                ToReturn = Task.FromResult(new List<Gift>
                 {
                     gift
-                }
+                })
             };
-            var controller = new GiftsController(testService, Mapper.Instance);
+            GiftsController controller = new GiftsController(testService, Mapper.Instance);
 
-            OkObjectResult result = await controller.GetGiftForUser(4) as OkObjectResult;
+            IActionResult result = await controller.GetGiftForUser(4);
+            OkObjectResult resultAsOkObj = result as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
-            GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
+            GiftViewModel resultGift = ((List<GiftViewModel>)resultAsOkObj.Value).Single();
+
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
             Assert.AreEqual(gift.Description, resultGift.Description);
@@ -56,10 +58,13 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task GetGiftForUser_RequiresPositiveUserId()
         {
-            var testService = new TestableGiftService();
-            var controller = new GiftsController(testService, Mapper.Instance);
+            TestableGiftService testService = new TestableGiftService();
 
-            IActionResult result = await controller.GetGiftForUser(-1) as NotFoundResult;
+            GiftsController controller = new GiftsController(testService, Mapper.Instance);
+
+            IActionResult result = await controller.GetGiftForUser(-1);
+
+            NotFoundResult resultAsNotFound = result as NotFoundResult;
 
             Assert.IsNotNull(result);
             //This check ensures that the service was not called
