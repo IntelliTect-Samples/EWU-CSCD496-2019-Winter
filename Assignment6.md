@@ -1,5 +1,7 @@
 # Assignment 6 - Due 2019-02-22
 
+[![Build Status](https://dev.azure.com/CaseyWhite/SecretSanta/_apis/build/status/SecretSanta?branchName=Assignment6)](https://dev.azure.com/CaseyWhite/SecretSanta/_build/latest?definitionId=7&branchName=Assignment6)
+
 ## Overview
 In this assignment the goal is to setup an Azure DevOps pipeline that build (compiles and runs your tests) and then deploys the code.
 
