@@ -20,7 +20,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{groupId}")]
-        public async Task<IActionResult> AddUserToGroup(int groupId, int userId)
+        public async Task<ActionResult> AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -40,7 +40,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpDelete("{groupId}")]
-        public async Task<IActionResult> RemoveUserFromGroup(int groupId, int userId)
+        public async Task<ActionResult> RemoveUserFromGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {

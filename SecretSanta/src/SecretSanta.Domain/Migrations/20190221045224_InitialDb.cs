@@ -12,7 +12,7 @@ namespace SecretSanta.Domain.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,9 +39,9 @@ namespace SecretSanta.Domain.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    OrderOfImportance = table.Column<int>(nullable: false),
+                    OrderOfImportance = table.Column<int>(nullable: true),
                     Url = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -137,6 +137,12 @@ namespace SecretSanta.Domain.Migrations
                 name: "IX_Gifts_UserId",
                 table: "Gifts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_Name",
+                table: "Groups",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupUser_GroupId",

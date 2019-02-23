@@ -27,18 +27,16 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/group
         [HttpGet]
-        [Produces(typeof(ICollection<GroupViewModel>))]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<ICollection<GroupViewModel>>> GetGroups()
         {
-            List<Group> groups = await GroupService.FetchAll();
+            var groups = await GroupService.FetchAll();
             return Ok(groups.Select(x => Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]
-        [Produces(typeof(GroupViewModel))]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<GroupViewModel>> GetGroup(int id)
         {
-            Group group = await GroupService.GetById(id);
+            var group = await GroupService.GetById(id);
             if (group == null)
             {
                 return NotFound();
@@ -49,26 +47,25 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/group
         [HttpPost]
-        [Produces(typeof(GroupViewModel))]
-        public async Task<IActionResult> Post(GroupInputViewModel viewModel)
+        public async Task<ActionResult<GroupViewModel>> CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
-            Group createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
-            return CreatedAtAction(nameof(Get), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
+            var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+            return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
         // PUT api/group/5
         [HttpPut]
-        public async Task<IActionResult> Put(int id, GroupInputViewModel viewModel)
+        public async Task<ActionResult> UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
-            Group group = await GroupService.GetById(id);
+            var group = await GroupService.GetById(id);
             if (group == null)
             {
                 return NotFound();
@@ -82,7 +79,7 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/group/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteGroup(int id)
         {
             if (id <= 0)
             {

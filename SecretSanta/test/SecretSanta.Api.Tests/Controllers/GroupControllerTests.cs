@@ -1,4 +1,4 @@
-﻿ using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -39,7 +39,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            OkObjectResult result = await controller.Get() as OkObjectResult;
+            var result = (await controller.GetGroups()).Result as OkObjectResult;
 
             List<GroupViewModel> groups = ((IEnumerable<GroupViewModel>)result.Value).ToList();
 
@@ -55,8 +55,7 @@ namespace SecretSanta.Api.Tests.Controllers
             var service = new Mock<IGroupService>(MockBehavior.Strict);
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-
-            BadRequestResult result = await controller.Post(null) as BadRequestResult;
+            var result = (await controller.CreateGroup(null)).Result as BadRequestResult;
 
             Assert.IsNotNull(result);
         }
@@ -79,7 +78,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            CreatedAtActionResult result = await controller.Post(group) as CreatedAtActionResult;
+            var result = (await controller.CreateGroup(group)).Result as CreatedAtActionResult;
             var resultValue = result.Value as GroupViewModel;
 
             Assert.IsNotNull(resultValue);
@@ -95,7 +94,7 @@ namespace SecretSanta.Api.Tests.Controllers
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
 
-            BadRequestResult result = await controller.Put(1, null) as BadRequestResult;
+            var result = (await controller.UpdateGroup(1, null)) as BadRequestResult;
 
             Assert.IsNotNull(result);
         }
@@ -118,7 +117,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            NoContentResult result = await controller.Put(2, group) as NoContentResult;
+            var result = (await controller.UpdateGroup(2, group)) as NoContentResult;
 
             Assert.IsNotNull(result);
             service.VerifyAll();
@@ -132,7 +131,7 @@ namespace SecretSanta.Api.Tests.Controllers
             var service = new Mock<IGroupService>(MockBehavior.Strict);
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            IActionResult result = await controller.Delete(groupId);
+            var result = await controller.DeleteGroup(groupId);
 
             Assert.IsTrue(result is BadRequestObjectResult);
         }
@@ -146,14 +145,14 @@ namespace SecretSanta.Api.Tests.Controllers
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            IActionResult result = await controller.Delete(2);
+            var result = await controller.DeleteGroup(2);
 
             Assert.IsTrue(result is NotFoundResult);
             service.VerifyAll();
         }
 
         [TestMethod]
-        public async Task DeleteGroup_ReturnsOkWhenGroupIsDeletedAsync()
+        public async Task DeleteGroup_ReturnsOkWhenGroupIsDeleted()
         {
             var service = new Mock<IGroupService>();
             service.Setup(x => x.DeleteGroup(2))
@@ -161,7 +160,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 
-            IActionResult result = await controller.Delete(2);
+            var result = await controller.DeleteGroup(2);
 
             Assert.IsTrue(result is OkResult);
             service.VerifyAll();
