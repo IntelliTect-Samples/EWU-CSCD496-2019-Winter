@@ -10,10 +10,10 @@ using SecretSanta.Web.ViewModels;
 
 namespace SecretSanta.Web.Controllers
 {
-    public class UsersController : Controller
+    public class GroupsController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public UsersController(IHttpClientFactory clientFactory)
+        public GroupsController(IHttpClientFactory clientFactory)
         {
             ClientFactory = clientFactory;
         }
@@ -24,7 +24,7 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Users = await secretSantaClient.GetAllUsersAsync();
+                ViewBag.Groups = await secretSantaClient.GetGroupsAsync();
             }
 
             return View();
@@ -37,18 +37,19 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(UserInputViewModel viewModel)
+        public async Task<IActionResult> Add(GroupUserViewModel viewModel)
         {
             IActionResult result = View();
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
+
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.CreateUserAsync(viewModel);
+                        await secretSantaClient.AddUserToGroupAsync(viewModel.GroupId.Value, viewModel.UserId);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -69,24 +70,23 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserGroupViewModel viewModel)
+        public async Task<IActionResult> Edit(GroupViewModel viewModel)
         {
             IActionResult result = View();
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
                     try
                     {
                         int? id = viewModel.Id;
-                        var inputModel = new UserInputViewModel()
+                        var inputModel = new GroupInputViewModel()
                         {
-                            FirstName = viewModel.FirstName,
-                            LastName = viewModel.LastName
+                            Name = viewModel.Name
                         };
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.UpdateUserAsync(id, inputModel);
+                        await secretSantaClient.UpdateGroupAsync(id, inputModel);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -107,7 +107,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove(UserGroupViewModel user)
+        public async Task<IActionResult> Remove(GroupUserViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -117,10 +117,8 @@ namespace SecretSanta.Web.Controllers
                 {
                     try
                     {
-                        int? id = user.Id;
-
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.DeleteUserAsync(id.Value);
+                        await secretSantaClient.RemoveUserFromGroupAsync(viewModel.GroupId.Value, viewModel.UserId);
 
                         result = RedirectToAction(nameof(Index));
                     }
