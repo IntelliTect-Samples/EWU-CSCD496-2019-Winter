@@ -1,19 +1,13 @@
-﻿@model GroupUserViewModel
+﻿@model GroupViewModel
 @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
 {
     <div>@ViewBag.ErrorMessage</div>
 }
     <form asp-route="Remove">
         <div class="field">
-            <label class="label" asp-for="UserId">User Id</label>
+            <label class="label" asp-for="Id">Group Id</label>
             <div class="control">
-                <input class="input" type="number" asp-for="UserId" />
-            </div>
-        </div>
-        <div class="field">
-            <label class="label" asp-for="GroupId">Group Id</label>
-            <div class="control">
-                <input class="input" type="number" asp-for="GroupId" />
+                <input class="input" type="number" asp-for="Id" />
             </div>
         </div>
         <div class="field">

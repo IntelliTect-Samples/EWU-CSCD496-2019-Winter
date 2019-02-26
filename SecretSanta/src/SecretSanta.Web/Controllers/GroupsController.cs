@@ -37,7 +37,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(GroupUserViewModel viewModel)
+        public async Task<IActionResult> Add(GroupInputViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -49,7 +49,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.AddUserToGroupAsync(viewModel.GroupId.Value, viewModel.UserId);
+                        await secretSantaClient.CreateGroupAsync(viewModel);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -107,7 +107,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove(GroupUserViewModel viewModel)
+        public async Task<IActionResult> Remove(GroupViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -118,7 +118,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.RemoveUserFromGroupAsync(viewModel.GroupId.Value, viewModel.UserId);
+                        await secretSantaClient.DeleteGroupAsync(viewModel.Id.Value);
 
                         result = RedirectToAction(nameof(Index));
                     }
