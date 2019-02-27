@@ -1,11 +1,16 @@
 ﻿<h1 class="heading">Groups</h1>
-<ul>
-    @foreach (var group in ViewBag.Groups)
-    {
-        <li>@group.Name</li>
-    }
-</ul>
-<br />
+<hr width="25%"/>
+
+@foreach (var group in ViewBag.Groups)
+{
+    <p>@group.Name</p>
+
+    <div class="buttons are-small">
+        <a asp-controller="Groups" asp-action="Update" asp-route-groupId="@group.Id" class="button is-info">Update</a>
+        <a asp-controller="Groups" asp-action="Remove" asp-route-groupId="@group.Id" class="button is-danger">Remove</a>
+        <br />
+        <br />
+    </div>
+}
+
 <a asp-controller="Groups" asp-action="Add" class="button is-primary">Add Group</a>
-<a asp-controller="Groups" asp-action="Update" class="button is-info">Update Group</a>
-<a asp-controller="Groups" asp-action="Remove" class="button is-danger">Remove Group</a>

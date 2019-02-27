@@ -1,28 +1,26 @@
-﻿@model GroupViewModel
+﻿@model GroupInputViewModel
 @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
 {
     <div>@ViewBag.ErrorMessage</div>
 }
-    <form asp-route="Update">
-        <div class="field">
-            <label class="label" asp-for="Id">Group Id</label>
-            <div class="control">
-                <input class="input" type="text" asp-for="Id" />
-            </div>
-        </div>
-        <div class="field">
-            <label class="label" asp-for="Name">Group Name</label>
-            <div class="control">
-                <input class="input" type="text" asp-for="Name" />
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <button class="button is-info">Update</button>
-            </div>
-        </div>
+<form asp-route="Update">
+    <div class="field">
         <div class="control">
-            <button class="button is-light" asp-action="Index">Cancel</button>
+            <input type="hidden" id="groupId" value="@ViewBag.GroupId" />
         </div>
-
-    </form>
+    </div>
+    <div class="field">
+        <label class="label" asp-for="Name">Group Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="Name" />
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button is-info">Update</button>
+        </div>
+    </div>
+    <div class="control">
+        <button class="button is-light" asp-action="Index">Cancel</button>
+    </div>
+</form>

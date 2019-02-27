@@ -1,13 +1,12 @@
-﻿@model UserViewModel
+﻿@model UserInputViewModel
 @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
 {
     <div>@ViewBag.ErrorMessage</div>
 }
     <form asp-route="Update">
         <div class="field">
-            <label class="label" asp-for="Id">User Id</label>
             <div class="control">
-                <input class="input" type="text" asp-for="Id" />
+                <input type="hidden" id="userId" value="@ViewBag.UserId" />
             </div>
         </div>
         <div class="field">

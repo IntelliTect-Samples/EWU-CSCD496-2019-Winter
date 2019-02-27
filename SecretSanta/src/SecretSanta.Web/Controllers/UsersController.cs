@@ -57,13 +57,14 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int userId)
         {
+            ViewBag.UserId = userId;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(int id, UserInputViewModel viewModel)
+        public async Task<IActionResult> Update(int userId, UserInputViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -74,7 +75,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.UpdateUserAsync(id, viewModel);
+                        await secretSantaClient.UpdateUserAsync(userId, viewModel);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -89,13 +90,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Remove()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Remove(int id)
+        public async Task<IActionResult> Remove(int userId)
         {
             IActionResult result = View();
 
@@ -106,7 +101,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.DeleteUserAsync(id);
+                        await secretSantaClient.DeleteUserAsync(userId);
 
                         result = RedirectToAction(nameof(Index));
                     }
