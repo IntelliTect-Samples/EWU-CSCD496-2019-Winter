@@ -2,9 +2,11 @@
 <ul>
     @foreach (var group in ViewBag.Groups)
     {
-        <li>@group.Name</li>
-        <a class="Button" asp-action="Edit" asp-route-id="@group.Id">Edit</a>
-        <a class="Button" asp-action="Delete" asp-route-id="@group.Id">Delete</a>
+    <li>
+        @group.Name
+        <a class="button is-warning" asp-action="Edit" asp-route-id="@group.Id">Edit</a>
+        <a class="button is-danger" asp-action="Delete" asp-route-id="@group.Id" onclick="return confirm('Are you sure you want to delete @group.Name?')">Delete</a>
+    </li>
     }
 </ul>
 
