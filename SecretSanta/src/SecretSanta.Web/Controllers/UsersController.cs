@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using SecretSanta.Web.ViewModels;
+using SecretSanta.Web.ApiModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,13 +24,8 @@ namespace SecretSanta.Web.Controllers
         {
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
-                var response = await httpClient.GetAsync("/api/users");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    ViewBag.Users = JsonConvert.DeserializeObject<ICollection<UserViewModel>>(content);
-                }
+                var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                ViewBag.Users = await secretSantaClient.GetAllUsersAsync();
             }
             return View();
         }
@@ -49,16 +44,22 @@ namespace SecretSanta.Web.Controllers
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
-                    var response = await httpClient.PostAsJsonAsync<UserInputViewModel>("/api/users", viewModel);
-                    ViewBag.StatusCode = response.StatusCode;
-
-                    if (response.IsSuccessStatusCode)
+                    try
                     {
-                        result = RedirectToAction(nameof(Index));
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        var user = await secretSantaClient.CreateUserAsync(viewModel);
+
+                        if (user != null)
+                        {
+                            result = RedirectToAction(nameof(Index));
+                        }
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ModelState.TryAddModelError("", se.Message);
                     }
                 }
             }
-
             return result;
         }
     }

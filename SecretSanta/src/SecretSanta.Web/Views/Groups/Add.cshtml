@@ -1,0 +1,17 @@
+﻿@model GroupInputViewModel
+<form asp-route="Add">
+    <div class="field">
+        <label class="label" asp-for="Name">Group Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="Name" />
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary">Submit</button>
+        </div>
+        <div class="control">
+            <button class="button is-light" asp-action="Index">Cancel</button>
+        </div>
+    </div>
+</form>
