@@ -1,1 +1,7 @@
 ﻿<h1 class="heading">Groups</h1>
+<ul>
+    @foreach (var group in ViewBag.Groups)
+    {
+        <li>@group.Name</li>
+    }
+</ul>
