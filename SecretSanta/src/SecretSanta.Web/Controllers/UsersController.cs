@@ -63,13 +63,34 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> ViewEdit()
         {
-            return View();
+            return await Index();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            UserViewModel findUser = null;
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    findUser = await secretSantaClient.GetUserAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return View(findUser);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserGroupViewModel viewModel)
+        public async Task<IActionResult> Edit(UserViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -101,13 +122,12 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Remove()
+        public async Task<IActionResult> Remove()
         {
-            return View();
+            return await Index();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Remove(UserGroupViewModel user)
+        public async Task<IActionResult> Delete(int id)
         {
             IActionResult result = View();
 
@@ -117,10 +137,8 @@ namespace SecretSanta.Web.Controllers
                 {
                     try
                     {
-                        int? id = user.Id;
-
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.DeleteUserAsync(id.Value);
+                        await secretSantaClient.DeleteUserAsync(id);
 
                         result = RedirectToAction(nameof(Index));
                     }

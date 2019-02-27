@@ -3,6 +3,7 @@
 {
     <div>@ViewBag.ErrorMessage</div>
 }
+<div asp-validation-summary="All"></div>
 <form asp-route="Add">
     <div class="field">
         <label class="label" asp-for="Name">Group Title</label>
@@ -15,7 +16,7 @@
             <button class="button is-primary">Submit</button>
         </div>
         <div class="control">
-            <button class="button is-light">Cancel</button>
+            <button class="button is-light" asp-action="Index">Cancel</button>
         </div>
     </div>
 </form>

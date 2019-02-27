@@ -64,9 +64,30 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> ViewEdit()
         {
-            return View();
+            return await Index();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            GroupViewModel findGroup = null;
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    findGroup = await secretSantaClient.GetGroupAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return View(findGroup);
         }
 
         [HttpPost]
@@ -101,13 +122,12 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Remove()
+        public async Task<IActionResult> Remove()
         {
-            return View();
+            return await Index();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Remove(GroupViewModel viewModel)
+        public async Task<IActionResult> Delete(int id)
         {
             IActionResult result = View();
 
@@ -118,7 +138,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.DeleteGroupAsync(viewModel.Id.Value);
+                        await secretSantaClient.DeleteGroupAsync(id);
 
                         result = RedirectToAction(nameof(Index));
                     }

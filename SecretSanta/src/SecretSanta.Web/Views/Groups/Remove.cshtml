@@ -1,21 +1,11 @@
-﻿@model GroupViewModel
-@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
-{
-    <div>@ViewBag.ErrorMessage</div>
-}
-    <form asp-route="Remove">
-        <div class="field">
-            <label class="label" asp-for="Id">Group Id</label>
-            <div class="control">
-                <input class="input" type="number" asp-for="Id" />
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <button class="button is-primary">Submit</button>
-            </div>
-            <div class="control">
-                <button class="button is-light">Cancel</button>
-            </div>
-        </div>
-    </form>
+﻿<h1 class="heading">Groups</h1>
+<ul>
+    @foreach (var group in ViewBag.Groups)
+    {
+        <li>
+            @group.Name
+            <a class="button is-danger" asp-action="Delete" asp-route-id="@group.Id" onclick="return confirm('Are you sure you want to delete @group.Name ?')">Delete</a>
+        </li>
+    }
+</ul>
+<br />

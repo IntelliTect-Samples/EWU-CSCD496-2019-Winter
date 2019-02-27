@@ -1,15 +1,8 @@
 ﻿@model GroupViewModel
-@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
-{
-    <div>@ViewBag.ErrorMessage</div>
-}
+
+<div asp-validation-summary="All"></div>
 <form asp-route="Edit">
-    <div class="field">
-        <label class="label" asp-for="Id">Group Id</label>
-        <div class="control">
-            <input class="input" type="number" asp-for="Id" />
-        </div>
-    </div>
+    <input asp-for="Id" type="hidden" />
     <div class="field">
         <label class="label" asp-for="Name">Name</label>
         <div class="control">
@@ -21,7 +14,7 @@
             <button class="button is-primary">Submit</button>
         </div>
         <div class="control">
-            <button class="button is-light">Cancel</button>
+            <button class="button is-light" asp-action="Index">Cancel</button>
         </div>
     </div>
 </form>

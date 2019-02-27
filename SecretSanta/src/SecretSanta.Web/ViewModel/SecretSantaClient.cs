@@ -981,7 +981,7 @@ namespace SecretSanta.Web.ViewModels
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserGroupViewModel>> GetAllUsersAsync()
+        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserViewModel>> GetAllUsersAsync()
         {
             return GetAllUsersAsync(System.Threading.CancellationToken.None);
         }
@@ -989,7 +989,7 @@ namespace SecretSanta.Web.ViewModels
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserGroupViewModel>> GetAllUsersAsync(System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserViewModel>> GetAllUsersAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Users");
@@ -1023,10 +1023,10 @@ namespace SecretSanta.Web.ViewModels
                         if (status_ == "200")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            var result_ = default(System.Collections.Generic.ICollection<UserGroupViewModel>);
+                            var result_ = default(System.Collections.Generic.ICollection<UserViewModel>);
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.ICollection<UserGroupViewModel>>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.ICollection<UserViewModel>>(responseData_, _settings.Value);
                                 return result_;
                             }
                             catch (System.Exception exception_)
@@ -1041,7 +1041,7 @@ namespace SecretSanta.Web.ViewModels
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
 
-                        return default(System.Collections.Generic.ICollection<UserGroupViewModel>);
+                        return default(System.Collections.Generic.ICollection<UserViewModel>);
                     }
                     finally
                     {
@@ -1166,7 +1166,7 @@ namespace SecretSanta.Web.ViewModels
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<UserGroupViewModel> CreateUserAsync(UserInputViewModel viewModel)
+        public System.Threading.Tasks.Task<UserViewModel> CreateUserAsync(UserInputViewModel viewModel)
         {
             return CreateUserAsync(viewModel, System.Threading.CancellationToken.None);
         }
@@ -1174,7 +1174,7 @@ namespace SecretSanta.Web.ViewModels
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<UserGroupViewModel> CreateUserAsync(UserInputViewModel viewModel, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<UserViewModel> CreateUserAsync(UserInputViewModel viewModel, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Users");
@@ -1211,10 +1211,10 @@ namespace SecretSanta.Web.ViewModels
                         if (status_ == "201")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            var result_ = default(UserGroupViewModel);
+                            var result_ = default(UserViewModel);
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<UserGroupViewModel>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<UserViewModel>(responseData_, _settings.Value);
                                 return result_;
                             }
                             catch (System.Exception exception_)
@@ -1266,7 +1266,7 @@ namespace SecretSanta.Web.ViewModels
 
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<UserGroupViewModel> GetUserAsync(int id)
+        public System.Threading.Tasks.Task<UserViewModel> GetUserAsync(int id)
         {
             return GetUserAsync(id, System.Threading.CancellationToken.None);
         }
@@ -1274,7 +1274,7 @@ namespace SecretSanta.Web.ViewModels
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<UserGroupViewModel> GetUserAsync(int id, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<UserViewModel> GetUserAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -1312,10 +1312,10 @@ namespace SecretSanta.Web.ViewModels
                         if (status_ == "200")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            var result_ = default(UserGroupViewModel);
+                            var result_ = default(UserViewModel);
                             try
                             {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<UserGroupViewModel>(responseData_, _settings.Value);
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<UserViewModel>(responseData_, _settings.Value);
                                 return result_;
                             }
                             catch (System.Exception exception_)
@@ -1646,7 +1646,7 @@ namespace SecretSanta.Web.ViewModels
         public int? UserId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("user", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public UserGroupViewModel User { get; set; }
+        public UserViewModel User { get; set; }
 
         public string ToJson()
         {
@@ -1661,7 +1661,7 @@ namespace SecretSanta.Web.ViewModels
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.18.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class UserGroupViewModel
+    public partial class UserViewModel
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id { get; set; }
@@ -1677,9 +1677,9 @@ namespace SecretSanta.Web.ViewModels
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
 
-        public static UserGroupViewModel FromJson(string data)
+        public static UserViewModel FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserGroupViewModel>(data);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserViewModel>(data);
         }
 
     }
