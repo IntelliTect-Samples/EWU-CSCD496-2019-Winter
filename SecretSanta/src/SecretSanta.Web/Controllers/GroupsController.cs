@@ -22,13 +22,12 @@ namespace SecretSanta.Web.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            IActionResult result = View();
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                 ViewBag.Groups = await secretSantaClient.GetGroupsAsync();
             }
-            return result;
+            return View();
         }
 
         [HttpGet]
@@ -36,6 +35,27 @@ namespace SecretSanta.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            GroupViewModel fetchedGroup = null;
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    fetchedGroup = await secretSantaClient.GetGroupAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.TryAddModelError("", se.Message);
+                }
+            }
+            return View(fetchedGroup);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add(GroupInputViewModel viewModel)
         {
@@ -58,6 +78,35 @@ namespace SecretSanta.Web.Controllers
                     catch (SwaggerException se)
                     {
                         ModelState.TryAddModelError("", se.Message);
+                    }
+                }
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(GroupViewModel viewModel)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+
+                        await secretSantaClient.UpdateGroupAsync(viewModel.Id, new GroupInputViewModel
+                        {
+                            Name = viewModel.Name
+                        });
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ModelState.AddModelError("", se.Message);
                     }
                 }
             }

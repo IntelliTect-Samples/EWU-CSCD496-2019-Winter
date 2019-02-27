@@ -1,2 +1,20 @@
-﻿@model GroupInputViewModel
-<h1>Edit</h1>
+﻿@model GroupViewModel
+
+<div asp-validation-summary="All"></div>
+<form asp-route="Add">
+    <input asp-for="Id" type="hidden" />
+    <div class="field">
+        <label class="label" asp-for="Name">Group Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="Name" />
+        </div>
+    </div>
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-primary">Submit</button>
+        </div>
+        <div class="control">
+            <a asp-controller="Groups" asp-action="Index" class="button is-light">Cancel</a>
+        </div>
+    </div>
+</form>
