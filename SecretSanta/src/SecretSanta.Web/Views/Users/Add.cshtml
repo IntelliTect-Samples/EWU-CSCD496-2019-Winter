@@ -1,0 +1,27 @@
+﻿@model UserInputViewModel
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
+<form asp-route="Add">
+    <div class="field">
+        <label class="label" asp-for="FirstName">First Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="FirstName" />
+        </div>
+    </div>
+    <div class="field">
+        <label class="label" asp-for="LastName">Last Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="LastName" />
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary">Submit</button>
+        </div>
+        <div class="control">
+            <button class="button is-light">Cancel</button>
+        </div>
+    </div>
+</form>

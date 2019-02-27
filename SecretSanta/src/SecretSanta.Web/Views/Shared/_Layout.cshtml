@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    <!-- Stylesheets -->
+    
+    <link href="~/css/main.90005a4e529a622689a7.css" rel="stylesheet" />
+    
+    <!-- End Stylesheets -->
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" asp-controller="Home">
+                Secret Santa
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" asp-controller="Users">
+                    Users
+                </a>
+                <a class="navbar-item">
+                    Groups
+                </a>
+            </div>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    
+    <script src="~/js/main.90005a4e529a622689a7.js"></script>
+    
+    <!-- End Scripts -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>
