@@ -1,9 +1,15 @@
-﻿@model UserInputViewModel
+﻿@model UserViewModel
 @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
 {
     <div>@ViewBag.ErrorMessage</div>
 }
-    <form asp-route="Add">
+    <form asp-route="Update">
+        <div class="field">
+            <label class="label" asp-for="Id">User Id</label>
+            <div class="control">
+                <input class="input" type="text" asp-for="Id" />
+            </div>
+        </div>
         <div class="field">
             <label class="label" asp-for="FirstName">First Name</label>
             <div class="control">
@@ -18,7 +24,7 @@
         </div>
         <div class="field">
             <div class="control">
-                <button class="button is-primary">Submit</button>
+                <button class="button is-info">Update</button>
             </div>
         </div>
         <div class="control">
