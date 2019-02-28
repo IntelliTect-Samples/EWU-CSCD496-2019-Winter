@@ -1,2 +1,6 @@
 ﻿@charset "utf-8";
 @import "~bulma/bulma";
+
+.input-validation-error {
+	border-color: red;	
+}

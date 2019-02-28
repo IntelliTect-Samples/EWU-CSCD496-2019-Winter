@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SecretSanta.Web.ApiModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Web.ApiModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Web.Controllers
 {
-    public class UsersController : Controller
+    public class GroupsController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        private IMapper Mapper { get;  }
+        private IMapper Mapper { get; }
 
-        public UsersController(IHttpClientFactory clientFactory, IMapper mapper)
+        public GroupsController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
             Mapper = mapper;
@@ -28,18 +27,17 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 SecretSantaClient secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Users = await secretSantaClient.GetAllUsersAsync();
+                ViewBag.Groups = await secretSantaClient.GetGroupsAsync();
             }
             return View();
         }
-
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Add(UserInputViewModel viewModel)
+        public async Task<IActionResult> Add(GroupInputViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -47,7 +45,7 @@ namespace SecretSanta.Web.Controllers
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
-                    var response = await httpClient.PostAsJsonAsync<UserInputViewModel>("/api/users", viewModel);
+                    var response = await httpClient.PostAsJsonAsync<GroupInputViewModel>("/api/groups", viewModel);
                     ViewBag.StatusCode = response.StatusCode;
 
                     if (response.IsSuccessStatusCode)
@@ -62,25 +60,25 @@ namespace SecretSanta.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            UserViewModel fetchedUser = null;
+            GroupViewModel fetchedGroup = null;
 
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    fetchedUser = await secretSantaClient.GetUserAsync(id);
+                    fetchedGroup = await secretSantaClient.GetGroupAsync(id);
                 }
                 catch (SwaggerException se)
                 {
                     ModelState.AddModelError("", se.Message);
                 }
             }
-            return View(fetchedUser);
+            return View(fetchedGroup);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel viewModel)
+        public async Task<IActionResult> Edit(GroupViewModel viewModel)
         {
             IActionResult result = View();
 
@@ -91,7 +89,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.UpdateUserAsync(viewModel.Id, Mapper.Map<UserInputViewModel>(viewModel));
+                        await secretSantaClient.UpdateGroupAsync(viewModel.Id, Mapper.Map<GroupInputViewModel>(viewModel));
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -113,7 +111,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.DeleteUserAsync(id);
+                    await secretSantaClient.DeleteGroupAsync(id);
 
                     result = RedirectToAction(nameof(Index));
                 }
@@ -125,6 +123,6 @@ namespace SecretSanta.Web.Controllers
 
             return result;
         }
+
     }
 }
-

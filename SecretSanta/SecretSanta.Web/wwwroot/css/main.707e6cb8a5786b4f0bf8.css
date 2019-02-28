@@ -6969,3 +6969,6 @@ label.panel-block {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
 
+.input-validation-error {
+  border-color: red; }
+
