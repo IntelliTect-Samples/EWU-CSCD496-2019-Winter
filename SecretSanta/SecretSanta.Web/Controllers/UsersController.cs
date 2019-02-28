@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SecretSanta.Web.ViewModels;
+using SecretSanta.Web.Models;
 
 namespace SecretSanta.Web.Controllers
 {
@@ -25,10 +21,13 @@ namespace SecretSanta.Web.Controllers
                 var response = await httpClient.GetAsync("/api/users");
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    ViewBag.Users = await secretSantaClient.GetAllUsersAsync();
+
+                    /*var content = await response.Content.ReadAsStringAsync();
 
                     ViewBag.Users = JsonConvert.DeserializeObject<ICollection<UserViewModel>>(content);
-                    //parsing to put into catch all, put from controller to view
+                    //parsing to put into catch all, put from controller to view*/
                 }
             }
             return View();
