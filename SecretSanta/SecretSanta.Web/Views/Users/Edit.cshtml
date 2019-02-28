@@ -1,5 +1,8 @@
-﻿@model SecretSanta.Web.ApiModels.UserInputViewModel
+﻿@model SecretSanta.Web.ApiModels.UserViewModel
+
+<div asp-validation-summary="All"></div>
 <form asp-route="Add">
+    <input asp-for="Id" type="hidden" />
     <div class="field">
         <label class="label" asp-for="FirstName">First Name</label>
         <div class="control">
@@ -12,12 +15,12 @@
             <input class="input" type="text" asp-for="LastName" />
         </div>
     </div>
-    <div class="field">
+    <div class="field is-grouped">
         <div class="control">
             <button class="button is-primary">Submit</button>
         </div>
         <div class="control">
-            <button class="button is-light" asp-action="Index">Cancel</button>
+            <a asp-controller="Users" asp-action="Index" class="button is-light">Cancel</a>
         </div>
     </div>
-</form> 
+</form>
