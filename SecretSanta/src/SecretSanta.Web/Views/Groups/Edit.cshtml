@@ -1,5 +1,9 @@
 ﻿@model GroupViewModel
 
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
 <div asp-validation-summary="All"></div>
 <form asp-route="Edit">
     <input asp-for="Id" type="hidden" />

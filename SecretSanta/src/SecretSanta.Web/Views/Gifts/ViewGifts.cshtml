@@ -1,0 +1,16 @@
+﻿<h1 class="heading">Gifts</h1>
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
+<ul>
+    @foreach (var gift in ViewBag.Gifts)
+    {
+        <li>
+            @gift.Title
+            <a class="button is-warning" asp-action="Edit" asp-route-id="@gift.Id">Edit</a>
+            <a class="button is-danger" asp-action="Index" asp-route-id="@gift.Id" onclick="return confirm('Are you sure you want to delete @gift.Title?')">Delete</a>
+        </li>
+    }
+</ul>
+<a class="button is-light" asp-action="Index">Cancel</a>

@@ -1,4 +1,8 @@
 ﻿<h1 class="heading">Users</h1>
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
 <ul>
     @foreach (var user in ViewBag.Users)
     {

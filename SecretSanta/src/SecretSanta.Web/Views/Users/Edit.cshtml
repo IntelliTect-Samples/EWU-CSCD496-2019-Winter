@@ -1,7 +1,11 @@
 ﻿@model UserViewModel
 
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
 <div asp-validation-summary="All"></div>
-<form asp-route="Add">
+<form asp-route="Edit">
     <input asp-for="Id" type="hidden" />
     <div class="field">
         <label class="label" asp-for="FirstName">First Name</label>

@@ -1,4 +1,8 @@
 ﻿<h1 class="heading">Groups</h1>
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
 <ul>
     @foreach (var group in ViewBag.Groups)
     {

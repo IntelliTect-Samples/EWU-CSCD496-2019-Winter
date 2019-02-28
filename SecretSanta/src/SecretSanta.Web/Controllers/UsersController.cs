@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Web.ViewModels;
 
@@ -13,9 +14,11 @@ namespace SecretSanta.Web.Controllers
     public class UsersController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public UsersController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+        public UsersController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
 
         // GET: /<controller>/
@@ -100,14 +103,8 @@ namespace SecretSanta.Web.Controllers
                 {
                     try
                     {
-                        int? id = viewModel.Id;
-                        var inputModel = new UserInputViewModel()
-                        {
-                            FirstName = viewModel.FirstName,
-                            LastName = viewModel.LastName
-                        };
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.UpdateUserAsync(id, inputModel);
+                        await secretSantaClient.UpdateUserAsync(viewModel.Id, Mapper.Map<UserInputViewModel>(viewModel));
 
                         result = RedirectToAction(nameof(Index));
                     }

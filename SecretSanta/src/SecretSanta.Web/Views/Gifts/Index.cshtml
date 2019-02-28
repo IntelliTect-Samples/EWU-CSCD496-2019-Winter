@@ -1,0 +1,11 @@
+﻿<h1 class="heading">Gifts</h1>
+<ul>
+    @foreach (var user in ViewBag.Users)
+    {
+    <li>
+        @user.FirstName @user.LastName
+        <a asp-controller="Gifts" asp-action="Add"  asp-route-id="@user.Id" class="button is-primary">Add Gifts</a>
+        <a asp-controller="Gifts" asp-action="ViewGifts" asp-route-id="@user.Id" class="button">View Gifts</a>
+    </li>
+    }
+</ul>

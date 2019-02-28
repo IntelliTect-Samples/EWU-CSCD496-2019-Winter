@@ -155,7 +155,7 @@ namespace SecretSanta.Web.ViewModels
         public async System.Threading.Tasks.Task<GiftViewModel> CreateGiftAsync(GiftInputViewModel viewModel, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Gifts");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Gifts/" + viewModel.UserId);
 
             var client_ = _httpClient;
             try

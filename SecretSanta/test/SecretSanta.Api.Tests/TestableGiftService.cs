@@ -12,6 +12,11 @@ namespace SecretSanta.Api.Tests
         public List<Gift> ToReturn { get; set; }
         public int GetGiftsForUser_UserId { get; set; }
 
+        public Task<Gift> AddGiftToUser(int userId, Gift gift)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Gift>> GetGiftsForUser(int userId)
         {
             await Task.Yield();
