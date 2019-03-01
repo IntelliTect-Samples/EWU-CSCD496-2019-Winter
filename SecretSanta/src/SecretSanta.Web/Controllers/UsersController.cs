@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SecretSanta.Web.ApiModels;
-//using SecretSanta.Web.ViewModels;
+using AutoMapper;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Web.Controllers
@@ -14,9 +14,12 @@ namespace SecretSanta.Web.Controllers
     public class UsersController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public UsersController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+
+        public UsersController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
 
         // GET: /<controller>/
@@ -55,6 +58,83 @@ namespace SecretSanta.Web.Controllers
             }
 
             return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            UserViewModel fetchedUser = null;
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        fetchedUser = await secretSantaClient.GetUserAsync(id);
+                    }
+                    catch (SwaggerException ex)
+                    {
+                        ModelState.AddModelError("", ex.Message);
+                    }
+                }
+
+            }
+
+            return View(fetchedUser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserViewModel viewModel)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+
+                        await secretSantaClient.UpdateUserAsync(viewModel.Id, Mapper.Map<UserInputViewModel>(viewModel));
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException ex)
+                    {
+                        ModelState.AddModelError("", ex.Message);
+                    }
+
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            IActionResult result = View();
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+
+                    await secretSantaClient.DeleteUserAsync(id);
+
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+
+                return result;
+
+            }
         }
     }
 }

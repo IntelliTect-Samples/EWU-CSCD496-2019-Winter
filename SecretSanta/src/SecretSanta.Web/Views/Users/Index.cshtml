@@ -2,7 +2,10 @@
 <ul>
     @foreach (var user in ViewBag.Users)
     {
-        <li>@user.FirstName @user.LastName</li>
+        <li>@user.FirstName @user.LastName
+        <a class="button" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+        <a class="button is-danger" asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+        </li>
     }
 </ul>
 

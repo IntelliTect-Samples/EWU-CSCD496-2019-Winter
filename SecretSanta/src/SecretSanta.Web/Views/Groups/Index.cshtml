@@ -1,0 +1,12 @@
+﻿<h1 class="heading">Groups</h1>
+<ul>
+    @foreach (var group in ViewBag.Groups)
+    {
+        <li>
+            @group.Name
+            <a asp-action="Edit" class="button" asp-route-id="@group.Id">Edit</a>
+            <a asp-action="Delete" class="button is-danger" asp-route-id="@group.Id">Delete</a>
+        </li>
+    }
+</ul>
+<a asp-controller="Groups" asp-action="Add" class="button is-primary">Add group</a>
