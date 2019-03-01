@@ -86,5 +86,52 @@ namespace SecretSanta.Web.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            GroupViewModel fetchedGroup = null;
+
+            using(var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    fetchedGroup = await secretSantaClient.GetGroupAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return View(fetchedGroup);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(GroupViewModel viewModel)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.UpdateGroupAsync(viewModel.Id, Mapper.Map<GroupInputViewModel>(viewModel));
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ModelState.AddModelError("", se.Message);
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }
