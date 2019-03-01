@@ -1,0 +1,39 @@
+﻿@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <div>@ViewBag.ErrorMessage</div>
+}
+
+<h1 class="heading">Users in @ViewBag.Group.Name</h1>
+@if (ViewBag.Group.GroupUsers.Count == 0)
+{
+    <p>None</p>
+}
+else
+{
+    foreach (var groupUser in ViewBag.Group.GroupUsers)
+    {
+        <p>@groupUser.User.FirstName @groupUser.User.LastName</p>
+
+        <div class="buttons are-small">
+            <a asp-controller="Groups" asp-action="RemoveUser" asp-route-userId="@groupUser.User.Id" asp-route-groupId="@ViewBag.Group.Id" class="button is-danger">Remove User from Group</a>
+        </div>
+    }
+}
+<br />
+<br />
+
+<h1 class="heading">Users Available to Add</h1>
+@if (ViewBag.UsersNotInGroup.Count == 0)
+{
+    <p>None</p>
+}
+else
+{
+    foreach (var user in ViewBag.UsersNotInGroup)
+    {
+        <p>@user.FirstName @user.LastName</p>
+        <div class="buttons are-small">
+            <a asp-controller="Groups" asp-action="AddUser" asp-route-userId="@user.Id" asp-route-groupId="@ViewBag.Group.Id" class="button is-primary">Add User to Group</a>
+        </div>
+    }
+}

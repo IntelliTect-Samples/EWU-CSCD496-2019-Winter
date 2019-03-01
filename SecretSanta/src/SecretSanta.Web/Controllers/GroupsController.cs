@@ -117,5 +117,113 @@ namespace SecretSanta.Web.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GroupUsers(int groupId)
+        {
+            IActionResult result = View();
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+
+                    ViewBag.UsersNotInGroup = await GetUsersNotInGroup(groupId);
+
+                    ViewBag.Group = await secretSantaClient.GetGroupAsync(groupId);
+                }
+                catch (SwaggerException se)
+                {
+                    ViewBag.ErrorMessage = se.Message;
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<ICollection<UserViewModel>> GetUsersNotInGroup(int groupId)
+        {
+            List<UserViewModel> usersNotInGroup = new List<UserViewModel>();
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+
+                var allUsers = await secretSantaClient.GetAllUsersAsync();
+                var group = await secretSantaClient.GetGroupAsync(groupId);
+                var groupUsers = group.GroupUsers;
+
+                
+                foreach (var user in allUsers)
+                {
+                    bool addUser = true;
+                    foreach (var groupUser in groupUsers)
+                    {
+                        if (user.Id == groupUser.User.Id)
+                        {
+                            addUser = false;
+                        }
+                    }
+
+                    if (addUser) usersNotInGroup.Add(user);
+                }
+            }
+
+            return usersNotInGroup;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddUser(int userId, int groupId)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.AddUserToGroupAsync(groupId, userId);
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveUser(int userId, int groupId)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.RemoveUserFromGroupAsync(groupId, userId);
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
+                }
+            }
+
+            return result;
+        }
+
     }
 }
