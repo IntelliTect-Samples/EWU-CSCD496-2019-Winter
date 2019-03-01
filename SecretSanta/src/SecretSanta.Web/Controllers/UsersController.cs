@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Web.ApiModels;
 
@@ -10,9 +11,11 @@ namespace SecretSanta.Web.Controllers
     public class UsersController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public UsersController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+        public UsersController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
@@ -46,6 +49,31 @@ namespace SecretSanta.Web.Controllers
                         result = RedirectToAction(nameof(Index));
                     }
                     catch(SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.DeleteUserAsync(id);
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
                     {
                         ViewBag.ErrorMessage = se.Message;
                     }
