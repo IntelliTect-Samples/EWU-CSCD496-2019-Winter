@@ -7,7 +7,8 @@
 
     <div class="buttons are-small">
         <a asp-controller="Groups" asp-action="Update" asp-route-groupId="@group.Id" class="button is-info">Update</a>
-        <a asp-controller="Groups" asp-action="Remove" asp-route-groupId="@group.Id" class="button is-danger">Remove</a>
+        <a asp-controller="Groups" asp-action="Remove" asp-route-groupId="@group.Id" class="button is-danger"
+            onclick="return confirm('Are you sure you want to delete @group.Name?')">Remove</a>
         <br />
         <br />
     </div>

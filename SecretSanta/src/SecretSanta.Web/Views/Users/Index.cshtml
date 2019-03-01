@@ -7,7 +7,8 @@
     
     <div class="buttons are-small">
         <a asp-controller="Users" asp-action="Update" asp-route-userId="@user.Id" class="button is-info">Update</a>
-        <a asp-controller="Users" asp-action="Remove" asp-route-userId="@user.Id" class="button is-danger">Remove</a>
+        <a asp-controller="Users" asp-action="Remove" asp-route-userId="@user.Id" class="button is-danger"
+            onclick="return confirm('Are you sure you want to delete @user.FirstName @user.LastName?')">Remove</a>
         <br />
         <br />
     </div>
