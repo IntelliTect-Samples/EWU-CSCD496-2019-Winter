@@ -12,6 +12,11 @@ namespace SecretSanta.Domain.Models
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {}
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Group>().HasIndex(g => g.Name).IsUnique();

@@ -51,6 +51,7 @@ namespace SecretSanta.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.CustomSchemaIds(i => i.FullName);
             });
 
             var dependencyContext = DependencyContext.Default;

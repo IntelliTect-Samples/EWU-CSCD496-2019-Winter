@@ -44,11 +44,18 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Gifts.Where(g => g.UserId == userId).ToListAsync();
         }
 
-        public async Task RemoveGift(Gift gift)
+        public async Task<User> GetUser(int userId)
         {
-            if (gift == null) throw new ArgumentNullException(nameof(gift));
+            return await DbContext.Users.FindAsync(userId);
+        }
+
+        public async Task RemoveGift(int userId, int giftId)
+        {
+            Gift gift = await DbContext.Gifts.FindAsync(giftId);
+            User user = await DbContext.Users.FindAsync(userId);
 
             DbContext.Gifts.Remove(gift);
+            user.Gifts.Remove(gift);
             await DbContext.SaveChangesAsync();
         }
     }

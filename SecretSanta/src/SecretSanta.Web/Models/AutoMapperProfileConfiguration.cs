@@ -8,6 +8,7 @@ namespace SecretSanta.Web.Models
         public AutoMapperProfileConfiguration()
         {
             CreateMap<UserInputViewModel, UserViewModel>();
+            CreateMap<GiftInputViewModel, GiftViewModel>();
         }
     }
 }

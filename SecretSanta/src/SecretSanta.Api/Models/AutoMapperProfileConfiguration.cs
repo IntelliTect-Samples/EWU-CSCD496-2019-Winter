@@ -14,6 +14,7 @@ namespace SecretSanta.Api.Models
         {
             CreateMap<Gift, GiftViewModel>();
             CreateMap<GiftViewModel, Gift>();
+            CreateMap<GiftInputViewModel, Gift>();
 
             CreateMap<User, UserViewModel>();
             CreateMap<UserInputViewModel, User>();

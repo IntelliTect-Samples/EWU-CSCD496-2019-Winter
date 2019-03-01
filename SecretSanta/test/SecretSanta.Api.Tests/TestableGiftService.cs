@@ -23,5 +23,20 @@ namespace SecretSanta.Api.Tests
             GetGiftsForUser_UserId = userId;
             return await Task.FromResult(ToReturn);
         }
+
+        public Task<User> GetUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveGift(int userId, int groupId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Gift> UpdateGiftForUser(int userId, Gift gift)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

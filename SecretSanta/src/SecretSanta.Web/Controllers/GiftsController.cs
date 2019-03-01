@@ -76,6 +76,33 @@ namespace SecretSanta.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, GiftInputViewModel viewModel)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        int? num = id;
+                        await secretSantaClient.GetGiftAsync(num);
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task<IActionResult> Remove(int id)
         {
             IActionResult result = View();

@@ -52,6 +52,46 @@ namespace SecretSanta.Api.Controllers
             return CreatedAtAction(nameof(GetGiftForUser), new { id = gift.UserId }, Mapper.Map<GiftViewModel>(gift));
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditGiftForUser(int id, GiftInputViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+            var fetchedGifts = await GiftService.GetGiftsForUser(id);
+            if (fetchedGifts == null)
+            {
+                return NotFound();
+            }
 
+            Gift updatedGift = Mapper.Map<Gift>(viewModel);
+            await GiftService.UpdateGiftForUser(id, updatedGift);
+            return NoContent();
+        }
+
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> RemoveGiftFromUser(int userId, int giftId)
+        {
+            if (userId <= 0)
+            {
+                return BadRequest("A User id must be specified");
+            }
+
+            var gifts = await GiftService.GetGiftsForUser(userId);
+
+            if(gifts == null)
+            {
+                return NotFound();
+            }
+
+            await GiftService.RemoveGift(userId, giftId);
+
+            return Ok();
+        }
     }
 }
