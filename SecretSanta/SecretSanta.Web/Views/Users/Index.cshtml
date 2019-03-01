@@ -1,11 +1,11 @@
 ﻿<h1 class="heading">Users</h1>
 
 <ul>
-    @foreach (SecretSanta.Web.ApiModels.UserViewModel user in ViewBag.Users)
+    @foreach (var user in ViewBag.Users)
     {
     <li>
         @user.FirstName @user.LastName
-        <a class="button is-warning" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+        <a class="button" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
         <a class="button is-danger" asp-action="Delete" asp-route-id="@user.Id" onclick="return confirm('Are you sure you want to delete @user.FirstName @user.LastName?')">Delete</a>
     </li>
     }

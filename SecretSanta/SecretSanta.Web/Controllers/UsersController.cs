@@ -50,13 +50,17 @@ namespace SecretSanta.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (viewModel.FirstName == null || viewModel.FirstName.Trim().Length == 0)
+                {
+                    ModelState.AddModelError("", "Cannot add a User with no first name, or an empty first name.");
+                }
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
                     SecretSantaClient secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
 
                     if (await secretSantaClient.CreateUserAsync(viewModel) == null) //does not create valid user
                     {
-                        ModelState.AddModelError("", "Cannot add invalid user. First name is required!");
+                        ModelState.AddModelError("", "User was not able to be created with passed in values.");
                     }
                     else
                     {
@@ -71,13 +75,8 @@ namespace SecretSanta.Web.Controllers
         /* EDIT A USER */
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int userId)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (userId == 0)
-            {
-                ModelState.AddModelError("", "The id is indeed" + userId);
-                return View(null);
-            }
             UserViewModel result = null;
 
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
@@ -85,11 +84,11 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     SecretSantaClient secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    result = await secretSantaClient.GetUserAsync(userId);
+                    result = await secretSantaClient.GetUserAsync(id);
                 }
                 catch (SwaggerException e)
                 {
-                    ModelState.AddModelError("", "There shouldn't be an error" + userId);
+                    ModelState.AddModelError("", $"The ID {id} does not coorespond to a valid user, no users were edited.");
                 }
             }
             return View(result);
@@ -107,16 +106,22 @@ namespace SecretSanta.Web.Controllers
                 {
                     try
                     {
-                        SecretSantaClient secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-
-                        await secretSantaClient.UpdateUserAsync(viewModel.Id, new UserInputViewModel
+                        if (viewModel.FirstName == null || viewModel.FirstName.Trim().Length == 0)
                         {
-                            FirstName = viewModel.FirstName,
-                            LastName = viewModel.LastName
-                        });
+                            ModelState.AddModelError("", "Cannot create a User with no first name, or an empty first name.");
+                        }
+                        else
+                        {
+                            SecretSantaClient secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
 
-                        result = RedirectToAction(nameof(Index));
-                        
+                            await secretSantaClient.UpdateUserAsync(viewModel.Id, new UserInputViewModel
+                            {
+                                FirstName = viewModel.FirstName,
+                                LastName = viewModel.LastName
+                            });
+
+                            result = RedirectToAction(nameof(Index));
+                        }
                     }
                     catch (SwaggerException e)
                     {
@@ -127,6 +132,8 @@ namespace SecretSanta.Web.Controllers
 
             return result;
         }
+
+        /* Delete A USER */
 
         public async Task<IActionResult> Delete(int id)
         {
@@ -143,13 +150,11 @@ namespace SecretSanta.Web.Controllers
                 }
                 catch (SwaggerException se)
                 {
-                    ModelState.AddModelError("", se.Message);
+                    ModelState.AddModelError("", $"User with ID {id} does not exist, no users were deleted.");
                 }
 
             }
             return result;
-
         }
-
     }
 }
