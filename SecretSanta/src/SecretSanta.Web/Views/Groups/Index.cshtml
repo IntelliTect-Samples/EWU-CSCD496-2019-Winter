@@ -1,9 +1,14 @@
 ﻿<h1 class="heading">Groups</h1>
 <ul>
+    @if (ViewBag.Groups.Count == 0)
+    {
+        <li>No Groups</li>
+    }
     @foreach (var group in ViewBag.Groups)
     {
         <li>
             @group.Name
+            <a asp-action="Edit" class="button" asp-route-id="@group.Id">Edit</a>
             <a asp-action="Delete" class="button is-danger" asp-route-id="@group.Id">Delete</a>
         </li>
     }

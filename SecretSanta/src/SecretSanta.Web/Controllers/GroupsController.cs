@@ -41,6 +41,11 @@ namespace SecretSanta.Web.Controllers
         {
             IActionResult result = View();
 
+            if (string.IsNullOrWhiteSpace(viewModel.Name))
+            {
+                ModelState.AddModelError("Name", "Invalid Group Name");
+            }
+
             if (ModelState.IsValid)
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
@@ -112,6 +117,11 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Edit(GroupViewModel viewModel)
         {
             IActionResult result = View();
+
+            if (string.IsNullOrWhiteSpace(viewModel.Name))
+            {
+                ModelState.AddModelError("Last Name", "Last name is required");
+            }
 
             if (ModelState.IsValid)
             {

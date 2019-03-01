@@ -1,17 +1,15 @@
-﻿@model GroupInputViewModel
-@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
-{
-    <div>@ViewBag.ErrorMessage</div>
-}
+﻿@model GroupViewModel
+
 <div asp-validation-summary="All"></div>
 <form asp-route="Add">
+    <input asp-for="Id" type="hidden" />
     <div class="field">
         <label class="label" asp-for="Name">Name</label>
         <div class="control">
             <input class="input" type="text" asp-for="Name" />
         </div>
     </div>
-    <div class="field">
+    <div class="field is-grouped">
         <div class="control">
             <button class="button is-primary">Submit</button>
         </div>

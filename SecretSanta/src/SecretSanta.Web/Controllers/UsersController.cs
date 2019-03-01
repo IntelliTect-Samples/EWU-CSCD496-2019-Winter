@@ -37,6 +37,11 @@ namespace SecretSanta.Web.Controllers
         {
             IActionResult result = View();
 
+            if (string.IsNullOrWhiteSpace(viewModel.LastName))
+            {
+                ModelState.AddModelError("Last Name", "Invalid Last Name");
+            }
+
             if (ModelState.IsValid)
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
@@ -108,6 +113,16 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Edit(UserViewModel viewModel)
         {
             IActionResult result = View();
+
+            if (string.IsNullOrWhiteSpace(viewModel.FirstName))
+            {
+                ModelState.AddModelError("First Name", "First name is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(viewModel.LastName))
+            {
+                ModelState.AddModelError("Last Name", "Last name is required");
+            }
 
             if (ModelState.IsValid)
             {

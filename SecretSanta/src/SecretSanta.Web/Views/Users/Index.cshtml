@@ -1,11 +1,16 @@
 ﻿<h1 class="heading">Users</h1>
 <ul>
+    @if (ViewBag.Users.Count == 0)
+    {
+        <li>No Users</li>
+    }
     @foreach (var user in ViewBag.Users)
     {
-    <li>
-        @user.FirstName @user.LastName
-        <a asp-action="Delete" class="button is-danger" asp-route-id="@user.Id">Delete</a>
-    </li>
+        <li>
+            @user.FirstName @user.LastName
+            <a asp-action="Edit" class="button" asp-route-id="@user.Id">Edit</a>
+            <a asp-action="Delete" class="button is-danger" asp-route-id="@user.Id">Delete</a>
+        </li>
     }
 </ul>
 <a asp-controller="Users" asp-action="Add" class="button is-primary">Add User</a>
