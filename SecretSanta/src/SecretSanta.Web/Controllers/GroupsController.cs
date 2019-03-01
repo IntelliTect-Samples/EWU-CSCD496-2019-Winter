@@ -24,7 +24,7 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Groups = await secretSantaClient.GetGroupsAsync();
+                ViewBag.Groups = await secretSantaClient.GetAllGroupsAsync();
             }
 
             return View();

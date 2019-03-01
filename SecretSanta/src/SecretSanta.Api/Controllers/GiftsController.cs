@@ -26,8 +26,27 @@ namespace SecretSanta.Api.Controllers
             Mapper = mapper;
         }
 
+        [HttpGet("{id}")]
+        [Produces(typeof(GiftViewModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(GiftViewModel), StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetGift(int id)
+        {
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(await GiftService.GetGift(id));
+        }
+
         // GET api/Gift/user/5
         [HttpGet("user/{userId}")]
+        [Produces(typeof(ICollection<GiftViewModel>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ICollection<GiftViewModel>), StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> GetGiftForUser(int userId)
         {
             if (userId <= 0)
@@ -40,33 +59,38 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPost("{id}")]
+        [Produces(typeof(GiftViewModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GiftViewModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddGiftToUser(int id, GiftViewModel viewModel)
         {
             if (viewModel is null) return BadRequest();
 
             Gift gift = await GiftService.AddGiftToUser(id, Mapper.Map<Gift>(viewModel));
 
-            return CreatedAtAction(nameof(GetGiftForUser), new { id = gift.UserId }, Mapper.Map<GiftViewModel>(gift));
+            return CreatedAtAction(nameof(GetGift), new { id = gift.Id }, Mapper.Map<GiftViewModel>(gift));
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> EditGiftForUser(int id, GiftInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
-            var fetchedGifts = await GiftService.GetGiftsForUser(id);
-            if (fetchedGifts == null)
+            var fetchedGift = await GiftService.GetGift(id);
+            if (fetchedGift == null)
             {
                 return NotFound();
             }
 
-            Gift updatedGift = Mapper.Map<Gift>(viewModel);
-            await GiftService.UpdateGiftForUser(id, updatedGift);
+            Mapper.Map(viewModel, fetchedGift);
+            await GiftService.UpdateGiftForUser(fetchedGift.UserId, fetchedGift);
             return NoContent();
         }
 

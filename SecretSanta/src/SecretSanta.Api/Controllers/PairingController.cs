@@ -28,8 +28,7 @@ namespace SecretSanta.Api.Controllers
         [Produces(typeof(PairingViewModel))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> Post(int groupId)
+        public async Task<IActionResult> MakePairings(int groupId)
         {
             if(groupId <= 0)
             {

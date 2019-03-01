@@ -31,7 +31,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             PairingController controller = new PairingController(service.Object, Mapper.Instance);
 
-            OkResult result = await controller.Post(group.Id) as OkResult;
+            OkResult result = await controller.MakePairings(group.Id) as OkResult;
             
             Assert.IsNotNull(result);
         }
@@ -50,7 +50,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             PairingController controller = new PairingController(service.Object, Mapper.Instance);
 
-            BadRequestResult result = await controller.Post(group.Id + 1) as BadRequestResult;
+            BadRequestResult result = await controller.MakePairings(group.Id + 1) as BadRequestResult;
 
             Assert.IsNotNull(result);
         }
@@ -61,7 +61,7 @@ namespace SecretSanta.Api.Tests.Controllers
             Mock<IPairingService> service = new Mock<IPairingService>(MockBehavior.Strict);
             PairingController controller = new PairingController(service.Object, Mapper.Instance);
 
-            BadRequestObjectResult result = await controller.Post(0) as BadRequestObjectResult;
+            BadRequestObjectResult result = await controller.MakePairings(0) as BadRequestObjectResult;
 
             Assert.IsNotNull(result);
         }

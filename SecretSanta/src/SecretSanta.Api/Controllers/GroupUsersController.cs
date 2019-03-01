@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -20,6 +21,9 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{groupId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
@@ -40,6 +44,9 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpDelete("{groupId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveUserFromGroup(int groupId, int userId)
         {
             if (groupId <= 0)

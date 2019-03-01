@@ -46,7 +46,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
             GroupsController controller = new GroupsController(service.Object, Mapper.Instance);
 
-            OkObjectResult result = await controller.Get(1) as OkObjectResult;
+            OkObjectResult result = await controller.GetGroup(1) as OkObjectResult;
 
             GroupViewModel resultValue = (GroupViewModel)result.Value;
 

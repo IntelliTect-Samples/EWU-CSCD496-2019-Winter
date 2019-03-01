@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,14 +29,17 @@ namespace SecretSanta.Api.Controllers
         // GET api/User
         [HttpGet]
         [Produces(typeof(ICollection<UserViewModel>))]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(ICollection<UserViewModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllUsers()
         {
             return Ok((await UserService.FetchAll()).Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         [Produces(typeof(UserViewModel))]
-        public async Task<IActionResult> Get(int id)
+        [ProducesResponseType(typeof(UserViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUser(int id)
         {
             User fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
@@ -49,7 +53,9 @@ namespace SecretSanta.Api.Controllers
         // POST api/User
         [HttpPost]
         [Produces(typeof(UserViewModel))]
-        public async Task<IActionResult> Post(UserInputViewModel viewModel)
+        [ProducesResponseType(typeof(UserViewModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateUser(UserInputViewModel viewModel)
         {
             if (User == null)
             {
@@ -58,12 +64,15 @@ namespace SecretSanta.Api.Controllers
 
             User createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
 
-            return CreatedAtAction(nameof(Get), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
         // PUT api/User/5
         [HttpPut]
-        public async Task<IActionResult> Put(int id, UserInputViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUser(int id, UserInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -82,7 +91,10 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteUser(int id)
         {
             if (id <= 0)
             {

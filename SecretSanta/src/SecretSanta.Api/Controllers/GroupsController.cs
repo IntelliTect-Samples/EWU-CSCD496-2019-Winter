@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
@@ -28,14 +29,17 @@ namespace SecretSanta.Api.Controllers
         // GET api/group
         [HttpGet]
         [Produces(typeof(ICollection<GroupViewModel>))]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(ICollection<GroupViewModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllGroups()
         {
             return Ok((await GroupService.FetchAll()).Select(x => Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         [Produces(typeof(GroupViewModel))]
-        public async Task<IActionResult> Get(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(GroupViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGroup(int id)
         {
             Group group = await GroupService.GetById(id);
             if (group == null)
@@ -49,19 +53,24 @@ namespace SecretSanta.Api.Controllers
         // POST api/group
         [HttpPost]
         [Produces(typeof(GroupViewModel))]
-        public async Task<IActionResult> Post(GroupInputViewModel viewModel)
+        [ProducesResponseType(typeof(GroupViewModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
             Group createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
-            return CreatedAtAction(nameof(Get), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
+            return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
         // PUT api/group/5
         [HttpPut]
-        public async Task<IActionResult> Put(int id, GroupInputViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -81,7 +90,10 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/group/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteGroup(int id)
         {
             if (id <= 0)
             {

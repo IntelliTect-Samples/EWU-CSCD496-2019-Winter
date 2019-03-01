@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Web.ViewModels;
 
@@ -14,9 +15,11 @@ namespace SecretSanta.Web.Controllers
     public class GiftsController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public GiftsController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+        public GiftsController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
 
         // GET: /<controller>/
@@ -37,7 +40,7 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Gifts = await secretSantaClient.GetGiftsForUserAsync(id);
+                ViewBag.Gifts = await secretSantaClient.GetGiftForUserAsync(id);
             }
 
             return View();
@@ -62,7 +65,7 @@ namespace SecretSanta.Web.Controllers
                     {
                         viewModel.UserId = id;
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.CreateGiftAsync(viewModel);
+                        await secretSantaClient.AddGiftToUserAsync(id, Mapper.Map<GiftViewModel>(viewModel));
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -73,7 +76,28 @@ namespace SecretSanta.Web.Controllers
                 }
             }
 
-            return View();
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            GiftViewModel findGift = null;
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    findGift = await secretSantaClient.GetGiftAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return View(findGift);
         }
 
         [HttpPost]
@@ -88,8 +112,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        int? num = id;
-                        await secretSantaClient.GetGiftAsync(num);
+                        await secretSantaClient.EditGiftForUserAsync(id, viewModel);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -103,7 +126,8 @@ namespace SecretSanta.Web.Controllers
             return result;
         }
 
-        public async Task<IActionResult> Remove(int id)
+
+        public async Task<IActionResult> Delete(int id)
         {
             IActionResult result = View();
 
@@ -114,7 +138,8 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        await secretSantaClient.GetGiftAsync(id);
+                        GiftViewModel viewModel = await secretSantaClient.GetGiftAsync(id);
+                        await secretSantaClient.RemoveGiftFromUserAsync(viewModel.UserId.Value, viewModel.Id);
 
                         result = RedirectToAction(nameof(Index));
                     }

@@ -13,5 +13,6 @@ namespace SecretSanta.Domain.Services.Interfaces
         Task RemoveGift(int userId, int giftId);
         Task<Gift> UpdateGiftForUser(int userId, Gift gift);
         Task<User> GetUser(int userId);
+        Task<Gift> GetGift(int giftId);
     }
 }
