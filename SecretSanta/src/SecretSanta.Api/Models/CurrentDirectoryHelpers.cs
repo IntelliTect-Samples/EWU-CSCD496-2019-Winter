@@ -9,7 +9,7 @@ namespace SecretSanta.Api.Models
     {
         internal const string AspNetCoreModuleDll = "aspnetcorev2_inprocess.dll";
 
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]

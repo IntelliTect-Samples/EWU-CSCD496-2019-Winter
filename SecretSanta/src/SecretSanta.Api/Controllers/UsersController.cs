@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(typeof(ICollection<UserViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok((await UserService.FetchAll()).Select(x => Mapper.Map<UserViewModel>(x)));
+            return Ok((await UserService.FetchAll().ConfigureAwait(false)).Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
@@ -41,7 +41,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(int id)
         {
-            User fetchedUser = await UserService.GetById(id);
+            User fetchedUser = await UserService.GetById(id).ConfigureAwait(false);
             if (fetchedUser == null)
             {
                 return NotFound();
@@ -62,7 +62,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            User createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
+            User createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel)).ConfigureAwait(false);
 
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
@@ -78,14 +78,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            User fetchedUser = await UserService.GetById(id);
+            User fetchedUser = await UserService.GetById(id).ConfigureAwait(false);
             if (fetchedUser == null)
             {
                 return NotFound();
             }
 
             Mapper.Map(viewModel, fetchedUser);
-            await UserService.UpdateUser(fetchedUser);
+            await UserService.UpdateUser(fetchedUser).ConfigureAwait(false);
             return NoContent();
         }
 
@@ -101,7 +101,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A User id must be specified");
             }
 
-            if (await UserService.DeleteUser(id))
+            if (await UserService.DeleteUser(id).ConfigureAwait(false))
             {
                 return Ok();
             }

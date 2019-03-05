@@ -38,7 +38,7 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(await GiftService.GetGift(id));
+            return Ok(await GiftService.GetGift(id).ConfigureAwait(false));
         }
 
         // GET api/Gift/user/5
@@ -53,7 +53,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
-            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId).ConfigureAwait(false);
 
             return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
@@ -67,7 +67,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel is null) return BadRequest();
 
-            Gift gift = await GiftService.AddGiftToUser(id, Mapper.Map<Gift>(viewModel));
+            Gift gift = await GiftService.AddGiftToUser(id, Mapper.Map<Gift>(viewModel)).ConfigureAwait(false);
 
             return CreatedAtAction(nameof(GetGift), new { id = gift.Id }, Mapper.Map<GiftViewModel>(gift));
         }
@@ -83,14 +83,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            var fetchedGift = await GiftService.GetGift(id);
+            var fetchedGift = await GiftService.GetGift(id).ConfigureAwait(false);
             if (fetchedGift == null)
             {
                 return NotFound();
             }
 
             Mapper.Map(viewModel, fetchedGift);
-            await GiftService.UpdateGiftForUser(fetchedGift.UserId, fetchedGift);
+            await GiftService.UpdateGiftForUser(fetchedGift.UserId, fetchedGift).ConfigureAwait(false);
             return NoContent();
         }
 
@@ -106,14 +106,14 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A User id must be specified");
             }
 
-            var gifts = await GiftService.GetGiftsForUser(userId);
+            var gifts = await GiftService.GetGiftsForUser(userId).ConfigureAwait(false);
 
             if(gifts == null)
             {
                 return NotFound();
             }
 
-            await GiftService.RemoveGift(userId, giftId);
+            await GiftService.RemoveGift(userId, giftId).ConfigureAwait(false);
 
             return Ok();
         }

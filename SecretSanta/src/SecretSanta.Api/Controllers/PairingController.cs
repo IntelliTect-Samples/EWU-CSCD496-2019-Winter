@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A group id must be specified");
             }
 
-            if(await PairingService.GenerateAllPairs(groupId))
+            if(await PairingService.GenerateAllPairs(groupId).ConfigureAwait(false))
             {
                 return Ok();
             }

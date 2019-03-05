@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(typeof(ICollection<GroupViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllGroups()
         {
-            return Ok((await GroupService.FetchAll()).Select(x => Mapper.Map<GroupViewModel>(x)));
+            return Ok((await GroupService.FetchAll().ConfigureAwait(false)).Select(x => Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]
@@ -41,7 +41,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(typeof(GroupViewModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGroup(int id)
         {
-            Group group = await GroupService.GetById(id);
+            Group group = await GroupService.GetById(id).ConfigureAwait(false);
             if (group == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            Group createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+            Group createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel)).ConfigureAwait(false);
             return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
@@ -76,14 +76,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            Group group = await GroupService.GetById(id);
+            Group group = await GroupService.GetById(id).ConfigureAwait(false);
             if (group == null)
             {
                 return NotFound();
             }
 
             Mapper.Map(viewModel, group);
-            await GroupService.UpdateGroup(group);
+            await GroupService.UpdateGroup(group).ConfigureAwait(false);
 
             return NoContent();
         }
@@ -100,7 +100,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A group id must be specified");
             }
 
-            if (await GroupService.DeleteGroup(id))
+            if (await GroupService.DeleteGroup(id).ConfigureAwait(false))
             {
                 return Ok();
             }
