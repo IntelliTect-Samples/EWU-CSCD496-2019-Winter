@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
+using Serilog;
+using Serilog.Events;
 
 namespace SecretSanta.Api
 {
@@ -17,6 +19,19 @@ namespace SecretSanta.Api
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(
+                Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
+                fileSizeLimitBytes: 1000000,
+                rollOnFileSizeLimit: true,
+                shared: true,
+                flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
+
             CurrentDirectoryHelpers.SetCurrentDirectory();
 
             var host = CreateWebHostBuilder(args).Build();
