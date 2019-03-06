@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using Serilog;
+using Serilog.Events;
 
 namespace SecretSanta.Api
 {
@@ -32,9 +33,14 @@ namespace SecretSanta.Api
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                 .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
                 .Enrich.WithProperty("App Name", "SecretSanta.Api")
+                .WriteTo.SQLite(Configuration.GetConnectionString("DefaultConnection"))
                 .CreateLogger();
+            
             try
             {
                 var host = CreateWebHostBuilder(args).Build();
