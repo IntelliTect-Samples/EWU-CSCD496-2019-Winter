@@ -23,7 +23,7 @@
     - Database
     - source code
       - by default, if the file exists you load the config from there, if there is no file you use default hard coded config settings. You can think of this as the default developer configuration
-### Add code analysis
+### Add code analysis *
   - Global suppression file for test projects so _ is allowed in names (project specific)
   - Ruleset so that localization rules are turned off (solution wide)
   - **ALWAYS provide the justification for any rule suppression**
