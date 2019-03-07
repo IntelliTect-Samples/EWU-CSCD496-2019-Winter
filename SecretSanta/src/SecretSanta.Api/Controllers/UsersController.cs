@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,6 +42,7 @@ namespace SecretSanta.Api.Controllers
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
+                Log.Logger.Debug($"{nameof(fetchedUser)} is null after function call {nameof(UserService.GetById)}. Not Found.");
                 return NotFound();
             }
 
@@ -51,11 +55,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (User == null)
             {
+                Log.Logger.Debug($"{nameof(User)} is null before function call {nameof(UserService.AddUser)}. Bad Request.");
                 return BadRequest();
             }
 
             var createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
 
+            Log.Logger.Information($"User created.", viewModel);
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
@@ -65,16 +71,19 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Debug($"{nameof(viewModel)} is null before function call {nameof(UserService.GetById)}. Bad Request.");
                 return BadRequest();
             }
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
+                Log.Logger.Debug($"{nameof(fetchedUser)} is null after function call {nameof(UserService.GetById)}. Not Found.");
                 return NotFound();
             }
 
             Mapper.Map(viewModel, fetchedUser);
             await UserService.UpdateUser(fetchedUser);
+            Log.Logger.Information($"User updated.", viewModel);
             return NoContent();
         }
 
@@ -84,13 +93,16 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Log.Logger.Debug($"{nameof(id)} is not valid before function call {nameof(UserService.DeleteUser)}. Bad Request.");
                 return BadRequest("A User id must be specified");
             }
 
             if (await UserService.DeleteUser(id))
             {
+                Log.Logger.Information($"User deleted.", id);
                 return Ok();
             }
+            Log.Logger.Debug($"{nameof(id)} is not valid after function call {nameof(UserService.DeleteUser)}. Not Found.");
             return NotFound();
         }
     }

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,6 +35,8 @@ namespace SecretSanta.Api.Controllers
 
             if (gift == null)
             {
+                Log.Logger.Debug($"{nameof(gift)} is null after function call {nameof(GiftService.GetGift)}. Not Found.");
+
                 return NotFound();
             }
 
@@ -43,6 +48,7 @@ namespace SecretSanta.Api.Controllers
         {
             var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel));
 
+            Log.Logger.Information($"Gift created.", viewModel);
             return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, Mapper.Map<GiftViewModel>(createdGift));
         }
 
@@ -52,6 +58,8 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0)
             {
+                Log.Logger.Debug($"{nameof(userId)} is not valid after function call {nameof(GiftService.GetGiftsForUser)}. Not Found.", userId);
+
                 return NotFound();
             }
             List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);

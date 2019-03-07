@@ -32,7 +32,9 @@ namespace SecretSanta.Api
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
                 .ReadFrom.Configuration(Configuration)
+                .WriteTo.SQLite(Configuration.GetConnectionString("LoggerConnection"))    
                 .Enrich.WithProperty("App Name", "SecretSanta.Api")
                 .CreateLogger();
             try

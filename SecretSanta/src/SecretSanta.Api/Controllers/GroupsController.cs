@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,6 +42,8 @@ namespace SecretSanta.Api.Controllers
             var group = await GroupService.GetById(id);
             if (group == null)
             {
+                Log.Logger.Debug($"{nameof(group)} is null after function call {nameof(GroupService.GetById)}. Not Found.");
+
                 return NotFound();
             }
 
@@ -51,9 +56,12 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Debug($"{nameof(viewModel)} is null before function call {nameof(GroupService.AddGroup)}. Bad Request.");
                 return BadRequest();
             }
             var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+
+            Log.Logger.Information($"Group created.", viewModel);
             return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
@@ -63,17 +71,20 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Debug($"{nameof(viewModel)} is null before function call {nameof(GroupService.GetById)}. Bad Request.");
                 return BadRequest();
             }
             var group = await GroupService.GetById(id);
             if (group == null)
             {
+                Log.Logger.Debug($"{nameof(group)} is null after function call {nameof(GroupService.GetById)}. Not Found.");
                 return NotFound();
             }
 
             Mapper.Map(viewModel, group);
             await GroupService.UpdateGroup(group);
 
+            Log.Logger.Information($"Group Updated.", viewModel);
             return NoContent();
         }
 
@@ -83,13 +94,16 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Log.Logger.Debug($"{nameof(id)} is not valid before function call {nameof(GroupService.DeleteGroup)}. Bad Request.");
                 return BadRequest("A group id must be specified");
             }
 
             if (await GroupService.DeleteGroup(id))
             {
+                Log.Logger.Information($"Group Deleted.", id);
                 return Ok();
             }
+            Log.Logger.Debug($"{nameof(id)} is not valid after function call {nameof(GroupService.DeleteGroup)}. Not Found.");
             return NotFound();
         }
     }
