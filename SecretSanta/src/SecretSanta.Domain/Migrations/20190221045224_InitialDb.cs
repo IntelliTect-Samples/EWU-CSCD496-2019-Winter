@@ -4,7 +4,11 @@ namespace SecretSanta.Domain.Migrations
 {
     public partial class InitialDb : Migration
     {
+#pragma warning disable CA1506 // Avoid excessive class coupling
+        // Justification: This method name is generated for us, we can do nothing
+        // about its coupling, that is simply its nature.
         protected override void Up(MigrationBuilder migrationBuilder)
+#pragma warning restore CA1506 // Avoid excessive class coupling
         {
             migrationBuilder.CreateTable(
                 name: "Groups",

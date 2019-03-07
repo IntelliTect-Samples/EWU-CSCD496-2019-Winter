@@ -5,11 +5,17 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Models
 {
+#pragma warning disable CA1060 // Move pinvokes to native methods class
     internal class CurrentDirectoryHelpers
+    // Justification: We are not concerned with the call to unmanaged code.
+#pragma warning restore CA1060 // Move pinvokes to native methods class
     {
         internal const string AspNetCoreModuleDll = "aspnetcorev2_inprocess.dll";
 
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        // Justification: We are not concerned with the call to unmanaged code.
+#pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
         private static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]

@@ -5,4 +5,4 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 [assembly: System.CLSCompliant(false)]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", Justification = "No SynchronizationContext in .net core")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", Justification = ".NET Core does not use synchronization contexts.")]

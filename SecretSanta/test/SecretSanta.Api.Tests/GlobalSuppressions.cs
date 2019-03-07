@@ -5,11 +5,10 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 [assembly: System.CLSCompliant(false)]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task",
-    Justification = "No SynchronizationContext in .net core")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", Justification = ".NET Core does not use synchronization contexts.")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores",
-    Justification = "Naming convention not applicable to descriptive test methods.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "This collection is not used in the same sense as a normal collection (where we care about the data).  All we really care about is the pointer changing.", Scope = "member", Target = "~P:SecretSanta.Api.Tests.TestableGiftService.ToReturn")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only",
-    Justification = "Class is just used as a Mock", Scope = "member", Target = "~P:SecretSanta.Api.Tests.TestableGiftService.ToReturn")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Underscore used to enhance test method name description.")]
+
+
