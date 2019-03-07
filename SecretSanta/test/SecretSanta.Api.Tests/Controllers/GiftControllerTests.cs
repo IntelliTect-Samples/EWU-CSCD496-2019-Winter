@@ -17,7 +17,9 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GiftControllerTests
     {
         [AssemblyInitialize]
-        public static void ConfigureAutoMapper()
+#pragma warning disable CA1801 // Review unused parameters, Justification: Method must be public, static, void, and have TestContext parameter. However here we do not use it.
+        public static void ConfigureAutoMapper(TestContext testContext)
+#pragma warning restore CA1801 // Review unused parameters
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }

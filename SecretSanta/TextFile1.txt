@@ -1,0 +1,8 @@
+Test Name:	GetGiftForUser_RequiresPositiveUserId
+Test FullName:	SecretSanta.Api.Tests.Controllers.GiftControllerTests.GetGiftForUser_RequiresPositiveUserId
+Test Source:	C:\Users\Richard Teller\EWU-CSCD496-2019-Winter\SecretSanta\test\SecretSanta.Api.Tests\Controllers\GiftControllerTests.cs : line 57
+Test Outcome:	Failed
+Test Duration:	0:00:00
+
+Result Message:	Method SecretSanta.Api.Tests.Controllers.GiftControllerTests.ConfigureAutoMapper has wrong signature. The method must be static, public, does not return a value and should take a single parameter of type TestContext. Additionally, if you are using async-await in method then return-type must be Task.
+
