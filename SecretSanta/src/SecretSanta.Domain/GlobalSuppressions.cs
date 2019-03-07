@@ -4,7 +4,7 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.CLSCompliant(false)]
+[assembly: System.CLSCompliant(false)] // Justification: Types Migration, MigrationBuilder, DbContext, ModelBuilder and more are not CLS-compliant and they must be used.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", Justification = ".NET Core does not use synchronization contexts.")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Entity Framework needs the setters to function properly.")]

@@ -4,7 +4,7 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.CLSCompliant(false)]
+[assembly: System.CLSCompliant(false)] // Justification: Too many types out of our control used in the project are not CLS-compliant, including BaseController, and all Interface arguments and they must be used.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", Justification = ".NET Core does not use synchronization contexts.")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Method name is only meant to match HTTP verbs.")]
