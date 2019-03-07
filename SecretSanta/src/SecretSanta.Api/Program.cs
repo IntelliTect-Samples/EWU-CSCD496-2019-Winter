@@ -33,12 +33,8 @@ namespace SecretSanta.Api
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                 .ReadFrom.Configuration(Configuration)
                 .Enrich.WithProperty("App Name", "SecretSanta.Api")
-                .WriteTo.Console()
-                .WriteTo.SQLite(Configuration.GetConnectionString("DefaultConnection"))
                 .CreateLogger();
             try
             {
