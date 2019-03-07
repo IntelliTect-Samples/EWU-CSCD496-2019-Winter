@@ -90,6 +90,8 @@ namespace SecretSanta.Api
             });
 
             app.UseMvc();
+
+            
         }
     }
 }
