@@ -8,6 +8,7 @@ using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,6 +33,7 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(typeof(ICollection<UserViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsers()
         {
+            Log.Logger.Information($"returning all users, returning ok | 200");
             return Ok((await UserService.FetchAll().ConfigureAwait(false)).Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
@@ -44,9 +46,11 @@ namespace SecretSanta.Api.Controllers
             User fetchedUser = await UserService.GetById(id).ConfigureAwait(false);
             if (fetchedUser == null)
             {
+                Log.Logger.Warning($"{nameof(fetchedUser)} was not found, return not found | 404");
                 return NotFound();
             }
 
+            Log.Logger.Information($"{nameof(fetchedUser)} was found, return ok | 200");
             return Ok(Mapper.Map<UserViewModel>(fetchedUser));
         }
 
@@ -57,13 +61,15 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUser(UserInputViewModel viewModel)
         {
-            if (User == null)
+            if (viewModel == null)
             {
+                Log.Logger.Error($"{nameof(viewModel)} was not valid, returning bad request | 400");
                 return BadRequest();
             }
 
             User createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel)).ConfigureAwait(false);
 
+            Log.Logger.Information($"{nameof(viewModel)} was created, returing URL of said user | 201");
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
@@ -76,16 +82,19 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Error($"{nameof(viewModel)} was not valid, returning bad request | 400");
                 return BadRequest();
             }
             User fetchedUser = await UserService.GetById(id).ConfigureAwait(false);
             if (fetchedUser == null)
             {
+                Log.Logger.Warning($"{nameof(fetchedUser)} was not found, returning not found | 404");
                 return NotFound();
             }
 
             Mapper.Map(viewModel, fetchedUser);
             await UserService.UpdateUser(fetchedUser).ConfigureAwait(false);
+            Log.Logger.Information($"{nameof(fetchedUser)} was updated, returning no content | 204");
             return NoContent();
         }
 
@@ -98,13 +107,16 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Log.Logger.Error($"{nameof(id)} was not valid, returing bad request | 400");
                 return BadRequest("A User id must be specified");
             }
 
             if (await UserService.DeleteUser(id).ConfigureAwait(false))
             {
+                Log.Logger.Information($"{nameof(id)} was deleted, returning ok | 200");
                 return Ok();
             }
+            Log.Logger.Warning($"{nameof(id)} was not found, returning not found | 404");
             return NotFound();
         }
     }

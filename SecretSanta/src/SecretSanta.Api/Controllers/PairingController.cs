@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -32,13 +33,17 @@ namespace SecretSanta.Api.Controllers
         {
             if(groupId <= 0)
             {
+                Log.Logger.Error($"{nameof(groupId)} is not vaild, returing bad request | 400");
                 return BadRequest("A group id must be specified");
             }
 
             if(await PairingService.GenerateAllPairs(groupId).ConfigureAwait(false))
             {
+                Log.Logger.Information($"{nameof(groupId)} had all pairs generated, returning ok | 200");
                 return Ok();
             }
+
+            Log.Logger.Error($"{nameof(groupId)}, there was an error, returning bad request | 400");
             return BadRequest();
         }
     }

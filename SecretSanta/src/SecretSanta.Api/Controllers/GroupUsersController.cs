@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,18 +29,23 @@ namespace SecretSanta.Api.Controllers
         {
             if (groupId <= 0)
             {
+                Log.Logger.Error($"{nameof(groupId)} is not valid, returning bad request | 400");
                 return BadRequest();
             }
 
             if (userId <= 0)
             {
+                Log.Logger.Error($"{nameof(userId)} is not valid, returning bad request | 400");
                 return BadRequest();
             }
 
             if (await GroupService.AddUserToGroup(groupId, userId).ConfigureAwait(false))
             {
+                Log.Logger.Information($"{nameof(userId)} was added to {nameof(groupId)}, returning ok | 200");
                 return Ok();
             }
+
+            Log.Logger.Warning($"{nameof(userId)} or {nameof(groupId)} was not found, returing not found | 404");
             return NotFound();
         }
 
@@ -51,18 +57,23 @@ namespace SecretSanta.Api.Controllers
         {
             if (groupId <= 0)
             {
+                Log.Logger.Error($"{nameof(groupId)} is not valid, returning bad request | 400");
                 return BadRequest();
             }
 
             if (userId <= 0)
             {
+                Log.Logger.Error($"{nameof(userId)} is not valid, returning bad request | 400");
                 return BadRequest();
             }
 
             if (await GroupService.RemoveUserFromGroup(groupId, userId).ConfigureAwait(false))
             {
+                Log.Logger.Information($"{nameof(userId)} was removed from {nameof(groupId)}, returning ok | 200");
                 return Ok();
             }
+
+            Log.Logger.Warning($"{nameof(userId)} or {nameof(groupId)} was not found, returing not found | 404");
             return NotFound();
         }
     }

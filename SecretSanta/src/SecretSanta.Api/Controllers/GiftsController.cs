@@ -8,6 +8,7 @@ using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,9 +36,11 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Log.Logger.Warning($"{nameof(id)} was not found | 404");
                 return NotFound();
             }
 
+            Log.Logger.Information($"{nameof(id)} was found, returning gift | 200");
             return Ok(await GiftService.GetGift(id).ConfigureAwait(false));
         }
 
@@ -51,10 +54,12 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0)
             {
+                Log.Logger.Warning($"{nameof(userId)} was not found | 404");
                 return NotFound();
             }
             List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId).ConfigureAwait(false);
 
+            Log.Logger.Information($"{nameof(userId)} was found, returning gift from user | 200");
             return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
 
@@ -65,10 +70,15 @@ namespace SecretSanta.Api.Controllers
         [ProducesResponseType(typeof(GiftViewModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddGiftToUser(int id, GiftViewModel viewModel)
         {
-            if (viewModel is null) return BadRequest();
+            if (viewModel is null)
+            {
+                Log.Logger.Error($"{nameof(viewModel)} was null, returning bad request | 400");
+                return BadRequest();
+            }
 
             Gift gift = await GiftService.AddGiftToUser(id, Mapper.Map<Gift>(viewModel)).ConfigureAwait(false);
 
+            Log.Logger.Information($"{nameof(viewModel)} was added to user, returning URL of said gift | 201");
             return CreatedAtAction(nameof(GetGift), new { id = gift.Id }, Mapper.Map<GiftViewModel>(gift));
         }
 
@@ -81,16 +91,19 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Error($"{nameof(viewModel)} was null, returning bad request | 400");
                 return BadRequest();
             }
             var fetchedGift = await GiftService.GetGift(id).ConfigureAwait(false);
             if (fetchedGift == null)
             {
+                Log.Logger.Warning($"{nameof(id)} was not found, returning not found | 404");
                 return NotFound();
             }
 
             Mapper.Map(viewModel, fetchedGift);
             await GiftService.UpdateGiftForUser(fetchedGift.UserId, fetchedGift).ConfigureAwait(false);
+            Log.Logger.Information($"{nameof(viewModel)} was edited, returning no content | 204");
             return NoContent();
         }
 
@@ -103,6 +116,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0)
             {
+                Log.Logger.Error($"{nameof(userId)} was not found, returning bad request | 400");
                 return BadRequest("A User id must be specified");
             }
 
@@ -110,11 +124,12 @@ namespace SecretSanta.Api.Controllers
 
             if(gifts == null)
             {
+                Log.Logger.Warning($"{nameof(gifts)} was not found, returning not found | 404");
                 return NotFound();
             }
 
             await GiftService.RemoveGift(userId, giftId).ConfigureAwait(false);
-
+            Log.Logger.Information($"{nameof(giftId)} was removed from {nameof(userId)} gift list, returning ok | 200");
             return Ok();
         }
     }

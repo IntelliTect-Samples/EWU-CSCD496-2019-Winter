@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,38 +18,62 @@ namespace SecretSanta.Api
 {
     public static class Program
     {
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsetting.json", true, true)
+            .AddJsonFile($"appsetting.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true)
+            .AddEnvironmentVariables()
+            .Build();
+
         public static void Main(string[] args)
         {
+            CurrentDirectoryHelpers.SetCurrentDirectory();
+
+            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+                .ReadFrom.Configuration(Configuration)
                 .Enrich.FromLogContext()
+                .Enrich.WithProperty("App Name", "SecretSanta.Api")
                 .WriteTo.Console()
                 .WriteTo.File(
-                Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
+                path: Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
                 fileSizeLimitBytes: 1000000,
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .WriteTo.ApplicationInsights("118d94a5-274f-4235-81f4-335c3ec4afcd", TelemetryConverter.Events)
                 .CreateLogger();
 
-            CurrentDirectoryHelpers.SetCurrentDirectory();
-
-            var host = CreateWebHostBuilder(args).Build();
-
-            using (var serviceScope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            try
             {
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                {
-                    context.Database.EnsureCreated();
-                }
-            }
+                var host = CreateWebHostBuilder(args).Build();
 
-            host.Run();
+                using (var serviceScope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+                    {
+                        context.Database.EnsureCreated();
+                    }
+                }
+
+                host.Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Host Error end process");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }
