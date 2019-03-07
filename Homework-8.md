@@ -5,7 +5,7 @@
     - You can use Serilog
   - Have logging at multiple levels, information, error caught (informational), error fatal
   - Purely extra, you can set up a logging API that is called using providers. So then you can still do something like Logger.Log() but the Logger calls the API for you.
-### Application Insights [1/2]
+### Application Insights *
   - Give either a URL or a screen save (html, imgt file) of the application insights to the service
   - Azure analytics
 ### Add configuration [3/4]

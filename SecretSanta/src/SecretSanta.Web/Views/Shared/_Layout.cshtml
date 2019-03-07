@@ -1,3 +1,4 @@
+@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 <!DOCTYPE html>
 
 <html>
@@ -9,6 +10,7 @@
     <link href="~/css/main.e43325a7fc0e0f8798b0.css" rel="stylesheet" />
     
     <!-- End Stylesheets -->
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
