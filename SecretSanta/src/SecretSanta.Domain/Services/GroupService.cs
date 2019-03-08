@@ -20,7 +20,7 @@ namespace SecretSanta.Domain.Services
         public async Task<Group> AddGroup(Group group)
         {
             DbContext.Groups.Add(group);
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
             return group;
         }
 
@@ -29,13 +29,13 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Groups
                 .Include(g => g.GroupUsers)
                 .ThenInclude(gu => gu.User)
-                .SingleOrDefaultAsync(g => g.Id == id);
+                .SingleOrDefaultAsync(g => g.Id == id).ConfigureAwait(false);
         }
 
         public async Task<Group> UpdateGroup(Group group)
         {
             DbContext.Groups.Update(group);
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
             return group;
         }
 
@@ -44,7 +44,7 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Groups
                 .Include(g => g.GroupUsers)
                 .ThenInclude(gu => gu.User)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<List<User>> GetUsers(int groupId)
@@ -53,17 +53,17 @@ namespace SecretSanta.Domain.Services
                 .Where(x => x.Id == groupId)
                 .SelectMany(x => x.GroupUsers)
                 .Select(x => x.User)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<bool> AddUserToGroup(int groupId, int userId)
         {
             Group foundGroup = await DbContext.Groups
                 .Include(x => x.GroupUsers)
-                .FirstOrDefaultAsync(x => x.Id == groupId);
+                .FirstOrDefaultAsync(x => x.Id == groupId).ConfigureAwait(false);
             if (foundGroup == null) return false;
 
-            User foundUser = await DbContext.Users.FindAsync(userId);
+            User foundUser = await DbContext.Users.FindAsync(userId).ConfigureAwait(false);
             if (foundUser == null) return false;
 
             var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
@@ -72,7 +72,7 @@ namespace SecretSanta.Domain.Services
                 foundGroup.GroupUsers = new List<GroupUser>();
             }
             foundGroup.GroupUsers.Add(groupUser);
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return true;
         }
@@ -81,26 +81,26 @@ namespace SecretSanta.Domain.Services
         {
             Group foundGroup = await DbContext.Groups
                 .Include(x => x.GroupUsers)
-                .FirstOrDefaultAsync(x => x.Id == groupId);
+                .FirstOrDefaultAsync(x => x.Id == groupId).ConfigureAwait(false);
 
             GroupUser mapping = foundGroup?.GroupUsers.FirstOrDefault(x => x.UserId == userId);
 
             if (mapping == null) return false;
 
             foundGroup.GroupUsers.Remove(mapping);
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return true;
         }
 
         public async Task<bool> DeleteGroup(int groupId)
         {
-            Group foundGroup = await DbContext.Groups.FindAsync(groupId);
+            Group foundGroup = await DbContext.Groups.FindAsync(groupId).ConfigureAwait(false);
 
             if (foundGroup != null)
             {
                 DbContext.Groups.Remove(foundGroup);
-                await DbContext.SaveChangesAsync();
+                await DbContext.SaveChangesAsync().ConfigureAwait(false);
                 return true;
             }
 

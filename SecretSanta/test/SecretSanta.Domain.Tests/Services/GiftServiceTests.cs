@@ -22,7 +22,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = await userService.AddUser(user);
+                user = await userService.AddUser(user).ConfigureAwait(false);
 
                 var gift = new Gift
                 {
@@ -31,7 +31,7 @@ namespace SecretSanta.Domain.Tests.Services
                     UserId = user.Id
                 };
 
-                var persistedGift = await giftService.AddGift(gift);
+                var persistedGift = await giftService.AddGift(gift).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
@@ -51,7 +51,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = await userService.AddUser(user);
+                user = await userService.AddUser(user).ConfigureAwait(false);
 
                 var gift = new Gift
                 {
@@ -60,7 +60,7 @@ namespace SecretSanta.Domain.Tests.Services
                     UserId = user.Id
                 };
 
-                var persistedGift = await giftService.AddGift(gift);
+                var persistedGift = await giftService.AddGift(gift).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
@@ -68,7 +68,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 GiftService giftService = new GiftService(context);
-                var retrievedGift = await giftService.GetGift(1);
+                var retrievedGift = await giftService.GetGift(1).ConfigureAwait(false);
 
                 Assert.AreEqual("Sword", retrievedGift.Title);
             }
@@ -88,7 +88,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = await userService.AddUser(user);
+                user = await userService.AddUser(user).ConfigureAwait(false);
 
                 var gift = new Gift
                 {
@@ -97,7 +97,7 @@ namespace SecretSanta.Domain.Tests.Services
                     UserId = user.Id
                 };
 
-                var persistedGift = await giftService.AddGift(gift);
+                var persistedGift = await giftService.AddGift(gift).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
@@ -107,13 +107,13 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = await userService.FetchAll();
-                var gifts = await giftService.GetGiftsForUser(users[0].Id);
+                var users = await userService.FetchAll().ConfigureAwait(false);
+                var gifts = await giftService.GetGiftsForUser(users[0].Id).ConfigureAwait(false);
 
                 Assert.IsTrue(gifts.Count > 0);
 
                 gifts[0].Title = "Horse";
-                await giftService.UpdateGift(gifts[0]);                
+                await giftService.UpdateGift(gifts[0]).ConfigureAwait(false);                
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -121,8 +121,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = await userService.FetchAll();
-                var gifts = await giftService.GetGiftsForUser(users[0].Id);
+                var users = await userService.FetchAll().ConfigureAwait(false);
+                var gifts = await giftService.GetGiftsForUser(users[0].Id).ConfigureAwait(false);
 
                 Assert.IsTrue(gifts.Count > 0);
                 Assert.AreEqual("Horse", gifts[0].Title);            
@@ -143,7 +143,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = await userService.AddUser(user);
+                user = await userService.AddUser(user).ConfigureAwait(false);
 
                 var gift = new Gift
                 {
@@ -152,7 +152,7 @@ namespace SecretSanta.Domain.Tests.Services
                     UserId = user.Id
                 };
 
-                var persistedGift = await giftService.AddGift(gift);
+                var persistedGift = await giftService.AddGift(gift).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
@@ -161,7 +161,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 GiftService giftService = new GiftService(context);
 
-                await giftService.RemoveGift(1);
+                await giftService.RemoveGift(1).ConfigureAwait(false);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -169,8 +169,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = await userService.FetchAll();
-                var gifts = await giftService.GetGiftsForUser(users[0].Id);
+                var users = await userService.FetchAll().ConfigureAwait(false);
+                var gifts = await giftService.GetGiftsForUser(users[0].Id).ConfigureAwait(false);
 
                 Assert.IsTrue(gifts.Count == 0);
             }

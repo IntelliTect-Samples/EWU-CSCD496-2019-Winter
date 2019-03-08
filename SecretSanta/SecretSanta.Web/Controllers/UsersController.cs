@@ -88,7 +88,7 @@ namespace SecretSanta.Web.Controllers
                 }
                 catch (SwaggerException e)
                 {
-                    ModelState.AddModelError("", $"The ID {id} does not coorespond to a valid user, no users were edited.");
+                    ModelState.AddModelError("", $"{e}: The ID {id} does not coorespond to a valid user, no users were edited.");
                 }
             }
             return View(result);
@@ -125,7 +125,7 @@ namespace SecretSanta.Web.Controllers
                     }
                     catch (SwaggerException e)
                     {
-                        ModelState.AddModelError("", "Cannot update existing using an invalid user");
+                        ModelState.AddModelError("", $"{e}: Cannot update existing using an invalid user");
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace SecretSanta.Web.Controllers
                 }
                 catch (SwaggerException se)
                 {
-                    ModelState.AddModelError("", $"User with ID {id} does not exist, no users were deleted.");
+                    ModelState.AddModelError("", $"{se}: User with ID {id} does not exist, no users were deleted.");
                 }
 
             }

@@ -21,7 +21,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                await userService.AddUser(user);
+                await userService.AddUser(user).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, user.Id);
             }
@@ -40,7 +40,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                await userService.AddUser(user);
+                await userService.AddUser(user).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, user.Id);
             }
@@ -48,18 +48,18 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 UserService userService = new UserService(context);
-                var retrievedUser = await userService.GetById(1);
+                var retrievedUser = await userService.GetById(1).ConfigureAwait(false);
 
                 retrievedUser.FirstName = "Princess";
                 retrievedUser.LastName = "Buttercup";
 
-                await userService.UpdateUser(retrievedUser);
+                await userService.UpdateUser(retrievedUser).ConfigureAwait(false);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 UserService userService = new UserService(context);
-                var retrievedUser = await userService.GetById(1);
+                var retrievedUser = await userService.GetById(1).ConfigureAwait(false);
 
                 Assert.AreEqual("Princess", retrievedUser.FirstName);
                 Assert.AreEqual("Buttercup", retrievedUser.LastName);
@@ -79,7 +79,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                await userService.AddUser(user);
+                await userService.AddUser(user).ConfigureAwait(false);
 
                 Assert.AreNotEqual(0, user.Id);
             }
@@ -87,14 +87,14 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 UserService userService = new UserService(context);
-                bool isDeleted = await userService.DeleteUser(1);
+                bool isDeleted = await userService.DeleteUser(1).ConfigureAwait(false);
                 Assert.IsTrue(isDeleted);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 UserService userService = new UserService(context);
-                var retrievedUser = await userService.GetById(1);
+                var retrievedUser = await userService.GetById(1).ConfigureAwait(false);
 
                 Assert.IsNull(retrievedUser);
             }

@@ -87,7 +87,7 @@ namespace SecretSanta.Web.Controllers
                 }
                 catch (SwaggerException e)
                 {
-                    ModelState.AddModelError("", $"The Group with ID {id} does not exist and cannot be edited");
+                    ModelState.AddModelError("", $"{e}: The Group with ID {id} does not exist and cannot be edited");
                 }
             }
             return View(result);
@@ -122,7 +122,7 @@ namespace SecretSanta.Web.Controllers
                     }
                     catch (SwaggerException e)
                     {
-                        ModelState.AddModelError("", "Cannot update existing using an invalid group");
+                        ModelState.AddModelError("", $"{e}: Cannot update existing using an invalid group");
                     }
                 }
             }
@@ -147,7 +147,7 @@ namespace SecretSanta.Web.Controllers
                 }
                 catch (SwaggerException se)
                 {
-                    ModelState.AddModelError("", $"The ID {id} does not coorespond to a group, cannot be deleted.");
+                    ModelState.AddModelError("", $"{se}: The ID {id} does not coorespond to a group, cannot be deleted.");
                 }
             }
             return result;

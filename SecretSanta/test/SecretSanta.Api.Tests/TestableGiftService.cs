@@ -10,7 +10,7 @@ namespace SecretSanta.Api.Tests
     public class TestableGiftService : IGiftService
     {
         public List<Gift> ToReturn { get; set; }
-        public int GetGiftsForUser_UserId { get; set; }
+        public int GetGiftsForUserUserId { get; set; }
 
         public Task<Gift> AddGift(Gift gift)
         {
@@ -24,7 +24,7 @@ namespace SecretSanta.Api.Tests
 
         public Task<List<Gift>> GetGiftsForUser(int userId)
         {
-            GetGiftsForUser_UserId = userId;
+            GetGiftsForUserUserId = userId;
             return Task.FromResult(ToReturn);
         }
 
