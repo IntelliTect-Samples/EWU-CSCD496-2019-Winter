@@ -4,7 +4,7 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GiftControllerTests.GetGiftForUser_ReturnsUsersFromService~System.Threading.Tasks.Task")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Underscores fine for test methods>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GiftControllerTests.GetGiftForUser_ReturnsUsersFromService~System.Threading.Tasks.Task")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GiftControllerTests.GetGiftForUser_RequiresPositiveUserId~System.Threading.Tasks.Task")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GroupControllerTests.CreateGroup_RequiresGroup~System.Threading.Tasks.Task")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GroupControllerTests.CreateGroup_ReturnsCreatedGroup~System.Threading.Tasks.Task")]
