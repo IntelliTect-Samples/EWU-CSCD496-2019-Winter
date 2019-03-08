@@ -25,7 +25,7 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Groups = await secretSantaClient.GetGroupsAsync();
+                ViewBag.Groups = await secretSantaClient.GetGroupsAsync().ConfigureAwait(false);
             }
             return View();
         }
@@ -46,7 +46,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    fetchedGroup = await secretSantaClient.GetGroupAsync(id);
+                    fetchedGroup = await secretSantaClient.GetGroupAsync(id).ConfigureAwait(false);
                 }
                 catch (SwaggerException se)
                 {
@@ -68,7 +68,7 @@ namespace SecretSanta.Web.Controllers
                     try
                     {
                         var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                        var group = await secretSantaClient.CreateGroupAsync(viewModel);
+                        var group = await secretSantaClient.CreateGroupAsync(viewModel).ConfigureAwait(false);
 
                         if (group != null)
                         {
@@ -100,7 +100,7 @@ namespace SecretSanta.Web.Controllers
                         await secretSantaClient.UpdateGroupAsync(viewModel.Id, new GroupInputViewModel
                         {
                             Name = viewModel.Name
-                        });
+                        }).ConfigureAwait(false);
 
                         result = RedirectToAction(nameof(Index));
                     }
@@ -121,7 +121,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.DeleteGroupAsync(id);
+                    await secretSantaClient.DeleteGroupAsync(id).ConfigureAwait(false);
 
                     result = RedirectToAction(nameof(Index));
                 }

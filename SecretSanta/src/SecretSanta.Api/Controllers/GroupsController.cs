@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,16 +30,17 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<ICollection<GroupViewModel>>> GetGroups()
         {
-            var groups = await GroupService.FetchAll();
+            var groups = await GroupService.FetchAll().ConfigureAwait(true);
             return Ok(groups.Select(x => Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GroupViewModel>> GetGroup(int id)
         {
-            var group = await GroupService.GetById(id);
+            var group = await GroupService.GetById(id).ConfigureAwait(true);
             if (group == null)
             {
+                Log.Logger.Warning($"{nameof(group)} was not found in call to {nameof(GroupService.GetById)}");
                 return NotFound();
             }
 
@@ -51,9 +53,10 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Warning($"{nameof(viewModel)} was passed in as null in {nameof(GroupsController.CreateGroup)}");
                 return BadRequest();
             }
-            var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+            Group createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel)).ConfigureAwait(true);
             return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
@@ -63,16 +66,18 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Log.Logger.Warning($"{nameof(viewModel)} was passed in as null in {nameof(GroupsController.CreateGroup)}");
                 return BadRequest();
             }
-            var group = await GroupService.GetById(id);
+            var group = await GroupService.GetById(id).ConfigureAwait(true);
             if (group == null)
             {
+                Log.Logger.Warning($"UserId {nameof(id)} was not found in call to {nameof(GroupService.GetById)}");
                 return NotFound();
             }
 
             Mapper.Map(viewModel, group);
-            await GroupService.UpdateGroup(group);
+            await GroupService.UpdateGroup(group).ConfigureAwait(true);
 
             return NoContent();
         }
@@ -83,11 +88,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Log.Logger.Warning($"{nameof(id)} was not greater than 0 as in {nameof(GroupsController.DeleteGroup)}");
                 return BadRequest("A group id must be specified");
             }
 
-            if (await GroupService.DeleteGroup(id))
+            if (await GroupService.DeleteGroup(id).ConfigureAwait(true))
             {
+                Log.Logger.Verbose($"{nameof(id)} was successfully deleted in call to {nameof(GroupService.DeleteGroup)}");
                 return Ok();
             }
             return NotFound();
