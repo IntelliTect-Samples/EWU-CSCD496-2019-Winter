@@ -35,11 +35,11 @@ namespace SecretSanta.Api.Tests.Controllers
                 LastName = "Montoya"
             };
 
-            var response = await client.PostAsJsonAsync("/api/users", viewModel);
+            var response = await client.PostAsJsonAsync("/api/users", viewModel).ConfigureAwait(false);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var result = await response.Content.ReadAsStringAsync();
+            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var problemDetails = JsonConvert.DeserializeObject<ProblemDetails>(result);
 
@@ -63,11 +63,11 @@ namespace SecretSanta.Api.Tests.Controllers
                 LastName = "Montoya"
             };
 
-            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", userViewModel);
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", userViewModel).ConfigureAwait(false);
 
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
 
-            string result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             UserViewModel resultViewModel = JsonConvert.DeserializeObject<UserViewModel>(result);
 

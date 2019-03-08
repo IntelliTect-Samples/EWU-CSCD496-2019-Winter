@@ -42,7 +42,7 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             GiftsController controller = new GiftsController(testService, Mapper.Instance);
 
-            OkObjectResult result = await controller.GetGiftForUser(4) as OkObjectResult;
+            OkObjectResult result = await controller.GetGiftForUser(4).ConfigureAwait(false) as OkObjectResult;
 
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             GiftViewModel resultGift = ((List<GiftViewModel>)result.Value).Single();
@@ -59,7 +59,7 @@ namespace SecretSanta.Api.Tests.Controllers
             TestableGiftService testService = new TestableGiftService();
             GiftsController controller = new GiftsController(testService, Mapper.Instance);
 
-            NotFoundResult result = await controller.GetGiftForUser(-1) as NotFoundResult;
+            NotFoundResult result = await controller.GetGiftForUser(-1).ConfigureAwait(false) as NotFoundResult;
 
             Assert.IsNotNull(result);
             //This check ensures that the service was not called

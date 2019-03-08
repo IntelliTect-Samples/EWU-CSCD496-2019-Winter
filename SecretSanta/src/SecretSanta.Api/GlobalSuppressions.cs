@@ -10,3 +10,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "This suggestion will break the code for the API's EF, thus the Collection property is remain writable.", Scope = "member", Target = "~P:SecretSanta.Api.ViewModels.GroupViewModel.GroupUsers")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "This is done to prevent the need to regenerate the SecretSantaClient.cs file.", Scope = "member", Target = "~M:SecretSanta.Api.Controllers.UsersController.GetUser(System.Int32)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1014:Mark assemblies with CLSCompliant", Justification = "Ran out of time to clear all the errors")]
