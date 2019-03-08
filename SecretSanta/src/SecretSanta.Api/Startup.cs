@@ -60,7 +60,7 @@ namespace SecretSanta.Api
             var dependencyContext = DependencyContext.Default;
             var assemblies = dependencyContext.RuntimeLibraries.SelectMany(lib =>
                 lib.GetDefaultAssemblyNames(dependencyContext)
-                    .Where(a => a.Name.Contains("SecretSanta", StringComparison.CurrentCulture)).Select(Assembly.Load)).ToArray();
+                    .Where(a => a.Name.Contains("SecretSanta", StringComparison.Ordinal)).Select(Assembly.Load)).ToArray();
             services.AddAutoMapper(assemblies);
         }
 
