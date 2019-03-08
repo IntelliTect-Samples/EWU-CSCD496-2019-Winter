@@ -9,7 +9,7 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableGiftService : IGiftService
     {
-        public List<Gift> ToReturn { get; }
+        public List<Gift> ToReturn { get; set; }
         public int GetGiftsForUser_UserId { get; set; }
 
         public Task<Gift> AddGift(Gift gift)

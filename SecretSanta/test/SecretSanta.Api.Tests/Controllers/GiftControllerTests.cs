@@ -17,7 +17,7 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GiftControllerTests
     {
         [AssemblyInitialize]
-        public static void ConfigureAutoMapper(TestContext context)
+        public static void ConfigureAutoMapper()
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
