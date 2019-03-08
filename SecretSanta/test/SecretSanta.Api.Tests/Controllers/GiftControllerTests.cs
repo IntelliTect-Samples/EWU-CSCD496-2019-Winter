@@ -16,7 +16,7 @@ namespace SecretSanta.Api.Tests.Controllers
     public class GiftControllerTests
     {
         [AssemblyInitialize]
-        public static void ConfigureAutoMapper()
+        public static void ConfigureAutoMapper(TestContext testContext)
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
@@ -29,7 +29,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 Id = 3,
                 Title = "Gift Tile",
                 Description = "Gift Description",
-                Url = new Uri("http://www.gift.url"),
+                Url = "http://www.gift.url",
                 OrderOfImportance = 1
             };
             var testService = new TestableGiftService

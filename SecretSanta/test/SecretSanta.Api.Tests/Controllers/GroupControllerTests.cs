@@ -68,7 +68,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 Name = "Group"
             };
             var service = new Mock<IGroupService>();
-            service.Setup(x => x.AddGroup(It.Is<Group>(g => g.Name == group.Name)))
+            service.Setup(x => x.AddGroup(It.Is<Group>(g => string.Equals(g.Name, group.Name, StringComparison.Ordinal))))
                 .Returns(Task.FromResult(new Group
                 {
                     Id = 2,
