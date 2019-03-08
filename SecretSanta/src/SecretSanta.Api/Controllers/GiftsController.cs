@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,20 +30,21 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<GiftViewModel>> GetGift(int id)
         {
-            var gift = await GiftService.GetGift(id);
+            var gift = await GiftService.GetGift(id).ConfigureAwait(false);
 
             if (gift == null)
             {
+                Log.Logger.Debug("id: " + id + " was invalid for GetGift(id)");
                 return NotFound();
             }
-
+            Log.Logger.Information("Successful call to GetGift(id) with id: " + id);
             return Ok(Mapper.Map<GiftViewModel>(gift));
         }
 
         [HttpPost]
         public async Task<ActionResult<GiftViewModel>> CreateGift(GiftInputViewModel viewModel)
         {
-            var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel));
+            var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel)).ConfigureAwait(false);
 
             return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, Mapper.Map<GiftViewModel>(createdGift));
         }
@@ -52,10 +55,12 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0)
             {
+                Log.Logger.Debug("userId: " + userId + " was invalid for GetGiftsForUser(userId)");
                 return NotFound();
             }
-            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId).ConfigureAwait(false);
 
+            Log.Logger.Information("Successful call to GetGiftsForUser(userId) with userId: " + userId);
             return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
