@@ -1,15 +1,14 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -30,7 +29,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 Id = 3,
                 Title = "Gift Tile",
                 Description = "Gift Description",
-                Url = "http://www.gift.url",
+                Url = new Uri("http://www.gift.url"),
                 OrderOfImportance = 1
             };
             var testService = new TestableGiftService
