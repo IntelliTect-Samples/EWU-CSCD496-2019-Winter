@@ -18,31 +18,12 @@ namespace SecretSanta.Api
 {
     public static class Program
     {
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsetting.json", true, true)
-            .AddJsonFile($"appsetting.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true)
-            .AddEnvironmentVariables()
-            .Build();
-
         public static void Main(string[] args)
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
 
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.WithProperty("App Name", "SecretSanta.Api")
-                .WriteTo.File(
-                    path: Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
-                    fileSizeLimitBytes: 1000000,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1))
-                .WriteTo.ApplicationInsights("118d94a5-274f-4235-81f4-335c3ec4afcd", TelemetryConverter.Events)
-                .CreateLogger();
-            
+                        
             try
             {
                 var host = CreateWebHostBuilder(args).Build();
@@ -70,6 +51,36 @@ namespace SecretSanta.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureAppConfiguration(
+                (buildContext, configure) => 
+                {
+                    var env = buildContext.HostingEnvironment;
+                    configure.AddJsonFile("appsetting.json", true, true)
+                                .AddJsonFile($"appsetting.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true)
+                                .AddEnvironmentVariables();
+
+                    if (args != null) configure.AddCommandLine(args);
+                }
+                )
+                .ConfigureLogging(
+                (buildContext, logBuilder) =>
+                {
+
+                    Log.Logger = new LoggerConfiguration()
+                        .ReadFrom.Configuration(buildContext.Configuration)
+                        .Enrich.WithProperty("App Name", "SecretSanta.Api")
+                        .WriteTo.File
+                        (
+                            path: Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
+                            fileSizeLimitBytes: 1000000,
+                            rollOnFileSizeLimit: true,
+                            shared: true,
+                            flushToDiskInterval: TimeSpan.FromSeconds(1)
+                        )
+                        .WriteTo.ApplicationInsights("118d94a5-274f-4235-81f4-335c3ec4afcd", TelemetryConverter.Events)
+                        .CreateLogger();
+                }
+                )
                 .UseSerilog();
     }
 }
