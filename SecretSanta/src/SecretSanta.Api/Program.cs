@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using Serilog;
@@ -19,28 +14,12 @@ namespace SecretSanta.Api
 {
     public static class Program
     {
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true)
-            .AddEnvironmentVariables()
-            .Build();
-
         public static void Main(string[] args)
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
 
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("App Name", "SecretSanta.Api")
-                .WriteTo.SQLite(Configuration.GetConnectionString("DefaultConnection"))
-                .CreateLogger();
-            
             try
             {
                 var host = CreateWebHostBuilder(args).Build();
@@ -64,11 +43,37 @@ namespace SecretSanta.Api
                 Log.CloseAndFlush();
             }
         }
-
+        
+        // Im going to leave these two links here for future reference
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2
+        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseApplicationInsights()
                 .UseStartup<Startup>()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile(
+                        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
+                        optional: true, reloadOnChange: true);
+                    config.AddEnvironmentVariables();
+                    if (args != null)
+                    {
+                        config.AddCommandLine(args);
+                    }
+                })
+                .ConfigureLogging((hostingContext, config) =>
+                {
+                    Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug()
+                        .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .Enrich.FromLogContext()
+                        .Enrich.WithProperty("App Name", "SecretSanta.Api")
+                        .WriteTo.SQLite(hostingContext.Configuration.GetConnectionString("DefaultConnection"))
+                        .CreateLogger();
+                })
                 .UseSerilog();
     }
 }
