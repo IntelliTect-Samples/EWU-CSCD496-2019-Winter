@@ -32,21 +32,17 @@ namespace SecretSanta.Api
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
                 .ReadFrom.Configuration(Configuration)
-                .Enrich.FromLogContext()
                 .Enrich.WithProperty("App Name", "SecretSanta.Api")
-                .WriteTo.Console()
                 .WriteTo.File(
-                path: Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
-                fileSizeLimitBytes: 1000000,
-                rollOnFileSizeLimit: true,
-                shared: true,
-                flushToDiskInterval: TimeSpan.FromSeconds(1))
+                    path: Path.Combine(Directory.GetCurrentDirectory(), @"LogFiles\log.log"),
+                    fileSizeLimitBytes: 1000000,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1))
                 .WriteTo.ApplicationInsights("118d94a5-274f-4235-81f4-335c3ec4afcd", TelemetryConverter.Events)
                 .CreateLogger();
-
+            
             try
             {
                 var host = CreateWebHostBuilder(args).Build();
@@ -63,7 +59,7 @@ namespace SecretSanta.Api
             }
             catch (Exception e)
             {
-                Log.Fatal(e, "Host Error end process");
+                Log.Fatal(e, "Host Error, ~~END PROCESS~~");
             }
             finally
             {
