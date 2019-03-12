@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace SecretSanta.Web.UITests
 {
@@ -19,14 +19,18 @@ namespace SecretSanta.Web.UITests
         [TestInitialize]
         public void Init()
         {
-            Driver = new ChromeDriver(Path.GetFullPath("."));
+            var options = new FirefoxOptions
+            {
+                AcceptInsecureCertificates = true
+            };
+            Driver = new FirefoxDriver(Path.GetFullPath("."), options);
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            //Driver.Quit();
-            //Driver.Dispose();
+            Driver.Quit();
+            Driver.Dispose();
         }
 
         [TestMethod]
@@ -81,6 +85,8 @@ namespace SecretSanta.Web.UITests
             //Act
             IWebElement deleteLink = page.GetDeleteLink(groupName);
             deleteLink.Click();
+
+            Driver.SwitchTo().Alert().Accept();
 
             //Assert
             List<string> groupNames = page.GroupNames;
@@ -138,9 +144,9 @@ namespace SecretSanta.Web.UITests
                     .Select(x =>
                     {
                         var text = x.Text;
-                        if (text.EndsWith(" Edit Delete"))
+                        if (text.EndsWith("\r\nEdit\r\nDelete"))
                         {
-                            text = text.Substring(0, text.Length - " Edit Delete".Length);
+                            text = text.Substring(0, text.Length - "\r\nEdit\r\nDelete".Length);
                         }
                         return text;
                     })
@@ -153,7 +159,7 @@ namespace SecretSanta.Web.UITests
             ReadOnlyCollection<IWebElement> deleteLinks =
                 Driver.FindElements(By.CssSelector("a.is-danger"));
 
-            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}')"));
+            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}?')"));
         }
 
         public GroupsPage(IWebDriver driver)
