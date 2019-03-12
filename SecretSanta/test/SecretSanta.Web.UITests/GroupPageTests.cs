@@ -19,7 +19,11 @@ namespace SecretSanta.Web.UITests
         [TestInitialize]
         public void Init()
         {
-            Driver = new FirefoxDriver(Path.GetFullPath("."));
+            var options = new FirefoxOptions
+            {
+                BrowserExecutableLocation = @"C:\Program Files\Mozilla Firefox\firefox.exe"
+            };
+            Driver = new FirefoxDriver(Path.GetFullPath("."), options);
         }
 
         [TestCleanup]
