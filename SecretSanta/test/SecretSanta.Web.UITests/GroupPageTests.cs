@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
 
 namespace SecretSanta.Web.UITests
 {
@@ -19,11 +19,7 @@ namespace SecretSanta.Web.UITests
         [TestInitialize]
         public void Init()
         {
-            var options = new FirefoxOptions
-            {
-                BrowserExecutableLocation = @"C:\Program Files\Mozilla Firefox\firefox.exe"
-            };
-            Driver = new FirefoxDriver(Path.GetFullPath("."), options);
+            Driver = new ChromeDriver(Path.GetFullPath("."));
         }
 
         [TestCleanup]
