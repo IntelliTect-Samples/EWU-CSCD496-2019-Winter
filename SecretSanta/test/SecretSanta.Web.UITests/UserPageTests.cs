@@ -115,6 +115,20 @@ namespace SecretSanta.Web.UITests
             Assert.IsTrue(userNames.Contains(newFullName));
         }
 
+        [TestMethod]
+        public void CanNavigateFromUsersToHome()
+        {
+            var rootUri = new Uri(RootUrl);
+            Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
+
+            UsersPage usersPage = new UsersPage(Driver);
+            IWebElement homeLink = usersPage.HomeLink;
+
+            homeLink.Click();
+
+            Assert.AreEqual(RootUrl, Driver.Url);
+        }
+
         private UsersPage CreateUser(string firstName, string lastName)
         {
             var rootUri = new Uri(RootUrl);
