@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace SecretSanta.Web.UITests
@@ -12,7 +12,7 @@ namespace SecretSanta.Web.UITests
     [TestClass]
     public class GroupPageTests
     {
-        private const string RootUrl = "https://localhost:44331/";//edit later
+        private const string RootUrl = "https://localhost:44331/";
 
         private IWebDriver Driver { get; set; }
 
