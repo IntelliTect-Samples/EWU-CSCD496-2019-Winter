@@ -12,7 +12,7 @@ namespace SecretSanta.Web.UITests
     [TestClass]
     public class GroupPageTests
     {
-        private const string RootUrl = "https://localhost:44331/";
+        private const string RootUrl = "https://localhost:44387/";
 
         private IWebDriver Driver { get; set; }
 
@@ -107,10 +107,12 @@ namespace SecretSanta.Web.UITests
         public IWebDriver Driver { get; }
 
         public GroupsPage GroupPage => new GroupsPage(Driver);
+        public UsersPage UserPage => new UsersPage(Driver);
 
         //Id, LinkText, CssSelector/XPath
         //public IWebElement GroupsLink => Driver.FindElement(By.CssSelector("a[href=\"/Groups\"]"));
         public IWebElement GroupsLink => Driver.FindElement(By.LinkText("Groups"));
+        public IWebElement UsersLink => Driver.FindElement(By.LinkText("Users"));
 
         public HomePage(IWebDriver driver)
         {
