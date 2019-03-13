@@ -62,7 +62,7 @@ namespace SecretSanta.Web.UITests
         public void CanAddGroups()
         {
             //Arrange /Act
-            string groupName = "Group Name" + Guid.NewGuid().ToString("N");
+            string groupName = "Group Name " + Guid.NewGuid().ToString("N");
             GroupsPage page = CreateGroup(groupName);
             
             //Assert
@@ -75,12 +75,14 @@ namespace SecretSanta.Web.UITests
         public void CanDeleteGroup()
         {
             //Arrange
-            string groupName = "Group Name" + Guid.NewGuid().ToString("N");
+            string groupName = "Group Name " + Guid.NewGuid().ToString("N");
             GroupsPage page = CreateGroup(groupName);
 
             //Act
             IWebElement deleteLink = page.GetDeleteLink(groupName);
             deleteLink.Click();
+
+            Driver.SwitchTo().Alert().Accept();
 
             //Assert
             List<string> groupNames = page.GroupNames;
@@ -139,7 +141,7 @@ namespace SecretSanta.Web.UITests
                 return elements
                     .Select(x =>
                     {
-                        var text= x.Text;
+                        var text = x.Text;
                         if (text.EndsWith(" Edit Delete"))
                         {
                             text = text.Substring(0, text.Length - " Edit Delete".Length);
@@ -155,7 +157,8 @@ namespace SecretSanta.Web.UITests
             ReadOnlyCollection<IWebElement> deleteLinks = 
                 Driver.FindElements(By.CssSelector("a.is-danger"));
 
-            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}')"));
+            IWebElement deleteLink = deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}?')"));
+            return deleteLink;
         }
 
         public GroupsPage(IWebDriver driver)

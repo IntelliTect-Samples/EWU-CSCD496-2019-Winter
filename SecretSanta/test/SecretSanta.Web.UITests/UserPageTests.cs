@@ -44,17 +44,79 @@ namespace SecretSanta.Web.UITests
             Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
         }
 
-        private UsersPage CreateGroup(string groupName)
+        [TestMethod]
+        public void CanAddUsers()
+        {
+            //Arrange
+            string firstName = "FirstName " + Guid.NewGuid().ToString("N");
+
+            //Act
+            UsersPage page = CreateUser(firstName);
+
+            //Assert
+            Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
+            List<string> userNames = page.UserNames;
+            Assert.IsTrue(userNames.Contains(firstName));
+        }
+
+        [TestMethod]
+        public void CanDeleteUser()
+        {
+            //Arrange
+            string userName = Arrange();
+            UsersPage page = CreateUser(userName);
+
+            //Act
+            IWebElement deleteLink = page.GetDeleteLink(userName);
+            deleteLink.Click();
+
+            Driver.SwitchTo().Alert().Accept();
+
+            //Assert
+            List<string> groupNames = page.UserNames;
+            Assert.IsFalse(groupNames.Contains(userName));
+        }
+
+        [TestMethod]
+        public void CanEditUser()
+        {
+            //Arrange
+            var rootUri = new Uri(RootUrl);
+            Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
+            string userName = Arrange();
+            var userPage = CreateUser(userName);
+
+            IWebElement editLink = userPage.GetEditLink(userName);
+            editLink.Click();
+
+            //Act
+            var editUserPage = new EditUsersPage(Driver);
+            string editedName = "EDITED USER";
+            editUserPage.FirstNameTextBox.SendKeys(editedName);
+            editUserPage.SubmitButton.Click();
+
+            //Assert
+            List<string> userNames = userPage.UserNames;
+            Assert.IsFalse(userNames.Contains(userName));
+            Assert.IsTrue(userNames.Contains(userName + editedName));
+        }
+
+        private string Arrange()
+        {
+            return "User Name " + Guid.NewGuid().ToString("N");
+        }
+
+        private UsersPage CreateUser(string firstName)
         {
             var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
+            Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
             var page = new UsersPage(Driver);
             page.AddUser.Click();
 
-            var addGroupPage = new AddGroupsPage(Driver);
+            var addUserPage = new AddUsersPage(Driver);
 
-            addGroupPage.GroupNameTextBox.SendKeys(groupName);
-            addGroupPage.SubmitButton.Click();
+            addUserPage.FirstNameTextBox.SendKeys(firstName);
+            addUserPage.SubmitButton.Click();
             return page;
         }
     }
@@ -68,6 +130,7 @@ namespace SecretSanta.Web.UITests
         public IWebElement AddUser => Driver.FindElement(By.LinkText("Add User"));
 
         public AddUsersPage AddUserPage => new AddUsersPage(Driver);
+        public EditUsersPage EditUserPage => new EditUsersPage(Driver);
 
         public List<string> UserNames
         {
@@ -89,12 +152,26 @@ namespace SecretSanta.Web.UITests
             }
         }
 
-        public IWebElement GetDeleteLink(string groupName)
+        public IWebElement GetDeleteLink(string userName)
         {
             ReadOnlyCollection<IWebElement> deleteLinks =
                 Driver.FindElements(By.CssSelector("a.is-danger"));
 
-            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}')"));
+            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{userName}?')"));
+        }
+
+        public IWebElement GetEditLink(string userName)
+        {
+            IWebElement li = null;
+            ReadOnlyCollection<IWebElement> lis = Driver.FindElements(By.TagName("li"));
+            foreach(IWebElement element in lis)
+            {
+                if(element.Text.Contains(userName))
+                {
+                    li = element.FindElement(By.CssSelector("a.is-warning"));
+                }
+            }
+            return li;
         }
 
         public UsersPage(IWebDriver driver)
@@ -110,7 +187,7 @@ namespace SecretSanta.Web.UITests
 
         public IWebDriver Driver { get; }
 
-        public IWebElement UserNameTextBox => Driver.FindElement(By.Id("Name"));
+        public IWebElement FirstNameTextBox => Driver.FindElement(By.Id("FirstName"));
 
         public IWebElement SubmitButton =>
             Driver
@@ -118,6 +195,25 @@ namespace SecretSanta.Web.UITests
                 .Single(x => x.Text == "Submit");
 
         public AddUsersPage(IWebDriver driver)
+        {
+            Driver = driver ?? throw new ArgumentNullException(nameof(driver));
+        }
+    }
+
+    public class EditUsersPage
+    {
+        public const string Slug = UsersPage.Slug + "/Edit";
+
+        public IWebDriver Driver { get; }
+
+        public IWebElement FirstNameTextBox => Driver.FindElement(By.Id("FirstName"));
+
+        public IWebElement SubmitButton =>
+            Driver
+                .FindElements(By.CssSelector("button.is-primary"))
+                .Single(x => x.Text == "Submit");
+
+        public EditUsersPage(IWebDriver driver)
         {
             Driver = driver ?? throw new ArgumentNullException(nameof(driver));
         }
