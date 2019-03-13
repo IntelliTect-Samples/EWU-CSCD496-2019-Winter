@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -11,7 +12,9 @@ namespace SecretSanta.Web.UITests
     public class UserPageTests
     {
         private const string RootUrl = "https://localhost:44308/";
+        public const string ScreenshotFolderName = "Screenshots";
         private IWebDriver Driver { get; set; }
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void Init()
@@ -22,8 +25,18 @@ namespace SecretSanta.Web.UITests
         [TestCleanup]
         public void Cleanup()
         {
-            //Driver.Quit();
-            //Driver.Dispose();
+            if (TestContext.CurrentTestOutcome == UnitTestOutcome.Failed)
+            {
+                string fileName = $"{TestContext.TestName}.png";
+                string currentDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+                string path = Path.Combine(currentDirectory, ScreenshotFolderName, fileName);
+
+                Screenshot screenshot = ((ITakesScreenshot) Driver).GetScreenshot();
+                screenshot.SaveAsFile(path);
+            }
+
+            Driver.Quit();
+            Driver.Dispose();
         }
 
         [TestMethod]
