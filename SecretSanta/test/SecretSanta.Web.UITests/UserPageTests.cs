@@ -12,7 +12,7 @@ namespace SecretSanta.Web.UITests
     [TestClass]
     public class UserPageTests
     {
-        private const string RootUrl = "http://localhost:15421";
+        private const string RootUrl = "https://localhost:44377/";
 
         private IWebDriver Driver { get; set; }
 
