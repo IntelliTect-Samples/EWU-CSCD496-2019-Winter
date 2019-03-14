@@ -14,7 +14,11 @@ namespace SecretSanta.Web.UITests.Pages
 
         public IWebElement AddUser => Driver.FindElement(By.LinkText("Add User"));
 
+        public IWebElement EditUser => Driver.FindElement(By.LinkText("Edit"));
+
         public AddUsersPage AddUsersPage => new AddUsersPage(Driver);
+
+        public EditUsersPage EditUsersPage => new EditUsersPage(Driver);
 
         public List<string> UserNames
         {
@@ -34,6 +38,14 @@ namespace SecretSanta.Web.UITests.Pages
                     })
                     .ToList();
             }
+        }
+
+        public IWebElement GetEditLink(string userName)
+        {
+            ReadOnlyCollection<IWebElement> editLinks =
+                Driver.FindElements(By.CssSelector("h1.title+ul>li"));
+
+            return editLinks.Single(x => x.Text.StartsWith(userName)).FindElement(By.CssSelector("a.button"));
         }
 
         public IWebElement GetDeleteLink(string userName)
