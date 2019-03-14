@@ -11,10 +11,8 @@ namespace SecretSanta.Web.UITests
     {
         public IWebDriver Driver { get; set; }
         public const string Slug = "Users";
-        public IWebElement AddUser => Driver.FindElement(By.LinkText("Add User"));
-        public IWebElement EditUser => Driver.FindElement(By.LinkText("Edit"));
-        public IWebElement DeleteUser => Driver.FindElement(By.LinkText("Delete"));
         public IWebElement HomeLink => Driver.FindElement(By.CssSelector(".navbar-brand>a"));
+        public IWebElement AddUserLink => Driver.FindElement(By.LinkText("Add User"));
         public AddUsersPage AddUsersPage => new AddUsersPage(Driver);
 
         public List<string> UserNames
