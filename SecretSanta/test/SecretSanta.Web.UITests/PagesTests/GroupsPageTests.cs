@@ -7,23 +7,11 @@ using OpenQA.Selenium.Chrome;
 using SecretSanta.Web.UITests.Pages.AddPages;
 using SecretSanta.Web.UITests.Pages.RootPages;
 
-namespace SecretSanta.Web.UITests
+namespace SecretSanta.Web.UITests.PagesTests
 {
     [TestClass]
-    public class GroupsPageTests
+    public class GroupsPageTests : AbstractParentTest
     {
-        public const string RootUrl = "http://localhost:51042/";
-
-        public IWebDriver Driver { get; set; }
-        public TestContext TestContext { get; set; }
-
-
-        [TestInitialize]
-        public void Init()
-        {
-            Driver = new ChromeDriver(Path.GetFullPath("."));
-        }
-
         [TestMethod]
         public void CanGetToGroupsPage()
         {
@@ -119,23 +107,6 @@ namespace SecretSanta.Web.UITests
             addGroupPage.GroupNameTextBox.SendKeys(groupName);
             addGroupPage.SubmitButton.Click();
             return page;
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            if (TestContext.CurrentTestOutcome == UnitTestOutcome.Failed)
-            {
-                string projectRoot = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("bin"));
-
-                string fileName = projectRoot + "/Screenshots/" + TestContext.TestName + ".png";
-
-                Screenshot screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
-                screenshot.SaveAsFile(fileName, ScreenshotImageFormat.Png);
-            }
-
-            Driver.Quit();
-            Driver.Dispose();
         }
     }
 }

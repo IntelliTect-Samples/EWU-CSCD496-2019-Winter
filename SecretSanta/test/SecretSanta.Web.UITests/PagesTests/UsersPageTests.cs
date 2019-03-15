@@ -6,19 +6,15 @@ using SecretSanta.Web.UITests.Pages.RootPages;
 using System;
 using System.IO;
 
-namespace SecretSanta.Web.UITests
+namespace SecretSanta.Web.UITests.PagesTests
 {
     [TestClass]
-    public class UsersPageTests
+    public class UsersPageTests:AbstractParentTest
     {
         private StructUser StructTestUser { get; set; }
-        public const string RootUrl = "http://localhost:51042/";
-
-        public IWebDriver Driver { get; set; }
-        public TestContext TestContext { get; set; }
 
         [TestInitialize]
-        public void Init()
+        public new void Init()
         {
             Driver = new ChromeDriver(Path.GetFullPath("."));
             StructTestUser = new StructUser(
@@ -155,23 +151,6 @@ namespace SecretSanta.Web.UITests
             Uri rootUri = new Uri(RootUrl);
             Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
             return new UsersPage(Driver);
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            if (TestContext.CurrentTestOutcome == UnitTestOutcome.Failed)
-            {
-                string projectRoot = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("bin"));
-
-                string fileName = projectRoot + "/Screenshots/" + TestContext.TestName + ".png";
-
-                Screenshot screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
-                screenshot.SaveAsFile(fileName, ScreenshotImageFormat.Png);
-            }
-
-            Driver.Quit();
-            Driver.Dispose();
         }
     }
 }
