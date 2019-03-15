@@ -69,6 +69,20 @@ namespace SecretSanta.Web.UITests
             Assert.IsTrue(userNameList.Contains("first last"));
         }
 
+        [TestMethod]
+        public void DeleteUser()
+        {
+            var usersPage = CreateUser("never", "ever");
+
+            WebDriver.Navigate().GoToUrl(UsersPage.Path);
+            usersPage.GetDeleteLink("never ever").Click();
+            WebDriver.SwitchTo().Alert().Accept();
+            var userNames = usersPage.UserNames;
+
+            Assert.IsFalse(userNames.Contains("never ever"));
+
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {
