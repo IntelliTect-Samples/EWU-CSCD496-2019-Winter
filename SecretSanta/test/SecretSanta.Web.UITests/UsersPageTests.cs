@@ -47,7 +47,7 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanReachUsersEditPage()
         {
-            var usersPage = CreateUser("one", "two");
+            var usersPage = CreateAndAddUser("one", "two");
             var editLink = usersPage.GetEditLink("one two");
 
             editLink.Click();
@@ -62,7 +62,7 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void AddValidUser()
         {
-            var usersPage = CreateUser("first", "last");
+            var usersPage = CreateAndAddUser("first", "last");
             Assert.IsTrue(WebDriver.Url.EndsWith(UsersPage.Slug));
 
             var userNameList = usersPage.UserNames;
@@ -70,9 +70,45 @@ namespace SecretSanta.Web.UITests
         }
 
         [TestMethod]
+        public void AddedUsersAreInTheList()
+        {
+            CreateAndAddUser("he", "heeee");
+            CreateAndAddUser("were", "wolf");
+            var usersPage = CreateAndAddUser("some", "body");
+
+            WebDriver.Navigate().GoToUrl(UsersPage.Path);
+            var userNames = usersPage.UserNames;
+
+            Assert.IsTrue(userNames.Contains("he heeee"));
+            Assert.IsTrue(userNames.Contains("were wolf"));
+            Assert.IsTrue(userNames.Contains("some body"));
+
+        }
+
+        [TestMethod]
+        public void EditUser()
+        {
+            var usersPage = CreateAndAddUser("cow", "bark");
+            var usersEditPage = new EditUsersPage(WebDriver);
+
+            var editLink = usersPage.GetEditLink("cow bark");
+            editLink.Click();
+
+            usersEditPage.FirstNameTextBox.Clear();
+            usersEditPage.LastNameTextBox.Clear();
+
+            usersEditPage.FirstNameTextBox.SendKeys("dog");
+            usersEditPage.LastNameTextBox.SendKeys("moo");
+
+            usersEditPage.SubmitButton.Click();
+
+            Assert.IsTrue(usersPage.UserNames.Contains("dog moo"));
+        }
+
+        [TestMethod]
         public void DeleteUser()
         {
-            var usersPage = CreateUser("never", "ever");
+            var usersPage = CreateAndAddUser("never", "ever");
 
             WebDriver.Navigate().GoToUrl(UsersPage.Path);
             usersPage.GetDeleteLink("never ever").Click();
@@ -90,7 +126,7 @@ namespace SecretSanta.Web.UITests
             WebDriver.Dispose();
         }
 
-        private UsersPage CreateUser(string firstName, string lastName)
+        public UsersPage CreateAndAddUser(string firstName, string lastName)
         {
             WebDriver.Navigate().GoToUrl(AddUsersPage.Path);
             var usersPage = new UsersPage(WebDriver);
