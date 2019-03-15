@@ -78,6 +78,20 @@ namespace SecretSanta.Web.UITests
         }
 
         [TestMethod]
+        public void CanAddUsersFirstNameOnly()
+        {
+            //Arrange /Act
+            string userFirstName = "First Name" + Guid.NewGuid().ToString("N");
+            string userFullName = userFirstName;
+            UsersPage page = CreateUser(userFirstName, null);
+
+            //Assert
+            Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
+            List<string> userNames = page.UserNames;
+            Assert.IsTrue(userNames.Contains(userFullName));
+        }
+        
+        [TestMethod]
         public void CanGetErrorOnAddUserMissingFirstName()
         {
             string userLastName = "Last Name" + Guid.NewGuid().ToString("N");
@@ -226,7 +240,7 @@ namespace SecretSanta.Web.UITests
             var addUsersPage = new AddUsersPage(Driver);
 
             if(userFirstName != null) addUsersPage.UserFristNameTextBox.SendKeys(userFirstName);
-            addUsersPage.UserLastNameTextBox.SendKeys(userLastName);
+            if(userLastName != null) addUsersPage.UserLastNameTextBox.SendKeys(userLastName);
             addUsersPage.SubmitButton.Click();
             return page;
         }
