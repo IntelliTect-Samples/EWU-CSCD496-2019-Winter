@@ -19,5 +19,7 @@ namespace SecretSanta.Web.UITests.Pages
         public IWebElement GroupsLink => WebDriver.FindElement(By.LinkText("Groups"));
 
         public IWebElement UsersLink => WebDriver.FindElement(By.LinkText("Users"));
+
+        public IWebElement GiftsLink => WebDriver.FindElement(By.LinkText("Gifts"));
     }
 }

@@ -15,5 +15,8 @@ namespace SecretSanta.Web.UITests.Pages
         {
             WebDriver = webDriver ?? throw new ArgumentNullException(nameof(webDriver));
         }
+
+        public IWebElement AddUserLink => WebDriver.FindElement(By.LinkText("Add User"));
+
     }
 }
