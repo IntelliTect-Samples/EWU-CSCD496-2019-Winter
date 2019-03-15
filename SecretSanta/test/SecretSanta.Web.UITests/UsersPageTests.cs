@@ -47,7 +47,26 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanReachUsersEditPage()
         {
-            //
+            var usersPage = CreateUser("one", "two");
+            var editLink = usersPage.GetEditLink("one two");
+
+            editLink.Click();
+
+            var editPage = new EditUsersPage(WebDriver);
+
+            Assert.IsTrue(WebDriver.Url.Contains(EditUsersPage.Slug));
+
+        }
+
+
+        [TestMethod]
+        public void AddValidUser()
+        {
+            var usersPage = CreateUser("first", "last");
+            Assert.IsTrue(WebDriver.Url.EndsWith(UsersPage.Slug));
+
+            var userNameList = usersPage.UserNames;
+            Assert.IsTrue(userNameList.Contains("first last"));
         }
 
         [TestCleanup]
@@ -55,6 +74,18 @@ namespace SecretSanta.Web.UITests
         {
             WebDriver.Quit();
             WebDriver.Dispose();
+        }
+
+        private UsersPage CreateUser(string firstName, string lastName)
+        {
+            WebDriver.Navigate().GoToUrl(AddUsersPage.Path);
+            var usersPage = new UsersPage(WebDriver);
+            var addUsersPage = new AddUsersPage(WebDriver);
+
+            addUsersPage.FirstNameTextBox.SendKeys(firstName);
+            addUsersPage.LastNameTextBox.SendKeys(lastName);
+            addUsersPage.SubmitButton.Click();
+            return usersPage;
         }
     }
 }

@@ -15,8 +15,6 @@ namespace SecretSanta.Web.UITests.Pages
         {
             WebDriver = webDriver ?? throw new ArgumentNullException(nameof(webDriver));
         }
-
-
-        //
+        public IWebElement AddGroupsLink => WebDriver.FindElement(By.LinkText("Add Group"));
     }
 }

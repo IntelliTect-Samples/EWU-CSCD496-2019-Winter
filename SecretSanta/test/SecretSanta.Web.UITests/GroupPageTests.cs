@@ -32,6 +32,19 @@ namespace SecretSanta.Web.UITests
             Assert.IsTrue(WebDriver.Url.EndsWith(GroupsPage.Slug));
         }
 
+        [TestMethod]
+        public void CanReachGroupsAddPage()
+        {
+            WebDriver.Navigate().GoToUrl(GroupsPage.Path);
+
+            var groupsPage = new GroupsPage(WebDriver);
+
+            groupsPage.AddGroupsLink.Click();
+
+            Assert.IsTrue(WebDriver.Url.EndsWith(AddGroupPage.Slug));
+        }
+
+
         [TestCleanup]
         public void TestCleanup()
         {
